@@ -7,14 +7,14 @@ require("dotenv").config({
 const app = express();
 app.use(express.json());
 
+const productRouter = require("./routes/product")
 const categoryRouter = require("./routes/category")
 const loginRouter = require("./routes/login");
 
-//Routingg
+//Routing
 app.use("/categories", categoryRouter)
+app.use("/products", productRouter)
 app.use("/login", loginRouter);
-app.use("/category", categoryRouter)
-
 
 app.use((req, res) => {
   console.log(`404: ${req.url}`);

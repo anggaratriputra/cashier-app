@@ -13,18 +13,22 @@ module.exports = {
         type: Sequelize.STRING
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       price: {
         type: Sequelize.INTEGER
       },
-      categoryId: {
-        type: Sequelize.INTEGER,
-        onDelete: "CASCADE",
-        references: {
-          model: "Categories",
-          key: "id",
-        },
+      // categoryId: {
+      //   type: Sequelize.INTEGER,
+      //   onDelete: "CASCADE",
+      //   references: {
+      //     model: "Categories",
+      //     key: "id",
+      //   },
+      // },
+      category: {
+        type: Sequelize.STRING
       },
       description: {
         type: Sequelize.STRING
