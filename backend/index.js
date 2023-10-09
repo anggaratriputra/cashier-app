@@ -10,11 +10,13 @@ app.use(express.json());
 const productRouter = require("./routes/product")
 const categoryRouter = require("./routes/category")
 const loginRouter = require("./routes/login");
+const cashierRouter = require("./routes/cashier");
 
 //Routing
 app.use("/categories", categoryRouter)
 app.use("/products", productRouter)
 app.use("/login", loginRouter);
+app.use("/cashier", cashierRouter)
 
 app.use((req, res) => {
   console.log(`404: ${req.url}`);
