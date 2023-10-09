@@ -9,11 +9,13 @@ app.use(express.json());
 
 const categoryRouter = require("./routes/category")
 const loginRouter = require("./routes/login");
+const cashierRouter = require("./routes/cashier");
 
 //Routingg
 app.use("/categories", categoryRouter)
 app.use("/login", loginRouter);
 app.use("/category", categoryRouter)
+app.use("/cashier", cashierRouter)
 
 
 app.use((req, res) => {
