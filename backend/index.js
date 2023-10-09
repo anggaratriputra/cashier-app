@@ -7,7 +7,7 @@ app.use(express.json());
 const categoryRouter = require("./routes/category")
 
 //Routingg
-app.use("/category", categoryRouter)
+app.use("/categories", categoryRouter)
 
 app.use((req, res) => {
   console.log(`404: ${req.url}`);
