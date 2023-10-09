@@ -3,7 +3,7 @@ import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu, FiChevronD
 import { Navigate, useNavigate } from "react-router-dom";
 
 import { NavLink } from "react-router-dom";
-// ...
+
 
 const LinkItems = [
   { name: "Home", icon: FiHome, to: "/home" }, // Add the "to" property for the Home link
@@ -14,7 +14,7 @@ const LinkItems = [
 
 const SidebarContent = ({ onClose, ...rest }) => {
   return (
-    <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="full" {...rest}>
+    <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh" {...rest}>
       <Flex h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex gap={2} alignItems={"center"} justifyContent={"center"}>
           <Image src="https://i.ibb.co/LzsMhD0/mekdilogo2.png" w={"90%"} />
@@ -74,16 +74,15 @@ const NavItem = ({ icon, children, to, ...rest }) => {
 };
 const Sidebar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   return (
-    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+    <>
       <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} returnFocusOnClose={false} onOverlayClick={onClose} size="full">
         <DrawerContent>
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-    </Box>
+    </>
   );
 };
 
