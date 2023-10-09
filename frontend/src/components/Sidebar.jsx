@@ -2,11 +2,14 @@ import { IconButton, Avatar, Box, CloseButton, Flex, HStack, VStack, Icon, useCo
 import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu, FiChevronDown } from "react-icons/fi";
 import { Navigate, useNavigate } from "react-router-dom";
 
+import { NavLink } from "react-router-dom";
+// ...
+
 const LinkItems = [
-  { name: "Home", icon: FiHome },
-  { name: "Dashboard", icon: FiTrendingUp },
-  { name: "Bills", icon: FiCompass },
-  { name: "Settings", icon: FiSettings },
+  { name: "Home", icon: FiHome, to: "/home" }, // Add the "to" property for the Home link
+  { name: "Dashboard", icon: FiTrendingUp, to: "/dashboard" }, // Add "to" for other links
+  { name: "Bills", icon: FiCompass, to: "/bills" },
+  { name: "Settings", icon: FiSettings, to: "/settings" },
 ];
 
 const SidebarContent = ({ onClose, ...rest }) => {
@@ -27,9 +30,20 @@ const SidebarContent = ({ onClose, ...rest }) => {
   );
 };
 
-const NavItem = ({ icon, children, ...rest }) => {
+
+const NavItem = ({ icon, children, to, ...rest }) => {
+  const activeColor = useColorModeValue("white", "gray.900");
+  const activeBgColor = "red"; // Set the active background color here
+
   return (
-    <Box as="a" href="#" style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
+    <NavLink
+      to={to}
+      style={{ textDecoration: "none" }}
+      activeStyle={{
+        backgroundColor: activeBgColor,
+        color: activeColor,
+      }}
+    >
       <Flex
         align="center"
         p="4"
@@ -55,10 +69,9 @@ const NavItem = ({ icon, children, ...rest }) => {
         )}
         {children}
       </Flex>
-    </Box>
+    </NavLink>
   );
 };
-
 const Sidebar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
