@@ -8,9 +8,9 @@ exports.createCategory = async (req, res) => {
       name,
     });
 
-    await Product.create({
-      categoryId: result.id,
-    });
+    // await Product.create({
+    //   categoryId: result.id,
+    // });
 
     res.status(201).json({
       ok: true,
@@ -74,11 +74,37 @@ exports.deleteCategory = async (req, res) => {
       ok: true,
       message: "Category deleted successfully",
     });
-    
   } catch (error) {
     res.status(400).json({
+      ok: false,
+      meessage: String(error),
+    });
+  }
+};
+
+exports.getAllCategory = async (req, res) => {
+  try {
+    const categories = await Category.findAll();
+
+    if (!categories || categories.length === 0) {
+      return res.status(404).json({
         ok: false,
-        meessage: String(error)
-    })
+        message: "No categories found!",
+      });
+    }
+
+    const categoryName = categories.map((category) => category.name);
+
+    res.status(200).json({
+      ok: true,
+      message: "Categories retrieved successfully",
+      categories: categoryName,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      message: "Failed to retrieved categories",
+      detail: String(error),
+    });
   }
 };

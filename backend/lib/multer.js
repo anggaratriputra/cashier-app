@@ -4,7 +4,7 @@ const storage = multer.diskStorage({
   destination: (req, res, cb) => {
     cb(null, __dirname + "/../public");
   },
-  filename: (req, res, cb) => {
+  filename: (req, file, cb) => {
     cb(null, "IMG-" + Date.now() + "." + file.mimetype.split("/")[1]);
   },
 });
@@ -26,6 +26,6 @@ exports.multerUpload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 2e7,
+    fileSize: 2e+7,
   },
 });
