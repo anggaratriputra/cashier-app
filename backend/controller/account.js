@@ -1,8 +1,9 @@
-const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const Account = require("../models");
+const {Account} = require("../models");
 const fs = require("fs");
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 exports.handleLogin = async (req, res) => {
     const { user_identity: userIdentity, password } = req.body;
@@ -13,7 +14,7 @@ exports.handleLogin = async (req, res) => {
           [Op.or]: {
             email: userIdentity,
             username: userIdentity,
-            password: userIdentity,
+            password
           },
         },
       });

@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 exports.validateToken = (req, res, next) => {
