@@ -11,8 +11,10 @@ const categoryRouter = require("./routes/category")
 const loginRouter = require("./routes/login");
 
 //Routingg
+app.use("/categories", categoryRouter)
 app.use("/login", loginRouter);
 app.use("/category", categoryRouter)
+
 
 app.use((req, res) => {
   console.log(`404: ${req.url}`);
