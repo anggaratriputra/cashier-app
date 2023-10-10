@@ -39,7 +39,7 @@ exports.handleLogin = async (req, res) => {
       const token = jwt.sign(payload, JWT_SECRET_KEY, {
         expiresIn: "1h",
       });
-  
+
       const response = {
         token,
         profile: { 

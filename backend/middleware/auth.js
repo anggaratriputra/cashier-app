@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken"); 
+const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 exports.validateToken = (req, res, next) => {
@@ -19,7 +19,6 @@ exports.validateToken = (req, res, next) => {
       });
       return;
     }
-    console.log(token);
     const payload = jwt.verify(token, JWT_SECRET_KEY);
     if (!payload) {
       res.status(401).json({
