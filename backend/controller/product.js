@@ -57,10 +57,18 @@ exports.updateProduct = async (req, res) => {
       });
     }
 
-    product.name = productName;
-    product.price = price;
-    product.category = category;
-    product.description = description;
+    if (productName) {
+      product.name = productName;
+    }
+    if (price) {
+      product.price = price;
+    }
+    if (category) {
+      product.category = category;
+    }
+    if (description) {
+      product.description = description;
+    }
     await product.save();
 
     res.status(200).json({
