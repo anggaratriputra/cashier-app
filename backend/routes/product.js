@@ -7,7 +7,7 @@ const authMiddleware = require("../middleware/auth");
 
 router.get("/", productController.getAllProducts);
 router.post("/create", authMiddleware.validateToken, authMiddleware.checkRole, multerUpload.single("img"), productController.createProduct);
-router.put("/update/:name", authMiddleware.validateToken, authMiddleware.checkRole, multerUpload.single("img"), productController.updateProduct);
+router.patch("/update/:name", authMiddleware.validateToken, authMiddleware.checkRole, multerUpload.single("img"), productController.updateProduct);
 router.put("/:name", authMiddleware.validateToken, authMiddleware.checkRole, productController.deactivateProduct);
 
 module.exports = router;
