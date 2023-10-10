@@ -29,7 +29,7 @@ exports.validateToken = (req, res, next) => {
       return;
     }
 
-    req.user = payload;
+    req.account = payload;
     next();
   } catch (error) {
     res.status(401).json({
@@ -40,7 +40,7 @@ exports.validateToken = (req, res, next) => {
 };
 
 exports.checkRole = (req, res, next) => {
-  if (req.user.isAdmin === true) {
+  if (req.account.isAdmin === true) {
     next();
     return;
   }
@@ -51,7 +51,7 @@ exports.checkRole = (req, res, next) => {
   });
 };
 exports.checkRoleUser = (req, res, next) => {
-  if (req.user.isValid === true) {
+  if (req.account.isValid === true) {
     next();
     return;
   }
