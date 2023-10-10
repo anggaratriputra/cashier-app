@@ -65,28 +65,65 @@ exports.handleLogin = async (req, res) => {
     }
   };
   
+  exports.updateAccount = async (req, res) => {
+    const { username } = req.params;
+    const { userName, firstName, lastName, password, photoProfile } = req.body;
   
-  exports.handleUploadPhotoProfile = async (req, res) => {
-  const {filename} = req.file;
-  const {id: accountId} = req.user;
+    console.log(req.file);
   
-  try {
-  const profile = await Account.findOne({ where: { accountId, } }); 
-  if (profile.photoProfile) {
-    fs.rmSync(__dirname + "/../public/" + profile.photoProfile);
-  }
+    try {
+      const account = await Account.findOne({ where: { username } });
+  console.log(account)
+      if (!account) {
+        res.status(404).json({
+          ok: false,
+          message: "Account Not Found!",
+        });
+      }
   
-  profile.photoProfile = filename;
-  await profile.save();
+      account.username = userName;
+      account.firstName = firstName;
+      account.lastName = lastName;
+      account.password = password;
+      account.photoProfile = photoProfile;
+      await account.save();
   
-  res.json({
-    ok: true,
-    date: "Profile picture updated",
-  });
-  } catch(error) {
-    res.status(500).json({
-      ok: false,
-      message: String(error),
-    })
-  }
+      res.status(200).json({
+        ok: true,
+        message: "Account updated successfully!",
+        detail: account,
+      });
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        message: "Failed to update account!",
+        detail: String(error),
+      });
+    }
+  };
+  
+  exports.uploadPhoto = async (req, res) => {
+    const { filename } = req.file;
+    const { id: accountId } = req.user;
+  
+    try {
+      const profile = await Profile.findOne({ where: { accountId } });
+      if (profile.profilePicture) {
+        // delete old profile picture
+        fs.rmSync(__dirname + "/../public/" + profile.profilePicture);
+      }
+  
+      profile.profilePicture = filename;
+      await profile.save();
+  
+      res.json({
+        ok: true,
+        data: "Profile picture updated",
+      });
+    } catch (error) {
+      res.status(500).json({
+        ok: false,
+        message: String(error),
+      });
+    }
   };
