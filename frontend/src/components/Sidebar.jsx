@@ -7,7 +7,7 @@ import Reports from "./Reports";
 import Settings from "./Settings";
 
 const SidebarContent = ({ onClose, ...rest }) => {
-  const [activeItem, setActiveItem] = useState("home"); // Initialize with the default active item
+  const [activeItem, setActiveItem] = useState("menu"); // Initialize with the default active item
 
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
