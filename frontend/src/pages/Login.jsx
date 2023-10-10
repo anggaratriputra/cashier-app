@@ -17,7 +17,7 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const loginUser = async (username, password) => {
+  const login = async (username, password) => {
     try {
       const response = await api.post('/login', {
         user_identity: username ,
@@ -43,7 +43,7 @@ function Login() {
     const { username, password } = values;
     
     // Call the loginUser function to send the POST request to the back end
-    loginUser(username, password);
+    login(username, password);
   
     // Rest of your form submission logic
   };
