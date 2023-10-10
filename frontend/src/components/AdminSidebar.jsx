@@ -25,8 +25,8 @@ const SidebarContent = ({ onClose, ...rest }) => {
 
       {/* Sidebar Navigation */}
       <Flex direction="column">
-        <NavItem icon={FiHome} name="Menu" isActive={activeItem === "menu"} onClick={() => setActivePage("menu")} />
-        <NavItem icon={FiTrendingUp} name="Bills" isActive={activeItem === "reports"} onClick={() => setActivePage("reports")} />
+        <NavItem icon={FiHome} name="Cashier" isActive={activeItem === "home"} onClick={() => setActivePage("home")} />
+        <NavItem icon={FiTrendingUp} name="Reports" isActive={activeItem === "reports"} onClick={() => setActivePage("reports")} />
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => setActivePage("settings")} />
       </Flex>
     </Box>

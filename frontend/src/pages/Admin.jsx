@@ -1,14 +1,14 @@
 import { Box, Flex, HStack, Text } from "@chakra-ui/react";
-import Sidebar from "../components/Sidebar";
+import AdminSidebar from "../components/AdminSidebar";
 
-function Home() {
+function Admin() {
   return (
     <>
-      <Sidebar/>
+    <AdminSidebar />
       <Flex direction={"row"} ml={{ base: 0, md: 60 }}>
-        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"60vw"}>
+        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"100vw"}>
           <Text mt="38px" ml="40px" fontSize="2xl">
-            INI PAGE KASIR!
+           INI PAGE ADMIN!
           </Text>
         </Box>
       </Flex>
@@ -16,4 +16,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Admin;
