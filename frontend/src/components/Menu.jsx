@@ -1,7 +1,7 @@
 import { Box, Flex, HStack, Text } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
 
-function Home() {
+function Menu() {
   return (
     <>
       <Flex direction={"row"} ml={{ base: 0, md: 60 }}>

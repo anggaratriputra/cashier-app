@@ -7,7 +7,7 @@ import Reports from "./Reports";
 import Settings from "./Settings";
 
 const SidebarContent = ({ onClose, ...rest }) => {
-  const [activeItem, setActiveItem] = useState("home"); // Initialize with the default active item
+  const [activeItem, setActiveItem] = useState("addProduct"); // Initialize with the default active item
 
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
@@ -25,9 +25,11 @@ const SidebarContent = ({ onClose, ...rest }) => {
 
       {/* Sidebar Navigation */}
       <Flex direction="column">
-        <NavItem icon={FiHome} name="Cashier" isActive={activeItem === "home"} onClick={() => setActivePage("home")} />
-        <NavItem icon={FiTrendingUp} name="Reports" isActive={activeItem === "reports"} onClick={() => setActivePage("reports")} />
+        <NavItem icon={FiHome} name="Add Product" isActive={activeItem === "addProduct"} onClick={() => setActivePage("addProduct")} />
+        <NavItem icon={FiTrendingUp} name="Product List" isActive={activeItem === "listProduct"} onClick={() => setActivePage("listProduct")} />
+        <NavItem icon={FiSettings} name="Cashier List" isActive={activeItem === "cashier"} onClick={() => setActivePage("cashier")} />
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => setActivePage("settings")} />
+      
       </Flex>
     </Box>
   );
