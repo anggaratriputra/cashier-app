@@ -2,21 +2,14 @@ import React, { useState } from "react";
 import { Icon, Flex, Text, Image, CloseButton, Box, useColorModeValue } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiSettings, FiMenu } from "react-icons/fi";
 
-const SidebarContent = ({ onClose, ...rest }) => {
-  const [activeItem, setActiveItem] = useState("addProduct"); // Initialize with the default active item
-
-  const setActivePage = (itemName) => {
-    setActiveItem(itemName);
-  };
-
+const AdminSidebar = ({setActivePage, activeItem }) => {
   return (
-    <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh" {...rest}>
+    <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">
       {/* Sidebar Header */}
       <Flex h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex gap={2} alignItems="center" justifyContent="center">
           <Image src="https://i.ibb.co/LzsMhD0/mekdilogo2.png" w={"90%"} />
         </Flex>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
 
       {/* Sidebar Navigation */}
@@ -67,4 +60,4 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
   );
 };
 
-export default SidebarContent;
+export default AdminSidebar;

@@ -6,8 +6,8 @@ function Cashier() {
     <>
       <Flex direction={"row"} ml={{ base: 0, md: 60 }}>
         <Box bgColor={"#f7f7f7"} h={"100vh"} w={"100vw"}>
-          <Text mt="38px" ml="40px" fontSize="2xl">
-           INI CASHIER LIST
+          <Text fontWeight="bold" mt="38px" ml="40px" fontSize="2xl">
+            
            </Text>
         </Box>
       </Flex>
