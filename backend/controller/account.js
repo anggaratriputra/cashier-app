@@ -48,6 +48,8 @@ exports.handleLogin = async (req, res) => {
           email: account.email,
           username: account.username,
           photoProfile: account.photoProfile,
+          isAdmin: account.isAdmin,
+          isValid: account.isValid,
         },
         }
   
