@@ -17,52 +17,35 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleSubmit = (values, forms) => {
-    api
-      .get(`/users?q=${values.username}`)
-      .then((res) => {
-        const { data } = res;
-        const filteredUser = data
-          .filter((user) => {
-            return user.username === values.username;
-          })
-          .filter((user) => user.password === values.password);
-        if (filteredUser.length === 0) {
-          toast({
-            status: "error",
-            title: "Login failed",
-            description: "incorrect username or password",
-            isClosable: true,
-            duration: 5000,
-          });
-          forms.setSubmitting(false);
-          return;
-        }
-        const [userProfile] = filteredUser;
-        dispatch(login(userProfile));
-
-        toast({
-          status: "success",
-          title: "Login is success",
-          description: "Redirecting you to timeline",
-          isClosable: true,
-          duration: 3000,
-          onCloseComplete: () => {
-            forms.resetForm();
-            navigate("/Home");
-          },
-        });
-      })
-      .catch((error) => {
-        toast({
-          status: "error",
-          title: "Something wrong",
-          description: error.message,
-          isClosable: true,
-          duration: 5000,
-        });
-        forms.resetForm();
+  const loginUser = async (username, password) => {
+    try {
+      const response = await api.post('/login', {
+        user_identity: username ,
+        password,
       });
+  
+      // Handle the response from the server
+      if (response.status === 200) {
+        // Successful login, do something with the response data
+        const userData = response.data;
+        navigate("/home")
+      } else {
+        // Handle other response statuses (e.g., authentication failed)
+       
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error('Error:', error);
+    }
+  };
+
+  const handleSubmit = (values, forms) => {
+    const { username, password } = values;
+    
+    // Call the loginUser function to send the POST request to the back end
+    loginUser(username, password);
+  
+    // Rest of your form submission logic
   };
 
   const loginSchema = yup.object().shape({

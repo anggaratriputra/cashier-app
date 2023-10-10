@@ -1,10 +1,12 @@
 const express = require("express");
 const PORT = 8000;
+const cors = require("cors")
 require("dotenv").config({
   path: __dirname + "/../.env"
 });
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const productRouter = require("./routes/product")
