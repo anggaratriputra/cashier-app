@@ -5,9 +5,9 @@ const authController = require("../controller/account");
 const authMiddleware = require("../middleware/auth");
 
  router.post("/", authController.handleLogin);
- router.patch("/account",
- authMiddleware.validateToken,
- authController.updateAccount);
+//  router.patch("/account",
+//  authMiddleware.validateToken,
+//  authController.updateAccount);
 
 
 module.exports = router;
