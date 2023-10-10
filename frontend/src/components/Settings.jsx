@@ -1,14 +1,19 @@
 import { Box, Flex, HStack, Text } from "@chakra-ui/react";
 import AdminSidebar from "./AdminSidebar";
+import { useState } from "react";
 
 function Settings() {
+  const [activeItem, setActiveItem] = useState("settings");
+  const setActivePage = (itemName) => {
+    setActiveItem(itemName);
+  };
   return (
     <>
+<AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
       <Flex direction={"row"} ml={{ base: 0, md: 60 }}>
         <Box bgColor={"#f7f7f7"} h={"100vh"} w={"100vw"}>
-          <Text mt="38px" ml="40px" fontSize="2xl">
-            {" "}
-            <b>SETTINGS </b>
+          <Text fontWeight="bold" mt="38px" ml="40px" fontSize="2xl">
+            Settings
           </Text>
         </Box>
       </Flex>

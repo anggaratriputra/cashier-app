@@ -4,13 +4,11 @@ import { FiHome, FiTrendingUp, FiSettings, FiMenu } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 
-const SidebarContent = ({ onClose, ...rest }) => {
-  const [activeItem, setActiveItem] = useState("addProduct"); // Initialize with the default active item
+const AdminSidebar = ({ activeItem  }) => {
+ 
   const navigate = useNavigate()
 
-  const setActivePage = (itemName) => {
-    setActiveItem(itemName);
-  };
+ 
 
   return (
     <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">
@@ -23,8 +21,8 @@ const SidebarContent = ({ onClose, ...rest }) => {
 
       {/* Sidebar Navigation */}
       <Flex direction="column">
-        <NavItem icon={FiHome} name="Add Product" isActive={activeItem === "addProduct"} onClick={() => navigate("/admin/addProduct")} />
-        <NavItem icon={FiTrendingUp} name="Product List" isActive={activeItem === "listProduct"} onClick={() => navigate("/admin/listProduct")} />
+        <NavItem icon={FiHome} name="Add Product" isActive={activeItem === "addProduct"} onClick={() => navigate("/admin/addproduct")} />
+        <NavItem icon={FiTrendingUp} name="Product List" isActive={activeItem === "listProduct"} onClick={() => navigate("/admin/listproduct")} />
         <NavItem icon={FiSettings} name="Cashier List" isActive={activeItem === "cashier"}  onClick={() => navigate("/admin/cashier")} />
         <NavItem icon={FiSettings} name="Reports" isActive={activeItem === "reports"} onClick={() => navigate("/admin/reports")} />
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"}  onClick={() => navigate("/admin/settings")} />
