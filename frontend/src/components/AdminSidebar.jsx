@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import { Icon, Flex, Text, Image, CloseButton, Box, useColorModeValue } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiSettings, FiMenu } from "react-icons/fi";
 
-import Home from "../pages/Home";
-import Reports from "./Reports";
-import Settings from "./Settings";
-
 const SidebarContent = ({ onClose, ...rest }) => {
   const [activeItem, setActiveItem] = useState("addProduct"); // Initialize with the default active item
 
@@ -28,6 +24,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <NavItem icon={FiHome} name="Add Product" isActive={activeItem === "addProduct"} onClick={() => setActivePage("addProduct")} />
         <NavItem icon={FiTrendingUp} name="Product List" isActive={activeItem === "listProduct"} onClick={() => setActivePage("listProduct")} />
         <NavItem icon={FiSettings} name="Cashier List" isActive={activeItem === "cashier"} onClick={() => setActivePage("cashier")} />
+        <NavItem icon={FiSettings} name="Reports" isActive={activeItem === "reports"} onClick={() => setActivePage("reports")} />
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => setActivePage("settings")} />
       
       </Flex>
