@@ -35,7 +35,7 @@ exports.handleLogin = async (req, res) => {
         });
         return;
       }
-      const payload = { id: account.id, isAdmin: account.isAdmin, isValid: account.isValid };
+      const payload = { id: account.id, isAdmin: account.isAdmin, isActive: account.isActive };
       const token = jwt.sign(payload, JWT_SECRET_KEY, {
         expiresIn: "1h",
       });
@@ -49,7 +49,7 @@ exports.handleLogin = async (req, res) => {
           username: account.username,
           photoProfile: account.photoProfile,
           isAdmin: account.isAdmin,
-          isValid: account.isValid,
+          isActive: account.isActive,
         },
         }
   

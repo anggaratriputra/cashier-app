@@ -51,7 +51,7 @@ exports.checkRole = (req, res, next) => {
   });
 };
 exports.checkRoleUser = (req, res, next) => {
-  if (req.user.isValid === true) {
+  if (req.user.isActive === true) {
     next();
     return;
   }
