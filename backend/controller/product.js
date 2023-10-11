@@ -120,9 +120,18 @@ exports.deactivateProduct = async (req, res) => {
 };
 
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.findAll();
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
 
-  if (!products) {
+  const offset = (page - 1) * limit;
+    // Find tickets associated with the user's account
+    const { count, rows: products } = await Product.findAndCountAll({
+      limit,
+      offset,
+      order: [["updatedAt", "DESC"]],
+    });
+
+  if (!products || products.length === 0) {
     return res.status(404).json({
       ok: false,
       message: "No products found!",
@@ -131,6 +140,10 @@ exports.getAllProducts = async (req, res) => {
 
   res.status(200).json({
     ok: true,
-    detail: products,
+    pagination: {
+      totalData: count,
+      page
+    },
+    details: products,
   });
 };
