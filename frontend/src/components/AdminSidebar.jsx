@@ -1,22 +1,24 @@
 import React from "react";
-import { Icon, Flex,  Image,  Box, useColorModeValue } from "@chakra-ui/react";
+import { Icon, Flex, Image, Box, useColorModeValue, Text } from "@chakra-ui/react";
 import { FiTrendingUp, FiSettings } from "react-icons/fi";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import { FaCashRegister } from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import { MdFastfood } from "react-icons/md";
 
-
-const AdminSidebar = ({ activeItem  }) => {
- 
-  const navigate = useNavigate()
+const AdminSidebar = ({ activeItem }) => {
+  const navigate = useNavigate();
 
   return (
     <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">
       {/* Sidebar Header */}
-      <Flex h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
-        <Flex gap={2} alignItems="center" justifyContent="center">
+      <Flex direction="column" h="20" alignItems="center" mx="8" mt={4} mb={20} justifyContent="space-between">
+        <Flex alignItems="center" justifyContent="center">
           <Image src="https://i.ibb.co/LzsMhD0/mekdilogo2.png" w={"90%"} />
+        </Flex>
+        <Flex>
+        <Text fontWeight={"bold"}> ADMINISTRATOR</Text>
         </Flex>
       </Flex>
 
@@ -25,10 +27,10 @@ const AdminSidebar = ({ activeItem  }) => {
         <NavItem icon={BiMessageSquareAdd} name="Add Product" isActive={activeItem === "addProduct"} onClick={() => navigate("/admin/addproduct")} />
         <NavItem icon={BiMessageSquareAdd} name="Update Product" isActive={activeItem === "updateProduct"} onClick={() => navigate("/admin/products/update")} />
         <NavItem icon={BiMessageSquareAdd} name="Category Product" isActive={activeItem === "category"} onClick={() => navigate("/admin/category")} />
-        <NavItem icon={FiTrendingUp} name="Product List" isActive={activeItem === "listProduct"} onClick={() => navigate("/admin/listproduct")} />
-        <NavItem icon={FaCashRegister} name="Cashier List" isActive={activeItem === "cashier"}  onClick={() => navigate("/admin/cashier")} />
+        <NavItem icon={MdFastfood} name="Product List" isActive={activeItem === "listProduct"} onClick={() => navigate("/admin/listproduct")} />
+        <NavItem icon={FaCashRegister} name="Cashier List" isActive={activeItem === "cashier"} onClick={() => navigate("/admin/cashier")} />
         <NavItem icon={TbReportSearch} name="Reports" isActive={activeItem === "reports"} onClick={() => navigate("/admin/reports")} />
-        <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"}  onClick={() => navigate("/admin/settings")} />
+        <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => navigate("/admin/settings")} />
       </Flex>
     </Box>
   );
@@ -52,7 +54,8 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
       }}
       backgroundColor={isActive ? activeBgColor : ""}
       color={isActive ? activeColor : ""}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       {icon && (
         <Icon
           mr="4"

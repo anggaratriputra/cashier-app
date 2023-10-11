@@ -12,39 +12,28 @@ function ListProduct() {
   const productsPerPage = 8; // Number of products to display per page
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [productIdForStatusChange, setProductIdForStatusChange] = useState(null);
-  const [sortCriteria, setSortCriteria] = useState("Alphabetical (A-Z)");
+  const [sortCriteria, setSortCriteria] = useState("alphabetical-asc"); // Default sorting criteria that matches the backend
+  const [totalData, setTotalData] = useState(0);
 
   // Fetch data from the backend API
   useEffect(() => {
-    api
-      .get(`/products?page=${currentPage}&limit=${productsPerPage}`)
-      .then((response) => {
-        // Assuming your API response has a "details" property with an array of products
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get(`/products?page=${currentPage}&limit=${productsPerPage}&sort=${sortCriteria}`);
         const productData = response.data.details;
-
-        // Sort the products based on the selected criteria
-        let sortedProducts = productData; // Start with the default order
-
-        if (sortCriteria === "Alphabetical (A-Z)") {
-          sortedProducts = productData.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortCriteria === "Alphabetical (Z-A)") {
-          sortedProducts = productData.sort((a, b) => b.name.localeCompare(a.name));
-        } else if (sortCriteria === "Price (Low to High)") {
-          sortedProducts = productData.sort((a, b) => a.price - b.price);
-        } else if (sortCriteria === "Price (High to Low)") {
-          sortedProducts = productData.sort((a, b) => b.price - a.price);
-        }
-
-        setProducts(sortedProducts);
+        setProducts(productData);
 
         // Calculate the total number of pages based on the total data count
         const totalData = response.data.pagination.totalData;
         const totalPages = Math.ceil(totalData / productsPerPage);
+        setTotalData(totalData);
         setTotalPages(totalPages);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
+      }
+    };
+
+    fetchProducts();
   }, [currentPage, sortCriteria]);
 
   const setActivePage = (itemName) => {
@@ -52,13 +41,11 @@ function ListProduct() {
   };
 
   const handlePageChange = (newPage) => {
-    // Ensure the new page is within bounds
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
 
-  // Function to format a number as Indonesian Rupiah
   const formatToRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -67,42 +54,37 @@ function ListProduct() {
   };
 
   const openConfirmationModal = (productId) => {
-    // Set the productId for status change
     setProductIdForStatusChange(productId);
     onOpen();
   };
 
   const handleToggleAvailability = (productId) => {
-    // Open the confirmation modal with the productId
     openConfirmationModal(productId);
   };
 
   const handleConfirmStatusChange = () => {
-    // Find the product by its ID in your products state
     const updatedProducts = products.map((product) => {
       if (product.id === productIdForStatusChange) {
-        // Toggle the isActive property
         return { ...product, isActive: !product.isActive };
       }
       return product;
     });
 
-    // Update the products state with the updatedProducts array
     setProducts(updatedProducts);
-
-    // Close the confirmation modal
     onClose();
-
-    // Clear the productIdForStatusChange
     setProductIdForStatusChange(null);
   };
 
-  // Array of sorting options
-  const sortingOptions = ["Alphabetical (A-Z)", "Alphabetical (Z-A)", "Price (Low to High)", "Price (High to Low)"];
+  const sortingOptions = [
+    { label: "Alphabetical (A-Z)", value: "alphabetical-asc" },
+    { label: "Alphabetical (Z-A)", value: "alphabetical-desc" },
+    { label: "Price (Low to High)", value: "price-asc" },
+    { label: "Price (High to Low)", value: "price-desc" },
+  ];
 
-  // Event handler for sorting change
   const handleSortChange = (event) => {
-    setSortCriteria(event.target.value);
+    const selectedSortValue = event.target.value;
+    setSortCriteria(selectedSortValue);
   };
 
   return (
@@ -117,8 +99,8 @@ function ListProduct() {
             <Text>Sort By</Text>
             <Select w="200px" value={sortCriteria} onChange={handleSortChange}>
               {sortingOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
+                <option key={option.value} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </Select>
@@ -174,19 +156,22 @@ function ListProduct() {
             </Tbody>
           </Table>
         </Box>
-        <Box display="flex" alignItems="center" justifyContent="right" gap={2} mt="20px" textAlign="right" mr={20}>
-          <Text fontWeight={"bold"}> Page </Text>
-          <Box>
-            <Button key={1} size="sm" onClick={() => handlePageChange(1)} variant={currentPage === 1 ? "solid" : "outline"} mr="5px">
-              1
-            </Button>
-            {totalPages > 1 &&
-              Array.from({ length: totalPages - 1 }, (_, index) => (
-                <Button key={index + 2} size="sm" onClick={() => handlePageChange(index + 2)} variant={currentPage === index + 2 ? "solid" : "outline"} mr="5px">
-                  {index + 2}
-                </Button>
-              ))}
-          </Box>
+        <Box display="flex" alignItems="center" justifyContent="space-between" mx={20} gap={2} mt="20px" textAlign="right" mr={20}>
+          <Text fontWeight={"bold"}> Total Data : {totalData} </Text>
+          <Flex alignItems={"center"} gap={2}>
+            <Text fontWeight={"bold"}> Page </Text>
+            <Box>
+              <Button key={1} size="sm" onClick={() => handlePageChange(1)} variant={currentPage === 1 ? "solid" : "outline"} mr="5px">
+                1
+              </Button>
+              {totalPages > 1 &&
+                Array.from({ length: totalPages - 1 }, (_, index) => (
+                  <Button key={index + 2} size="sm" onClick={() => handlePageChange(index + 2)} variant={currentPage === index + 2 ? "solid" : "outline"} mr="5px">
+                    {index + 2}
+                  </Button>
+                ))}
+            </Box>
+          </Flex>
         </Box>
       </Flex>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
