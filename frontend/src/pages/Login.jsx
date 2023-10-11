@@ -20,24 +20,28 @@ function Login() {
   const login = async (username, password) => {
     try {
       const response = await api.post('/login', {
-        user_identity: username ,
+        user_identity: username,
         password,
       });
-  
+    
       // Handle the response from the server
       if (response.status === 200) {
-        // Successful login, do something with the response data
-        const userData = response.data;
-        navigate("/home")
+  
+        const responseData = response.data;
+        const token = responseData.data.token;
+        const isAdmin = responseData.data.profile.isAdmin === true;
+        localStorage.setItem('token', token);
+        
+        if (isAdmin) {
+        navigate("/admin/addproduct");
       } else {
-        // Handle other response statuses (e.g., authentication failed)
-       
+        navigate("/home");
       }
-    } catch (error) {
-      // Handle network errors or other exceptions
-      console.error('Error:', error);
     }
-  };
+    } catch (error) {
+    console.error('Error:', error);
+  }
+};
 
   const handleSubmit = (values, forms) => {
     const { username, password } = values;

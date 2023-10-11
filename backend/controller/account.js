@@ -65,28 +65,122 @@ exports.handleLogin = async (req, res) => {
     }
   };
   
+  exports.updateAccount = async (req, res) => {
+    const { username } = req.params;
+    const { userName, firstName, lastName, password } = req.body;
+
+    const filename = req.file?.filename;
+    const photoProfile = filename;
   
-  exports.handleUploadPhotoProfile = async (req, res) => {
-  const {filename} = req.file;
-  const {id: accountId} = req.user;
   
-  try {
-  const profile = await Account.findOne({ where: { accountId, } }); 
-  if (profile.photoProfile) {
-    fs.rmSync(__dirname + "/../public/" + profile.photoProfile);
-  }
+    try {
+      const account = await Account.findOne({ where: { username } });
   
-  profile.photoProfile = filename;
-  await profile.save();
+      if (!account) {
+        return res.status(404).json({
+          ok: false,
+          message: "Account Not Found!",
+        });
+      }
   
-  res.json({
-    ok: true,
-    date: "Profile picture updated",
-  });
-  } catch(error) {
-    res.status(500).json({
-      ok: false,
-      message: String(error),
-    })
-  }
+      account.username = userName;
+      account.firstName = firstName;
+      account.lastName = lastName;
+      account.password = password;
+      if (photoProfile) {
+        account.photoProfile = photoProfile;
+      }
+      await account.save();
+
+      res.status(200).json({
+        ok: true,
+        message: "Account updated successfully!",
+        detail: account,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        ok: false,
+        message: "Failed to update account!",
+        detail: String(error),
+      });
+    }
+  };
+
+  exports.getAllAccounts = async (req, res) => {
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const sort = req.query.sort; // Get the sorting parameter from the query
+    const search = req.query.search; // Get the search query from the query
+  
+    try {
+      const filter = {
+        where: {},
+      };
+  
+  
+      // Apply search query filter using Sequelize's Op.like
+      if (search) {
+        filter.where.name = {
+          [Op.like]: `%${search}%`,
+        };
+      }
+  
+      // Include sorting options
+      if (sort) {
+        if (sort === 'alphabetical-asc') {
+          filter.order = [['name', 'ASC']];
+        } else if (sort === 'alphabetical-desc') {
+          filter.order = [['name', 'DESC']];
+        } else if (sort === 'price-asc') {
+          filter.order = [['price', 'ASC']];
+        } else if (sort === 'price-desc') {
+          filter.order = [['price', 'DESC']];
+        }
+      }
+  
+      // Apply pagination
+      filter.limit = limit;
+      filter.offset = (page - 1) * limit;
+  
+      const account = await Account.findAndCountAll(filter);
+  
+      if (!account || account.count === 0) {
+        return res.status(404).json({
+          ok: false,
+          message: 'No account found!',
+        });
+      }
+  
+      res.status(200).json({
+        ok: true,
+        pagination: {
+          totalData: account.count,
+          page: page,
+        },
+        details: account.rows,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({
+        ok: false,
+        message: 'Internal server error',
+      });
+    }
+  };
+
+  exports.getSingleAccount = async (req, res) => {
+    const { username } = req.params;
+    const account = await Account.findOne({ where: { username } });
+  
+    if (!account) {
+      res.status(404).json({
+        ok: false,
+        message: "Account Not Found!",
+      });
+    }
+  
+    res.status(200).json({
+      ok: true,
+      detail: account,
+    });
   };
