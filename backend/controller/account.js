@@ -73,9 +73,9 @@ exports.handleLogin = async (req, res) => {
   
     try {
       const account = await Account.findOne({ where: { username } });
-  console.log(account)
+  
       if (!account) {
-        res.status(404).json({
+        return res.status(404).json({
           ok: false,
           message: "Account Not Found!",
         });
@@ -88,42 +88,48 @@ exports.handleLogin = async (req, res) => {
       account.photoProfile = photoProfile;
       await account.save();
   
-      res.status(200).json({
-        ok: true,
-        message: "Account updated successfully!",
-        detail: account,
-      });
+      const { filename } = req.file;
+      const { id: accountId } = req.user;
+  
+      try {
+        const profile = await Account.findOne({ where: { username } });
+        if (profile) {
+          // Check if a profile exists before updating the profile picture
+          if (profile.profilePicture) {
+            // Delete old profile picture
+            fs.rmSync(__dirname + "/../public/" + profile.profilePicture);
+          }
+  
+          profile.profilePicture = filename;
+          await profile.save();
+  
+          res.json({
+            ok: true,
+            data: "Profile picture updated",
+          });
+        } else {
+          return res.status(404).json({
+            ok: false,
+            message: "Profile Not Found!",
+          });
+        }
+      } catch (error) {
+        return res.status(500).json({
+          ok: false,
+          message: String(error),
+        });
+      }
     } catch (error) {
-      res.status(400).json({
+      return res.status(400).json({
         ok: false,
         message: "Failed to update account!",
         detail: String(error),
       });
     }
-  };
-  
-  exports.uploadPhoto = async (req, res) => {
-    const { filename } = req.file;
-    const { id: accountId } = req.user;
-  
-    try {
-      const profile = await Profile.findOne({ where: { accountId } });
-      if (profile.profilePicture) {
-        // delete old profile picture
-        fs.rmSync(__dirname + "/../public/" + profile.profilePicture);
-      }
-  
-      profile.profilePicture = filename;
-      await profile.save();
-  
-      res.json({
-        ok: true,
-        data: "Profile picture updated",
-      });
-    } catch (error) {
-      res.status(500).json({
-        ok: false,
-        message: String(error),
-      });
-    }
+
+    res.status(200).json({
+      ok: true,
+      message: "Account updated successfully!",
+      detail: account,
+    });
   };
