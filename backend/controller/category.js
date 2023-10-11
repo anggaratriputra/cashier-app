@@ -23,11 +23,11 @@ exports.createCategory = async (req, res) => {
 };
 
 exports.editCategory = async (req, res) => {
-  const { name } = req.params;
+  const { id } = req.params;
   const { newName } = req.body;
 
   try {
-    const category = await Category.findOne({ where: { name } });
+    const category = await Category.findByPk(id);
 
     if (!category) {
       return res.status(404).json({
