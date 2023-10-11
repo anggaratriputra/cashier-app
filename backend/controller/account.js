@@ -67,7 +67,9 @@ exports.handleLogin = async (req, res) => {
   
   exports.updateAccount = async (req, res) => {
     const { username } = req.params;
-    const { userName, firstName, lastName, password, photoProfile } = req.body;
+    const { userName, firstName, lastName, password } = req.body;
+    const { filename } = req.file;
+    const photoProfile = filename;
   
     console.log(req.file);
   
@@ -87,38 +89,12 @@ exports.handleLogin = async (req, res) => {
       account.password = password;
       account.photoProfile = photoProfile;
       await account.save();
-  
-      const { filename } = req.file;
-      const { id: accountId } = req.user;
-  
-      try {
-        const profile = await Account.findOne({ where: { username } });
-        if (profile) {
-          // Check if a profile exists before updating the profile picture
-          if (profile.profilePicture) {
-            // Delete old profile picture
-            fs.rmSync(__dirname + "/../public/" + profile.profilePicture);
-          }
-  
-          profile.profilePicture = filename;
-          await profile.save();
-  
-          res.json({
-            ok: true,
-            data: "Profile picture updated",
-          });
-        } else {
-          return res.status(404).json({
-            ok: false,
-            message: "Profile Not Found!",
-          });
-        }
-      } catch (error) {
-        return res.status(500).json({
-          ok: false,
-          message: String(error),
-        });
-      }
+
+      res.status(200).json({
+        ok: true,
+        message: "Account updated successfully!",
+        detail: account,
+      });
     } catch (error) {
       return res.status(400).json({
         ok: false,
@@ -126,10 +102,4 @@ exports.handleLogin = async (req, res) => {
         detail: String(error),
       });
     }
-
-    res.status(200).json({
-      ok: true,
-      message: "Account updated successfully!",
-      detail: account,
-    });
   };
