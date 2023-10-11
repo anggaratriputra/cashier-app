@@ -4,12 +4,13 @@ import * as Yup from "yup";
 import AdminSidebar from "./AdminSidebar";
 import { useEffect, useState } from "react";
 import api from "../api";
+import ListUpdate from "./ListUpdate";
 
 export default function Category() {
   const [activeItem, setActiveItem] = useState("category");
   const [categories, setCategories] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [categoryName, setCategoryName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const toast = useToast();
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
@@ -85,12 +86,28 @@ export default function Category() {
     }
   };
 
-  const handleEditCategory = async (category) => {
+  const handleSaveCategory = async (categoryId, newName) => {
     try {
-      const { name, newName } = category;
-      await api.put(`/categories/${name}`, { newName });
-      category.name = newName;
-      setIsEditing(false);
+      const response = await api.put(`/categories/${categoryId}`, { newName });
+      if (response.data.ok) {
+        // Update the UI with the new category name if the API call is successful
+        const updatedCategories = categories.map((category) => {
+          if (category.id === categoryId) {
+            return { ...category, name: newName };
+          } else {
+            return category;
+          }
+        });
+        setCategories(updatedCategories);
+      } else {
+        toast({
+          title: "Error!",
+          description: "Error updating category. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       toast({
         title: "Error!",
@@ -131,34 +148,27 @@ export default function Category() {
               categories.map((category, index) => (
                 <div key={index}>
                   <Box display={"flex"} w={"80vw"} h={"10%"} alignItems={"center"}>
-                    {isEditing ? (
-                      <Box display={"flex"} w={"100vw"} my={"5px"}>
-                        <Input type="text" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
-                        <Button colorScheme="teal" onClick={() => handleEditCategory(category)}>
-                          Save
-                        </Button>
-                      </Box>
-                    ) : (
-                      <Box display={"flex"} w={"100vw"} my={"5px"}>
-                        <Text fontSize={"20px"} minW={"70vw"}>
-                          {category.name}
-                        </Text>
-                        <Button colorScheme="red" onClick={() => handleDeleteCategory(category.name)}>
-                          Delete
-                        </Button>
-                        <Button
-                          colorScheme="blue"
-                          onClick={() => {
-                            setIsEditing(true);
-                          }}>
-                          Edit
-                        </Button>
-                      </Box>
-                    )}
+                    <Box display={"flex"} w={"100vw"} my={"5px"}>
+                      <Text fontSize={"20px"} minW={"70vw"}>
+                        {category.name}
+                      </Text>
+                      <Button colorScheme="red" onClick={() => handleDeleteCategory(category.name)}>
+                        Delete
+                      </Button>
+                      <Button
+                        colorScheme="blue"
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setSelectedCategory(category);
+                        }}>
+                        Edit
+                      </Button>
+                    </Box>
                   </Box>
                 </div>
               ))
             )}
+            <ListUpdate isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveCategory} categoryToEdit={selectedCategory} />
           </Box>
         </Box>
       </Flex>

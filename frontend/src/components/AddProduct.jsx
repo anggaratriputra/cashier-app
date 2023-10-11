@@ -38,12 +38,12 @@ function AddProduct() {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const formData = new formData();
+        const formData = new FormData();
         formData.append("name", values.name);
         formData.append("price", values.price);
         formData.append("category", values.category);
         formData.append("description", values.description);
-        formData.append("image", values.image);
+        formData.append("img", values.image);
 
         // Send a POST request to API to update the data in the MySQL database
         await api.post("/products/create", formData, {
