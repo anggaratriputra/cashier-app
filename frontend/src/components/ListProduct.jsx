@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, Text, Table, Thead, Tbody, Tr, Th, Td, Button, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { Box, Flex, Text, Table, Thead, Tbody, Tr, Th, Td, Button, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Select } from "@chakra-ui/react";
+import { FaCheck, FaEdit, FaTimes } from "react-icons/fa";
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
 
@@ -12,6 +12,7 @@ function ListProduct() {
   const productsPerPage = 8; // Number of products to display per page
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [productIdForStatusChange, setProductIdForStatusChange] = useState(null);
+  const [sortCriteria, setSortCriteria] = useState("Alphabetical (A-Z)");
 
   // Fetch data from the backend API
   useEffect(() => {
@@ -20,7 +21,21 @@ function ListProduct() {
       .then((response) => {
         // Assuming your API response has a "details" property with an array of products
         const productData = response.data.details;
-        setProducts(productData);
+
+        // Sort the products based on the selected criteria
+        let sortedProducts = productData; // Start with the default order
+
+        if (sortCriteria === "Alphabetical (A-Z)") {
+          sortedProducts = productData.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortCriteria === "Alphabetical (Z-A)") {
+          sortedProducts = productData.sort((a, b) => b.name.localeCompare(a.name));
+        } else if (sortCriteria === "Price (Low to High)") {
+          sortedProducts = productData.sort((a, b) => a.price - b.price);
+        } else if (sortCriteria === "Price (High to Low)") {
+          sortedProducts = productData.sort((a, b) => b.price - a.price);
+        }
+
+        setProducts(sortedProducts);
 
         // Calculate the total number of pages based on the total data count
         const totalData = response.data.pagination.totalData;
@@ -30,7 +45,7 @@ function ListProduct() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [currentPage]);
+  }, [currentPage, sortCriteria]);
 
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
@@ -82,6 +97,14 @@ function ListProduct() {
     setProductIdForStatusChange(null);
   };
 
+  // Array of sorting options
+  const sortingOptions = ["Alphabetical (A-Z)", "Alphabetical (Z-A)", "Price (Low to High)", "Price (High to Low)"];
+
+  // Event handler for sorting change
+  const handleSortChange = (event) => {
+    setSortCriteria(event.target.value);
+  };
+
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
@@ -90,8 +113,18 @@ function ListProduct() {
           <Text fontWeight="bold" fontSize="2xl">
             Product List
           </Text>
+          <Flex gap={4} justifyContent={"right"} alignItems={"center"} mr="40px">
+            <Text>Sort By</Text>
+            <Select w="200px" value={sortCriteria} onChange={handleSortChange}>
+              {sortingOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </Select>
+          </Flex>
         </Box>
-        <Box bgColor="white" mt="38px" mx="40px" h="65vh" borderRadius={15} boxShadow={"lg"}>
+        <Box bgColor="white" mt="18px" mx="40px" h="65vh" borderRadius={15} boxShadow={"lg"}>
           <Table variant="simple">
             <Thead>
               <Tr>
@@ -120,12 +153,18 @@ function ListProduct() {
                       {product.isActive ? (
                         <>
                           <Text>Available</Text>
-                          <IconButton colorScheme="green" aria-label="Available" icon={<FaTimes />} size="sm" mr="2" onClick={() => handleToggleAvailability(product.id)} />
+                          <Flex>
+                            <IconButton colorScheme="green" aria-label="Available" icon={<FaTimes />} size="sm" mr="2" onClick={() => handleToggleAvailability(product.id)} />
+                            <IconButton colorScheme="blue" aria-label="Edit" icon={<FaEdit />} size="sm" mr="2" />
+                          </Flex>
                         </>
                       ) : (
                         <>
-                          <Text>Not Available</Text>
-                          <IconButton colorScheme="red" aria-label="Not Available" icon={<FaCheck />} size="sm" mr="2" onClick={() => handleToggleAvailability(product.id)} />
+                          <Text fontWeight={"bold"}> Not Available</Text>
+                          <Flex>
+                            <IconButton colorScheme="red" aria-label="Not Available" icon={<FaCheck />} size="sm" mr="2" onClick={() => handleToggleAvailability(product.id)} />
+                            <IconButton colorScheme="blue" aria-label="Edit" icon={<FaEdit />} size="sm" mr="2" />
+                          </Flex>
                         </>
                       )}
                     </Flex>

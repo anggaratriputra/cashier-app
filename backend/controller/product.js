@@ -128,7 +128,6 @@ exports.getAllProducts = async (req, res) => {
     const { count, rows: products } = await Product.findAndCountAll({
       limit,
       offset,
-      order: [["updatedAt", "DESC"]],
     });
 
   if (!products || products.length === 0) {
@@ -145,5 +144,22 @@ exports.getAllProducts = async (req, res) => {
       page
     },
     details: products,
+  });
+};
+
+exports.getSingleProduct = async (req, res) => {
+  const { name } = req.params;
+  const product = await Product.findOne({ where: { name } });
+
+  if (!product) {
+    res.status(404).json({
+      ok: false,
+      message: "Product Not Found!",
+    });
+  }
+
+  res.status(200).json({
+    ok: true,
+    detail: product,
   });
 };

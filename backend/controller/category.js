@@ -1,4 +1,4 @@
-const { Category, Product } = require("../models");
+const { Category } = require("../models");
 
 exports.createCategory = async (req, res) => {
   const { name } = req.body;
@@ -7,10 +7,6 @@ exports.createCategory = async (req, res) => {
     const result = await Category.create({
       name,
     });
-
-    // await Product.create({
-    //   categoryId: result.id,
-    // });
 
     res.status(201).json({
       ok: true,
