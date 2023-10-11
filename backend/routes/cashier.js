@@ -2,11 +2,20 @@ const express = require("express");
 const router = express.Router();
 
 const cashierController = require("../controller/cashier");
+const cashierValidator = require("../middleware/validation/cashier")
 
 // Get all cashiers
-router.get("/", cashierController.getAllCashier);
+router.get("/", cashierController.getAllCashiers);
 
 // Toggle cashier status (GET request for simplicity; consider using POST or PUT for better REST practices)
 router.put("/:cashierId/toggle-status", cashierController.toggleCashierStatus);
 
+// Add new cashiers
+router.post(
+    "/register", 
+  cashierValidator.registerValidationRules,
+  cashierValidator.applyRegisterValidation,
+   cashierController.handleRegister
+   );
+  
 module.exports = router;

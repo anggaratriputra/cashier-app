@@ -1,57 +1,71 @@
-const { Account } = require("../models");
 const { Op } = require("sequelize");
+const { Account } = require("../models");
+const bcrypt = require("bcrypt");
 
-exports.getAllCashier = async (req, res) => {
+exports.getAllCashiers = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
-
-  const offset = (page - 1) * limit;
+  const sort = req.query.sort; // Get the sorting parameter from the query
+  const search = req.query.search; // Get the search query from the query
 
   try {
-    const { count, rows: cashiers } = await Account.findAndCountAll({
-      limit,
-      offset,
+    const filter = {
       where: {
-        isAdmin: {
-          [Op.or]: [false, 0],
-        },
+        isAdmin: false, // Adding the condition to filter by isAdmin = false
       },
-      order: [["id", "ASC"]],
-    });
+    };
 
-    if (!cashiers || cashiers.length === 0) {
+    // Apply search query filter using Sequelize's Op.or to search across multiple fields
+    if (search) {
+      filter.where[Op.or] = [
+        {
+          username: { [Op.like]: `%${search}%` },
+        },
+        {
+          lastName: { [Op.like]: `%${search}%` },
+        },
+        {
+          firstName: { [Op.like]: `%${search}%` },
+        },
+      ];
+    }
+
+    // Include sorting options
+    if (sort) {
+      if (sort === "alphabetical-asc") {
+        filter.order = [["username", "ASC"]];
+      } else if (sort === "alphabetical-desc") {
+        filter.order = [["username", "DESC"]];
+      }
+    }
+
+    // Apply pagination
+    filter.limit = limit;
+    filter.offset = (page - 1) * limit;
+
+    const cashiers = await Account.findAndCountAll(filter);
+
+    if (!cashiers || cashiers.count === 0) {
       return res.status(404).json({
         ok: false,
-        message: "No cashiers data found!",
+        message: "No cashiers found!",
       });
     }
 
-    // Extract details for each cashier and create an array
-    const cashierDetails = cashiers.map((cashier) => ({
-      id: cashier.id,
-      username: cashier.username,
-      firstName: cashier.firstName,
-      lastName: cashier.lastName,
-      email: cashier.email,
-      isAdmin: cashier.isAdmin,
-      isActive: cashier.isActive,
-      createdAt: cashier.createdAt,
-      updatedAt: cashier.updatedAt,
-    }));
-
-    // Send a 200 OK status along with a JSON response including "data: ok".
     res.status(200).json({
       ok: true,
       pagination: {
-        totalData: count,
-        page,
+        totalData: cashiers.count,
+        page: page,
       },
-      details: cashierDetails,
+      details: cashiers.rows,
     });
   } catch (error) {
-    // Handle errors here
-    console.error(error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error fetching data:", error);
+    res.status(500).json({
+      ok: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -91,5 +105,54 @@ exports.toggleCashierStatus = async (req, res) => {
     // Handle errors here
     console.error(error);
     res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
+exports.handleRegister = async (req, res) => {
+  const { firstName, lastName, username, password, email } = req.body;
+
+  const existingAccount = await Account.findOne({
+    where: {
+      [Op.or]: [{ username }, { email }],
+    },
+  });
+
+  if (existingAccount) {
+    return res.status(400).json({
+      ok: false,
+      error: "Username, email or phone number already exists",
+    });
+  }
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
+
+    const cashier = await Account.create({
+      firstName,
+      lastName,
+      username,
+      password: hashPassword,
+      email,
+      isAdmin: false,
+      isActive: true,
+    });
+    res.json({
+      ok: true,
+      details: {
+        username: cashier.username,
+        email: cashier.email,
+        firstName: cashier.firstName,
+        lastName: cashier.lastName,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      ok: false,
+      message: String(error),
+    });
   }
 };
