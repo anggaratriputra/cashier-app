@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { Icon, Flex, Text, Image, CloseButton, Box, useColorModeValue } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiSettings, FiMenu } from "react-icons/fi";
+import React from "react";
+import { Icon, Flex,  Image,  Box, useColorModeValue } from "@chakra-ui/react";
+import { FiTrendingUp, FiSettings } from "react-icons/fi";
+import { BiMessageSquareAdd } from "react-icons/bi";
+import { FaCashRegister } from "react-icons/fa";
+import { TbReportSearch } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 
 const AdminSidebar = ({ activeItem  }) => {
  
   const navigate = useNavigate()
-
- 
 
   return (
     <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">
@@ -21,10 +22,12 @@ const AdminSidebar = ({ activeItem  }) => {
 
       {/* Sidebar Navigation */}
       <Flex direction="column">
-        <NavItem icon={FiHome} name="Add Product" isActive={activeItem === "addProduct"} onClick={() => navigate("/admin/addproduct")} />
+        <NavItem icon={BiMessageSquareAdd} name="Add Product" isActive={activeItem === "addProduct"} onClick={() => navigate("/admin/addproduct")} />
+        <NavItem icon={BiMessageSquareAdd} name="Update Product" isActive={activeItem === "updateProduct"} onClick={() => navigate("/admin/products/update")} />
+        <NavItem icon={BiMessageSquareAdd} name="Category Product" isActive={activeItem === "category"} onClick={() => navigate("/admin/category")} />
         <NavItem icon={FiTrendingUp} name="Product List" isActive={activeItem === "listProduct"} onClick={() => navigate("/admin/listproduct")} />
-        <NavItem icon={FiSettings} name="Cashier List" isActive={activeItem === "cashier"}  onClick={() => navigate("/admin/cashier")} />
-        <NavItem icon={FiSettings} name="Reports" isActive={activeItem === "reports"} onClick={() => navigate("/admin/reports")} />
+        <NavItem icon={FaCashRegister} name="Cashier List" isActive={activeItem === "cashier"}  onClick={() => navigate("/admin/cashier")} />
+        <NavItem icon={TbReportSearch} name="Reports" isActive={activeItem === "reports"} onClick={() => navigate("/admin/reports")} />
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"}  onClick={() => navigate("/admin/settings")} />
       </Flex>
     </Box>
