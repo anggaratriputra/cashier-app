@@ -27,14 +27,13 @@ function Login() {
       // Handle the response from the server
       if (response.status === 200) {
   
-        const userData = response.data;
-        const token = userData.token;
-        const isAdmin = userData.isAdmin === true;
-
+        const responseData = response.data;
+        const token = responseData.data.token;
+        const isAdmin = responseData.data.profile.isAdmin === true;
         localStorage.setItem('token', token);
         
         if (isAdmin) {
-        navigate("/admin/addproductt");
+        navigate("/admin/addproduct");
       } else {
         navigate("/home");
       }

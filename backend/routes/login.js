@@ -13,7 +13,7 @@ const { validateToken } = require("../middleware/auth");
  router.patch(
   "/profile/:username",
   authMiddleware.validateToken,
-  multerUpload.single("file"),
+  multerUpload.single("photoProfile"),
   authController.updateAccount
 );
 
