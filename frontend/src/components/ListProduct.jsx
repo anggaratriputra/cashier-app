@@ -48,6 +48,7 @@ function AdminValidationModal({ isOpen, onClose, onNavigate }) {
     </Modal>
   );
 }
+import UpdateProductModal from "./UpdateProductModal";
 
 function ListProduct() {
   const [products, setProducts] = useState([]); // State to store product data
@@ -69,6 +70,7 @@ function ListProduct() {
   const isAdmin = profile?.data?.profile?.isAdmin || false;
 
   const [isAdminValidationModalOpen, setIsAdminValidationModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [productIdForEdit, setProductForEdit] = useState("");
   const toast = useToast();
