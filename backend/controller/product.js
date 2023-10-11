@@ -128,7 +128,6 @@ exports.getAllProducts = async (req, res) => {
     const { count, rows: products } = await Product.findAndCountAll({
       limit,
       offset,
-      order: [["updatedAt", "DESC"]],
     });
 
   if (!products || products.length === 0) {
