@@ -24,6 +24,7 @@ import {
   InputGroup,
   InputLeftElement,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
 import { FaCheck, FaEdit, FaSearch, FaTimes } from "react-icons/fa";
 import AdminSidebar from "./AdminSidebar";
@@ -42,6 +43,8 @@ function ListProduct() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
 
+  const toast = useToast();
+
   // Fetch data from the backend API
   useEffect(() => {
     const fetchProducts = async () => {
@@ -57,11 +60,19 @@ function ListProduct() {
 
         setProducts(productData);
       } catch (error) {
-        console.error("Error fetching data:", error);
         if (error?.response?.status == 404) {
           setTotalData(0);
           setTotalPages(0);
           setProducts([]);
+        } else {
+          console.error(error);
+          toast({
+            title: "Error!",
+            description: String(error),
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
         }
       }
     };
@@ -151,7 +162,7 @@ function ListProduct() {
               </Select>
             </Flex>
             <Flex justifyContent={"right"} alignItems={"center"} mr="0px">
-              <InputGroup w={"820px"}>
+              <InputGroup w={"700px"}>
                 <InputLeftElement pointerEvents="none">
                   <Icon as={FaSearch} color="gray.300" />
                 </InputLeftElement>
@@ -170,8 +181,8 @@ function ListProduct() {
             </Flex>
           </Flex>
         </Box>
-        <Box bgColor="white" mt="18px" mx="40px" h="65vh" borderRadius={15} boxShadow={"lg"}>
-          <Table variant="simple">
+        <Box bgColor="white" mt="18px" mx="40px" borderRadius={15} boxShadow={"lg"} pb={5}>
+          <Table variant="simple" maxW="100%" overflow="auto">
             <Thead>
               <Tr>
                 <Th>ID</Th>
@@ -182,6 +193,17 @@ function ListProduct() {
               </Tr>
             </Thead>
             <Tbody>
+              {products.length == 0 ? (
+                <Tr>
+                  <Td colSpan={5}>
+                    <Text textAlign={"center"} fontStyle={"italic"}>
+                      No data matches.
+                    </Text>
+                  </Td>
+                </Tr>
+              ) : (
+                ""
+              )}
               {products.map((product) => (
                 <Tr
                   key={product.id}

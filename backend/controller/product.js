@@ -133,7 +133,7 @@ exports.getAllProducts = async (req, res) => {
     };
 
     // Apply category filter
-    if (category && category !== 'All') {
+    if (category && category !== "All") {
       filter.where.category = category;
     }
 
@@ -146,14 +146,14 @@ exports.getAllProducts = async (req, res) => {
 
     // Include sorting options
     if (sort) {
-      if (sort === 'alphabetical-asc') {
-        filter.order = [['name', 'ASC']];
-      } else if (sort === 'alphabetical-desc') {
-        filter.order = [['name', 'DESC']];
-      } else if (sort === 'price-asc') {
-        filter.order = [['price', 'ASC']];
-      } else if (sort === 'price-desc') {
-        filter.order = [['price', 'DESC']];
+      if (sort === "alphabetical-asc") {
+        filter.order = [["name", "ASC"]];
+      } else if (sort === "alphabetical-desc") {
+        filter.order = [["name", "DESC"]];
+      } else if (sort === "price-asc") {
+        filter.order = [["price", "ASC"]];
+      } else if (sort === "price-desc") {
+        filter.order = [["price", "DESC"]];
       }
     }
 
@@ -166,7 +166,7 @@ exports.getAllProducts = async (req, res) => {
     if (!products || products.count === 0) {
       return res.status(404).json({
         ok: false,
-        message: 'No products found!',
+        message: "No products found!",
       });
     }
 
@@ -179,10 +179,10 @@ exports.getAllProducts = async (req, res) => {
       details: products.rows,
     });
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     res.status(500).json({
       ok: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
@@ -192,7 +192,7 @@ exports.getSingleProduct = async (req, res) => {
   const product = await Product.findOne({ where: { name } });
 
   if (!product) {
-    res.status(404).json({
+    return res.status(404).json({
       ok: false,
       message: "Product Not Found!",
     });
