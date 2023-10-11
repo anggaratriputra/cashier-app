@@ -1,7 +1,7 @@
 import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-export default function ListUpdate({ isOpen, categoryToEdit, onSave, onClose }) {
+export default function CategoryUpdateModal({ isOpen, categoryToEdit, onSave, onClose }) {
   const [newCategoryName, setNewCategoryName] = useState(categoryToEdit.name);
 
   const handleSave = () => {

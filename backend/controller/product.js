@@ -45,14 +45,14 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
-  const { name } = req.params;
+  const { id } = req.params;
   const { productName, price, category, description } = req.body;
 
   try {
-    const product = await Product.findOne({ where: { name } });
+    const product = await Product.findByPk(id);
 
     if (!product) {
-      res.status(404).json({
+      return res.status(404).json({
         ok: false,
         message: "Product Not Found!",
       });
@@ -78,6 +78,7 @@ exports.updateProduct = async (req, res) => {
       detail: product,
     });
   } catch (error) {
+    console.error(error)
     res.status(400).json({
       ok: false,
       message: "Product failed to updated!",
@@ -87,11 +88,11 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.deactivateProduct = async (req, res) => {
-  const { name } = req.params;
+  const { id } = req.params;
   const { isActive } = req.body;
 
   try {
-    const product = await Product.findOne({ where: { name } });
+    const product = await Product.findByPk(id);
 
     if (!product) {
       res.status(404).json({
@@ -188,8 +189,8 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.getSingleProduct = async (req, res) => {
-  const { name } = req.params;
-  const product = await Product.findOne({ where: { name } });
+  const { id } = req.params;
+  const product = await Product.findByPk(id);
 
   if (!product) {
     return res.status(404).json({

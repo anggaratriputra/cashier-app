@@ -8,9 +8,8 @@ import ListProduct from "./components/ListProduct";
 import Cashier from "./components/Cashier";
 import Settings from "./components/Settings";
 import Reports from "./components/Reports";
-import UpdateProduct from "./components/UpdateProduct";
-import Category from "./components/Category";
 import UpdateProfile from "./components/UpdateProfile";
+import ListCategory from "./components/ListCategory";
 
 function App() {
   return (
@@ -18,8 +17,7 @@ function App() {
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<Home />} />
       <Route path="/admin/addproduct" element={<AddProduct />} />
-      <Route path="/admin/products/update" element={<UpdateProduct />} />
-      <Route path="/admin/category" element={<Category />} />
+      <Route path="/admin/category" element={<ListCategory />} />
       <Route path="/admin/listproduct" element={<ListProduct />} />
       <Route path="/admin/cashier" element={<Cashier />} />
       <Route path="/admin/settings" element={<Settings />} />

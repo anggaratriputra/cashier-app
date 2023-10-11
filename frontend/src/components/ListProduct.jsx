@@ -29,6 +29,7 @@ import {
 import { FaCheck, FaEdit, FaSearch, FaTimes } from "react-icons/fa";
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
+import UpdateProductModal from "./UpdateProductModal";
 
 function ListProduct() {
   const [products, setProducts] = useState([]); // State to store product data
@@ -42,8 +43,43 @@ function ListProduct() {
   const [totalData, setTotalData] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [productIdForEdit, setProductForEdit] = useState("");
   const toast = useToast();
+
+  const handleSaveProducts = async (productId, updateProductName, updateProductPrice, updateProductcategory, updateProductdescription, image) => {
+    try {
+      const response = await api.patch(`/products/update/${productId}`, { productName: updateProductName, price: updateProductPrice, category: updateProductcategory, description: updateProductdescription, image });
+      if (response.data.ok) {
+        // Update the UI with the new product if the API call is successful
+        const updatedProduct = products.map((product) => {
+          if (product.id === productId) {
+            return { ...product, name: updateProductName, price: updateProductPrice, category: updateProductcategory, description: updateProductdescription };
+          } else {
+            return product;
+          }
+        });
+        setProducts(updatedProduct);
+      } else {
+        toast({
+          title: "Error!",
+          description: "Error updating Product. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error!",
+        description: "Error updating Product. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   // Fetch data from the backend API
   useEffect(() => {
@@ -111,16 +147,47 @@ function ListProduct() {
   };
 
   const handleConfirmStatusChange = () => {
-    const updatedProducts = products.map((product) => {
-      if (product.id === productIdForStatusChange) {
-        return { ...product, isActive: !product.isActive };
-      }
-      return product;
-    });
+    const isActive = !products.find((product) => product.id === productIdForStatusChange).isActive;
 
-    setProducts(updatedProducts);
+    api
+      .put(`/products/${productIdForStatusChange}`, { isActive })
+      .then((response) => {
+        if (response.data.ok) {
+          const updatedProducts = products.map((product) => {
+            if (product.id === productIdForStatusChange) {
+              return { ...product, isActive };
+            }
+            return product;
+          });
+          setProducts(updatedProducts);
+        } else {
+          console.error("Failed to update product status:", response.data.message);
+          toast({
+            title: "Error",
+            description: response.data.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to update product status:", error);
+        toast({
+          title: "Error",
+          description: "Failed to update product status.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+
     onClose();
     setProductIdForStatusChange(null);
+  };
+
+  const handleEditProduct = (productId) => {
+    setProductForEdit(productId);
   };
 
   const sortingOptions = [
@@ -210,8 +277,7 @@ function ListProduct() {
                   style={{
                     backgroundColor: product.isActive ? null : "red", // Background color
                     color: product.isActive ? "black" : "white", // Font color
-                  }}
-                >
+                  }}>
                   <Td>{product.id}</Td>
                   <Td>{product.name}</Td>
                   <Td>{formatToRupiah(product.price)}</Td>
@@ -223,7 +289,17 @@ function ListProduct() {
                           <Text>Available</Text>
                           <Flex>
                             <IconButton colorScheme="green" aria-label="Available" icon={<FaTimes />} size="sm" mr="2" onClick={() => handleToggleAvailability(product.id)} />
-                            <IconButton colorScheme="blue" aria-label="Edit" icon={<FaEdit />} size="sm" mr="2" />
+                            <IconButton
+                              colorScheme="blue"
+                              aria-label="Edit"
+                              icon={<FaEdit />}
+                              size="sm"
+                              mr="2"
+                              onClick={() => {
+                                setIsModalOpen(true);
+                                handleEditProduct(product);
+                              }}
+                            />
                           </Flex>
                         </>
                       ) : (
@@ -259,6 +335,7 @@ function ListProduct() {
           </Flex>
         </Box>
       </Flex>
+      <UpdateProductModal isOpen={isModalOpen} productId={productIdForEdit} onClose={() => setIsModalOpen(false)} onSave={handleSaveProducts} />
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
