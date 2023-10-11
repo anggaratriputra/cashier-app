@@ -1,8 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, Text, Table, Thead, Tbody, Tr, Th, Td, Button, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
-import { FaCheck, FaTimes, FaEdit } from "react-icons/fa";
+import {
+  Box,
+  Flex,
+  Text,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Button,
+  IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Icon,
+  Select,
+  useToast,
+} from "@chakra-ui/react";
+import { FaCheck, FaTimes, FaEdit, FaSearch, FaPlusCircle } from "react-icons/fa";
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
+import CashierForm from "./CashierForm";
 
 function Cashier() {
   const [cashiers, setCashiers] = useState([]); // State to store product data
@@ -11,26 +38,102 @@ function Cashier() {
   const [totalPages, setTotalPages] = useState(1); // Total number of pages
   const cashiersPerPage = 8; // Number of products to display per page
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenForm, onOpen: onOpenForm, onClose: onCloseForm } = useDisclosure();
   const [cashierIdForStatusChange, setCashierIdForStatusChange] = useState(null);
+  const [sortCriteria, setSortCriteria] = useState("alphabetical-asc"); // Default sorting criteria that matches the backend;
+  const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
+  const [totalData, setTotalData] = useState(0);
 
+  const toast = useToast();
+
+  const fetchCashiers = async () => {
+    try {
+      const response = await api.get(`/cashier?page=${currentPage}&limit=${cashiersPerPage}&sort=${sortCriteria}&search=${searchInput}`);
+      const cashierData = response.data.details;
+
+      // Calculate the total number of pages based on the filtered data count
+      const totalData = response.data.pagination.totalData;
+      const totalPages = Math.ceil(totalData / cashiersPerPage);
+      setTotalData(totalData);
+      setTotalPages(totalPages);
+      setCashiers(cashierData);
+    } catch (error) {
+      if (error?.response?.status == 404) {
+        setTotalData(0);
+        setTotalPages(0);
+        setCashiers([]);
+      } else {
+        console.error(error);
+        toast({
+          title: "Error!",
+          description: String(error),
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  };
   // Fetch data from the backend API
   useEffect(() => {
-    api
-      .get(`/cashier?page=${currentPage}&limit=${cashiersPerPage}`)
-      .then((response) => {
-        // Assuming your API response has a "details" property with an array of products
-        const cashiersData = response.data.details;
-        setCashiers(cashiersData);
+    fetchCashiers();
+  }, [currentPage, sortCriteria, searchInput]);
 
-        // Calculate the total number of pages based on the total data count
-        const totalData = response.data.pagination.totalData;
-        const totalPages = Math.ceil(totalData / cashiersData);
-        setTotalPages(totalPages);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [currentPage]);
+  const handleAddCashier = async (values, actions) => {
+    try {
+      // Make a POST request to your API to add a new cashier
+      const response = await api.post("/cashier/register", values);
+
+      // Check if the request was successful
+      if (response.data.ok) {
+        // Optionally, you can display a success toast or take any other action here
+        toast({
+          title: "Cashier Added",
+          description: "New cashier has been added successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        fetchCashiers();
+
+        // Close the modal
+        onCloseForm();
+
+        // Clear the form
+        actions.resetForm();
+      } else {
+        // Handle the case where the API request was not successful
+        toast({
+          title: "Error!",
+          description: "Failed to add the cashier. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response?.status === 400) {
+        toast({
+          title: "Error!",
+          description: error.response?.data?.error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        // Handle any errors, e.g., network issues
+        console.error("Error adding cashier:", error);
+        toast({
+          title: "Error!",
+          description: "An error occurred. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  };
 
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
@@ -77,6 +180,20 @@ function Cashier() {
     setCashierIdForStatusChange(null);
   };
 
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const sortingOptions = [
+    { label: "Alphabetical (A-Z)", value: "alphabetical-asc" },
+    { label: "Alphabetical (Z-A)", value: "alphabetical-desc" },
+  ];
+
+  const handleSortChange = (event) => {
+    const selectedSortValue = event.target.value;
+    setSortCriteria(selectedSortValue);
+  };
+
   const handleToggleCashierStatus = (cashierId) => {
     // Make a GET request to the API endpoint with the cashierId
     api
@@ -97,23 +214,63 @@ function Cashier() {
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"Column"} ml={{ base: 0, md: 60 }} h="100vh" bgColor="#f7f7f7">
+      <Flex direction={"column"} ml={{ base: 0, md: 60 }} h="100vh" bgColor="#f7f7f7">
         <Box mt="38px" ml="40px">
-          <Text fontWeight="bold" fontSize="2xl">
-            Cashier List
+          <Text mb={4} fontWeight="bold" fontSize="2xl">
+            Cashiers List
           </Text>
+          <Button
+            colorScheme="red" // You can adjust the color as needed
+            leftIcon={<FaPlusCircle />} // Icon for the "Add Cashier" button
+            mb={4}
+            onClick={onOpenForm}
+          >
+            Add Cashier
+          </Button>
+          <Flex justifyContent={"space-between"}>
+            <Flex justifyContent={"right"} alignItems={"center"} mr="0px">
+              <InputGroup w={"820px"}>
+                <InputLeftElement pointerEvents="none">
+                  <Icon as={FaSearch} color="gray.300" />
+                </InputLeftElement>
+                <Input type="text" value={searchInput} onChange={handleSearchInputChange} placeholder="Search cashiers" />
+              </InputGroup>
+            </Flex>
+            <Flex gap={4} justifyContent={"right"} alignItems={"center"} mr="40px">
+              <Text>Sort By</Text>
+              <Select w="200px" value={sortCriteria} onChange={handleSortChange}>
+                {sortingOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </Flex>
+          </Flex>
         </Box>
-        <Box bgColor="white" mt="38px" mx="40px" h="65vh" borderRadius={15} boxShadow={"lg"}>
+        <Box bgColor="white" mt="28px" mx="40px" borderRadius={15} boxShadow={"lg"}>
           <Table variant="simple">
             <Thead>
               <Tr>
                 <Th>ID</Th>
                 <Th>Username</Th>
                 <Th>Cashier Name</Th>
+                <Th>Cashier Email</Th>
                 <Th>Status</Th>
               </Tr>
             </Thead>
             <Tbody>
+              {cashiers.length == 0 ? (
+                <Tr>
+                  <Td colSpan={5}>
+                    <Text textAlign={"center"} fontStyle={"italic"}>
+                      No data matches.
+                    </Text>
+                  </Td>
+                </Tr>
+              ) : (
+                ""
+              )}
               {cashiers.map((cashier) => (
                 <Tr
                   key={cashier.id}
@@ -125,6 +282,7 @@ function Cashier() {
                   <Td>{cashier.id}</Td>
                   <Td>{cashier.username}</Td>
                   <Td>{cashier.firstName + " " + cashier.lastName}</Td>
+                  <Td>{cashier.email}</Td>
                   <Td>
                     <Flex justifyContent={"space-between"} alignItems={"center"}>
                       {cashier.isActive ? (
@@ -178,6 +336,20 @@ function Cashier() {
               Cancel
             </Button>
           </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Modal for adding a new cashier */}
+      <Modal isOpen={isOpenForm} onClose={onCloseForm} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add New Cashier</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {/* Render the CashierForm component for adding a new cashier */}
+            <CashierForm onSubmit={handleAddCashier} />
+          </ModalBody>
+          <ModalFooter>{/* You can add additional modal footer elements if needed */}</ModalFooter>
         </ModalContent>
       </Modal>
     </>
