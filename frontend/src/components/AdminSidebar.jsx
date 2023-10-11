@@ -13,12 +13,9 @@ const AdminSidebar = ({ activeItem }) => {
   return (
     <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">
       {/* Sidebar Header */}
-      <Flex direction="column" h="20" alignItems="center" mx="8" mt={4} mb={20} justifyContent="space-between">
+      <Flex direction="column" h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex alignItems="center" justifyContent="center">
-          <Image src="https://i.ibb.co/LzsMhD0/mekdilogo2.png" w={"90%"} />
-        </Flex>
-        <Flex>
-        <Text fontWeight={"bold"}> ADMINISTRATOR</Text>
+          <Image src="https://i.ibb.co/mvwdFP8/mekdilogo3.png" w={"90%"} />
         </Flex>
       </Flex>
 

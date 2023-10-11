@@ -1,6 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, Text, Table, Thead, Tbody, Tr, Th, Td, Button, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Select } from "@chakra-ui/react";
-import { FaCheck, FaEdit, FaTimes } from "react-icons/fa";
+import {
+  Box,
+  Flex,
+  Text,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Button,
+  IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Select,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+} from "@chakra-ui/react";
+import { FaCheck, FaEdit, FaSearch, FaTimes } from "react-icons/fa";
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
 
@@ -12,30 +37,37 @@ function ListProduct() {
   const productsPerPage = 8; // Number of products to display per page
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [productIdForStatusChange, setProductIdForStatusChange] = useState(null);
-  const [sortCriteria, setSortCriteria] = useState("alphabetical-asc"); // Default sorting criteria that matches the backend
+  const [sortCriteria, setSortCriteria] = useState("alphabetical-asc"); // Default sorting criteria that matches the backend;
   const [totalData, setTotalData] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
 
   // Fetch data from the backend API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await api.get(`/products?page=${currentPage}&limit=${productsPerPage}&sort=${sortCriteria}`);
+        const response = await api.get(`/products?page=${currentPage}&limit=${productsPerPage}&sort=${sortCriteria}&category=${selectedCategory}&search=${searchInput}`);
         const productData = response.data.details;
-        setProducts(productData);
 
-        // Calculate the total number of pages based on the total data count
+        // Calculate the total number of pages based on the filtered data count
         const totalData = response.data.pagination.totalData;
         const totalPages = Math.ceil(totalData / productsPerPage);
         setTotalData(totalData);
         setTotalPages(totalPages);
+
+        setProducts(productData);
       } catch (error) {
         console.error("Error fetching data:", error);
+        if (error?.response?.status == 404) {
+          setTotalData(0);
+          setTotalPages(0);
+          setProducts([]);
+        }
       }
     };
 
     fetchProducts();
-  }, [currentPage, sortCriteria]);
-
+  }, [currentPage, sortCriteria, selectedCategory, searchInput]);
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
   };
@@ -44,6 +76,11 @@ function ListProduct() {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
+  };
+
+  // Handle search input change
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
   };
 
   const formatToRupiah = (number) => {
@@ -82,28 +119,55 @@ function ListProduct() {
     { label: "Price (High to Low)", value: "price-desc" },
   ];
 
+  const sortingProduct = [{ label: "All" }, { label: "Food", value: "food" }, { label: "Drink", value: "drink" }];
+
   const handleSortChange = (event) => {
     const selectedSortValue = event.target.value;
     setSortCriteria(selectedSortValue);
   };
 
+  const handleSortProductChange = (event) => {
+    const selectedSortProductValue = event.target.value;
+    setSelectedCategory(selectedSortProductValue); // Update selectedCategory
+  };
+
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"Column"} ml={{ base: 0, md: 60 }} h="100vh" bgColor="#f7f7f7">
+      <Flex direction={"column"} ml={{ base: 0, md: 60 }} h="100vh" bgColor="#f7f7f7">
         <Box mt="38px" ml="40px">
-          <Text fontWeight="bold" fontSize="2xl">
+          <Text mb={4} fontWeight="bold" fontSize="2xl">
             Product List
           </Text>
-          <Flex gap={4} justifyContent={"right"} alignItems={"center"} mr="40px">
-            <Text>Sort By</Text>
-            <Select w="200px" value={sortCriteria} onChange={handleSortChange}>
-              {sortingOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
+          <Flex justifyContent={"space-between"}>
+            <Flex alignItems={"center"} gap={2}>
+              <Text>Category</Text>
+              <Select w="100px" value={selectedCategory} onChange={handleSortProductChange}>
+                {sortingProduct.map((option) => (
+                  <option key={option.label} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </Flex>
+            <Flex justifyContent={"right"} alignItems={"center"} mr="0px">
+              <InputGroup w={"820px"}>
+                <InputLeftElement pointerEvents="none">
+                  <Icon as={FaSearch} color="gray.300" />
+                </InputLeftElement>
+                <Input type="text" value={searchInput} onChange={handleSearchInputChange} placeholder="Search products" />
+              </InputGroup>
+            </Flex>
+            <Flex gap={4} justifyContent={"right"} alignItems={"center"} mr="40px">
+              <Text>Sort By</Text>
+              <Select w="200px" value={sortCriteria} onChange={handleSortChange}>
+                {sortingOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </Flex>
           </Flex>
         </Box>
         <Box bgColor="white" mt="18px" mx="40px" h="65vh" borderRadius={15} boxShadow={"lg"}>
@@ -156,8 +220,7 @@ function ListProduct() {
             </Tbody>
           </Table>
         </Box>
-        <Box display="flex" alignItems="center" justifyContent="space-between" mx={20} gap={2} mt="20px" textAlign="right" mr={20}>
-          <Text fontWeight={"bold"}> Total Data : {totalData} </Text>
+        <Box display="flex" alignItems="center" justifyContent="right" mx={20} gap={2} mt="20px" textAlign="right" mr={20}>
           <Flex alignItems={"center"} gap={2}>
             <Text fontWeight={"bold"}> Page </Text>
             <Box>
