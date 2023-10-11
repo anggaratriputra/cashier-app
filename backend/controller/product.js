@@ -1,4 +1,5 @@
 const { Product, Category } = require("../models");
+const { Op } = require("sequelize");
 
 exports.createProduct = async (req, res) => {
   const { name, price, category, description } = req.body;
@@ -123,52 +124,65 @@ exports.getAllProducts = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
   const sort = req.query.sort; // Get the sorting parameter from the query
+  const category = req.query.category; // Get the category filter from the query
+  const search = req.query.search; // Get the search query from the query
 
   try {
-    // Fetch all products without pagination
-    const allProducts = await Product.findAll();
+    const filter = {
+      where: {},
+    };
 
-    // Check if a sorting option is provided and sort the products accordingly
+    // Apply category filter
+    if (category && category !== 'All') {
+      filter.where.category = category;
+    }
+
+    // Apply search query filter using Sequelize's Op.like
+    if (search) {
+      filter.where.name = {
+        [Op.like]: `%${search}%`,
+      };
+    }
+
+    // Include sorting options
     if (sort) {
       if (sort === 'alphabetical-asc') {
-        allProducts.sort((a, b) => a.name.localeCompare(b.name));
+        filter.order = [['name', 'ASC']];
       } else if (sort === 'alphabetical-desc') {
-        allProducts.sort((a, b) => b.name.localeCompare(a.name));
+        filter.order = [['name', 'DESC']];
       } else if (sort === 'price-asc') {
-        allProducts.sort((a, b) => a.price - b.price);
+        filter.order = [['price', 'ASC']];
       } else if (sort === 'price-desc') {
-        allProducts.sort((a, b) => b.price - a.price);
+        filter.order = [['price', 'DESC']];
       }
     }
 
-    // Calculate the total number of pages based on the sorted data count
-    const totalData = allProducts.length;
+    // Apply pagination
+    filter.limit = limit;
+    filter.offset = (page - 1) * limit;
 
-    // Apply pagination to the sorted products
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const products = allProducts.slice(startIndex, endIndex);
+    const products = await Product.findAndCountAll(filter);
 
-    if (!products || products.length === 0) {
+    if (!products || products.count === 0) {
       return res.status(404).json({
         ok: false,
-        message: "No products found!",
+        message: 'No products found!',
       });
     }
 
     res.status(200).json({
       ok: true,
       pagination: {
-        totalData: totalData,
+        totalData: products.count,
         page: page,
       },
-      details: products,
+      details: products.rows,
     });
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
     res.status(500).json({
       ok: false,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 };
