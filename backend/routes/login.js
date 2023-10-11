@@ -8,10 +8,11 @@ const { validateToken } = require("../middleware/auth");
 
 
 
-
+router.get("/profile", authController.getAllAccounts);
+router.get("/profile/:username", authController.getSingleAccount);
  router.post("/", authController.handleLogin);
  router.patch(
-  "/profile/:username",
+  "/update/:username",
   authMiddleware.validateToken,
   multerUpload.single("photoProfile"),
   authController.updateAccount

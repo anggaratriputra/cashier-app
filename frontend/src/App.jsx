@@ -10,6 +10,7 @@ import Settings from "./components/Settings";
 import Reports from "./components/Reports";
 import UpdateProduct from "./components/UpdateProduct";
 import Category from "./components/Category";
+import UpdateProfile from "./components/UpdateProfile";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route path="/admin/cashier" element={<Cashier />} />
       <Route path="/admin/settings" element={<Settings />} />
       <Route path="/admin/reports" element={<Reports />} />
+      <Route path="/login/update/:username" element={<UpdateProfile />} />
     </Routes>
   );
 }
