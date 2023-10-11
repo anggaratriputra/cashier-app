@@ -132,7 +132,6 @@ function Cashier() {
                           <Text>Active</Text>
                           <Flex>
                             <IconButton colorScheme="green" aria-label="Available" icon={<FaTimes />} size="sm" mr="2" onClick={() => handleToggleAvailability(cashier.id)} />
-                            <IconButton colorScheme="blue" aria-label="Edit" icon={<FaEdit />} size="sm" mr="2" />
                           </Flex>
                         </>
                       ) : (
@@ -140,7 +139,6 @@ function Cashier() {
                           <Text>Not Active</Text>
                           <Flex>
                             <IconButton colorScheme="red" aria-label="Not Available" icon={<FaCheck />} size="sm" mr="2" onClick={() => handleToggleAvailability(cashier.id)} />
-                            <IconButton colorScheme="blue" aria-label="Edit" icon={<FaEdit />} size="sm" mr="2" />
                           </Flex>
                         </>
                       )}
