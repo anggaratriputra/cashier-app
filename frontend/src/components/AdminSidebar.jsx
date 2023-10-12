@@ -1,6 +1,6 @@
 import React from "react";
-import { Icon, Flex, Image, Box, useColorModeValue, Text, Menu, MenuButton, Avatar, Portal, MenuList, MenuItem } from "@chakra-ui/react";
-import { FiTrendingUp, FiSettings } from "react-icons/fi";
+import { Icon, Flex, Image, Box, useColorModeValue, MenuButton, Avatar, Portal, MenuList, MenuItem } from "@chakra-ui/react";
+import { FiSettings } from "react-icons/fi";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import { FaCashRegister } from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { MdFastfood } from "react-icons/md";
 import { logout } from "../slices/accountSlices";
 import { useDispatch } from "react-redux";
+import Menu from "./Menu";
 
 const AdminSidebar = ({ activeItem }) => {
   const navigate = useNavigate();
@@ -30,7 +31,6 @@ const AdminSidebar = ({ activeItem }) => {
       {/* Sidebar Navigation */}
       <Flex direction="column">
         <NavItem icon={BiMessageSquareAdd} name="Add Product" isActive={activeItem === "addProduct"} onClick={() => navigate("/admin/addproduct")} />
-        <NavItem icon={BiMessageSquareAdd} name="Update Product" isActive={activeItem === "updateProduct"} onClick={() => navigate("/admin/products/update")} />
         <NavItem icon={BiMessageSquareAdd} name="Category Product" isActive={activeItem === "category"} onClick={() => navigate("/admin/category")} />
         <NavItem icon={MdFastfood} name="Product List" isActive={activeItem === "listProduct"} onClick={() => navigate("/admin/listproduct")} />
         <NavItem icon={FaCashRegister} name="Cashier List" isActive={activeItem === "cashier"} onClick={() => navigate("/admin/cashier")} />
@@ -38,6 +38,7 @@ const AdminSidebar = ({ activeItem }) => {
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => navigate("/admin/settings")} />
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
+
       <Menu>
           <MenuButton>
             <Avatar bg="red.500" />
@@ -75,8 +76,7 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
       }}
       backgroundColor={isActive ? activeBgColor : ""}
       color={isActive ? activeColor : ""}
-      onClick={onClick}
-    >
+      onClick={onClick}>
       {icon && (
         <Icon
           mr="4"

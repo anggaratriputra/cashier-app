@@ -1,16 +1,18 @@
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import AdminSidebar from "./AdminSidebar";
 import { useEffect, useState } from "react";
 import api from "../api";
-import ListUpdate from "./ListUpdate";
+import CategoryUpdateModal from "./UpdateCategoryModal";
+import ConfirmationModal from "./ConfirmationModal";
 
-export default function Category() {
+export default function ListCategory() {
   const [activeItem, setActiveItem] = useState("category");
   const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
@@ -72,9 +74,15 @@ export default function Category() {
   }, []);
 
   const handleDeleteCategory = async (categoryName) => {
+    setSelectedCategory(categoryName);
+    onOpen();
+  };
+
+  const handleConfirmDeleteCategory = async () => {
     try {
-      await api.delete(`/categories/${categoryName}`);
+      await api.delete(`/categories/${selectedCategory}`);
       fetchCategories();
+      onClose();
     } catch (error) {
       toast({
         title: "Error!",
@@ -134,7 +142,7 @@ export default function Category() {
               <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
             </FormControl>
 
-            <Button mt={4} colorScheme="teal" isLoading={formik.isSubmitting} type="submit">
+            <Button mt={4} bgColor={'orange.300'} color={'white'} isLoading={formik.isSubmitting} type="submit">
               Create Category
             </Button>
           </form>
@@ -168,7 +176,8 @@ export default function Category() {
                 </div>
               ))
             )}
-            <ListUpdate isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveCategory} categoryToEdit={selectedCategory} />
+            <CategoryUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveCategory} categoryToEdit={selectedCategory} />
+            <ConfirmationModal isOpen={isOpen} onClose={onClose} onConfirm={handleConfirmDeleteCategory} message={`Are you sure you want to delete the category: ${selectedCategory}?`} />
           </Box>
         </Box>
       </Flex>
