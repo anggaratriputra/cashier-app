@@ -182,3 +182,5 @@ exports.getSingleAccount = async (req, res) => {
     detail: account,
   });
 };
+
+
