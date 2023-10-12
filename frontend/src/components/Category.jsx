@@ -4,10 +4,13 @@ import * as Yup from "yup";
 import AdminSidebar from "./AdminSidebar";
 import { useEffect, useState } from "react";
 import api from "../api";
+import ListUpdate from "./ListUpdate";
 
 export default function Category() {
   const [activeItem, setActiveItem] = useState("category");
   const [categories, setCategories] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const toast = useToast();
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
@@ -53,13 +56,15 @@ export default function Category() {
         setCategories(response.data.categories);
       }
     } catch (error) {
-      toast({
-        title: "Error!",
-        description: "Error fetching categories. Please try again.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      if (error.response.status !== 404) {
+        toast({
+          title: "Error!",
+          description: "Error fetching categories. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     }
   };
   useEffect(() => {
@@ -81,27 +86,44 @@ export default function Category() {
     }
   };
 
+  const handleSaveCategory = async (categoryId, newName) => {
+    try {
+      const response = await api.put(`/categories/${categoryId}`, { newName });
+      if (response.data.ok) {
+        // Update the UI with the new category name if the API call is successful
+        const updatedCategories = categories.map((category) => {
+          if (category.id === categoryId) {
+            return { ...category, name: newName };
+          } else {
+            return category;
+          }
+        });
+        setCategories(updatedCategories);
+      } else {
+        toast({
+          title: "Error!",
+          description: "Error updating category. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error!",
+        description: "Error updating category. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
       <Flex direction={"row"} ml={{ base: 0, md: 60 }}>
         <Box bgColor={"#f7f7f7"} h={"100vh"} w={"100vw"} p={"20px"}>
-          <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
-            Category List
-          </Text>
-          <Box display={"flex"} flexDir={'column'}>
-            {categories.map((category) => (
-              <Box display={'flex'} w={'100%'}>
-                <Text fontSize={"2xl"} key={category} minW={'75vw'}>
-                  {category}
-                </Text>
-                <Button size={'sm'} colorScheme="red" onClick={() => handleDeleteCategory(category)}>
-                  Delete
-                </Button>
-              </Box>
-            ))}
-          </Box>
-
           <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
             Add Category
           </Text>
@@ -116,6 +138,38 @@ export default function Category() {
               Create Category
             </Button>
           </form>
+          <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
+            Category List
+          </Text>
+          <Box display={"flex"} flexDir={"column"}>
+            {categories.length === 0 ? (
+              <Text>Category is Empty!</Text>
+            ) : (
+              categories.map((category, index) => (
+                <div key={index}>
+                  <Box display={"flex"} w={"80vw"} h={"10%"} alignItems={"center"}>
+                    <Box display={"flex"} w={"100vw"} my={"5px"}>
+                      <Text fontSize={"20px"} minW={"70vw"}>
+                        {category.name}
+                      </Text>
+                      <Button colorScheme="red" onClick={() => handleDeleteCategory(category.name)}>
+                        Delete
+                      </Button>
+                      <Button
+                        colorScheme="blue"
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setSelectedCategory(category);
+                        }}>
+                        Edit
+                      </Button>
+                    </Box>
+                  </Box>
+                </div>
+              ))
+            )}
+            <ListUpdate isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveCategory} categoryToEdit={selectedCategory} />
+          </Box>
         </Box>
       </Flex>
     </>

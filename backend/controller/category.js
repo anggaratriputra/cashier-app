@@ -6,6 +6,7 @@ exports.createCategory = async (req, res) => {
   try {
     const result = await Category.create({
       name,
+      isEditing: false
     });
 
     res.status(201).json({
@@ -22,11 +23,11 @@ exports.createCategory = async (req, res) => {
 };
 
 exports.editCategory = async (req, res) => {
-  const { name } = req.params;
+  const { id } = req.params;
   const { newName } = req.body;
 
   try {
-    const category = await Category.findOne({ where: { name } });
+    const category = await Category.findByPk(id);
 
     if (!category) {
       return res.status(404).json({
@@ -89,12 +90,10 @@ exports.getAllCategory = async (req, res) => {
       });
     }
 
-    const categoryName = categories.map((category) => category.name);
-
     res.status(200).json({
       ok: true,
       message: "Categories retrieved successfully",
-      categories: categoryName,
+      categories: categories,
     });
   } catch (error) {
     res.status(500).json({
