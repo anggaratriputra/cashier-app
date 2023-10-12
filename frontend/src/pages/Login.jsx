@@ -41,7 +41,7 @@ function Login() {
           } else {
             toast({
               title: "Failed to login!",
-              description: "Username or password is incorrect",
+              description: "Your account is not Active!",
               status: "error",
               duration: 3000,
               isClosable: true,
