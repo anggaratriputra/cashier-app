@@ -8,7 +8,6 @@ import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../slices/accountSlices";
-import { logout } from "../slices/accountSlices";
 import YupPassword from "yup-password";
 YupPassword(yup);
 
@@ -41,7 +40,7 @@ function Login() {
           } else {
             toast({
               title: "Failed to login!",
-              description: "Your account is not Active!",
+              description: "Your account is not active, please contact an Admin",
               status: "error",
               duration: 3000,
               isClosable: true,
@@ -50,9 +49,13 @@ function Login() {
         }
       }
     } catch (error) {
+      let message = error.message;
+      if (error?.response?.status === 401) {
+        message = error.response.data.message;
+      }
       toast({
         title: "Failed to login!",
-        description: error.message,
+        description: message,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -60,11 +63,11 @@ function Login() {
     }
   };
 
-  const handleSubmit = (values, forms) => {
+  const handleSubmit = async (values, forms) => {
     const { username, password } = values;
 
     // Call the loginUser function to send the POST request to the back end
-    loginAccount(username, password);
+    await loginAccount(username, password);
 
     // Rest of your form submission logic
   };
