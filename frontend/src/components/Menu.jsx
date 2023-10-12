@@ -1,5 +1,4 @@
-import { Box, Flex, HStack, Text } from "@chakra-ui/react";
-import Sidebar from "./Sidebar";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 function Menu() {
   return (

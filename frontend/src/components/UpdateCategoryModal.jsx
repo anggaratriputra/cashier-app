@@ -1,7 +1,7 @@
 import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-export default function ListUpdate({ isOpen, categoryToEdit, onSave, onClose }) {
+export default function CategoryUpdateModal({ isOpen, categoryToEdit, onSave, onClose }) {
   const [newCategoryName, setNewCategoryName] = useState(categoryToEdit.name);
 
   const handleSave = () => {
@@ -28,7 +28,7 @@ export default function ListUpdate({ isOpen, categoryToEdit, onSave, onClose }) 
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSave}>
+            <Button colorScheme="yellow" mr={3} onClick={handleSave}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>

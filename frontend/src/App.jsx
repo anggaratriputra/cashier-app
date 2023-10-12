@@ -1,5 +1,8 @@
 import "./App.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { hideUnauthorizeModal } from "./slices/accountSlices";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -8,13 +11,13 @@ import ListProduct from "./components/ListProduct";
 import Cashier from "./components/Cashier";
 import Settings from "./components/Settings";
 import Reports from "./components/Reports";
-import UpdateProduct from "./components/UpdateProduct";
-import Category from "./components/Category";
 import UpdateProfile from "./components/UpdateProfile";
 import { useSelector, useDispatch } from "react-redux";
 import { hideUnauthorizeModal } from "./slices/accountSlices";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import UpdateAdminProfile from "./components/UpdateAdminProfile";
+import ListCategory from "./components/ListCategory";
+
 
 function AdminValidationModal() {
   const navigate = useNavigate();
@@ -27,8 +30,7 @@ function AdminValidationModal() {
         dispatch(hideUnauthorizeModal());
       }}
       closeOnOverlayClick={false}
-      isCentered
-    >
+      isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Permission Denied</ModalHeader>
@@ -39,8 +41,7 @@ function AdminValidationModal() {
             onClick={() => {
               navigate(redirectTo);
               dispatch(hideUnauthorizeModal());
-            }}
-          >
+            }}>
             OK
           </Button>
         </ModalFooter>
@@ -56,8 +57,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/admin/addproduct" element={<AddProduct />} />
-        <Route path="/admin/products/update" element={<UpdateProduct />} />
-        <Route path="/admin/category" element={<Category />} />
+        <Route path="/admin/category" element={<ListCategory />} />
         <Route path="/admin/listproduct" element={<ListProduct />} />
         <Route path="/admin/cashier" element={<Cashier />} />
         <Route path="/admin/settings" element={<Settings />} />
