@@ -17,47 +17,58 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  
-
-  const login = async (username, password) => {
+  const loginAccount = async (username, password) => {
     try {
-      const response = await api.post('/login', {
+      const response = await api.post("/login", {
         user_identity: username,
         password,
       });
-    
+
       // Handle the response from the server
       if (response.status === 200) {
-  
         const responseData = response.data;
-        const token = responseData.data.token;
         const isAdmin = responseData.data.profile.isAdmin === true;
-        localStorage.setItem('token', token);
-        
-        if (isAdmin) {
-        navigate("/admin/addproduct");
-      } else {
-        navigate("/home");
-      }
-    }
-    } catch (error) {
-    console.error('Error:', error);
-    toast({
-      title: "Failed to login!",
-      description: "Username or password is incorrect",
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-    });
-  }
-};
+        const isActive = responseData.data.profile.isActive === true;
 
-  const handleSubmit = (values, forms) => {
+        dispatch(login(responseData));
+
+        if (isAdmin) {
+          navigate("/admin/addproduct");
+        } else {
+          if (isActive) {
+            navigate("/home");
+          } else {
+            toast({
+              title: "Failed to login!",
+              description: "Your account is not active, please contact an Admin",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      let message = error.message;
+      if (error?.response?.status === 401) {
+        message = error.response.data.message;
+      }
+      toast({
+        title: "Failed to login!",
+        description: message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleSubmit = async (values, forms) => {
     const { username, password } = values;
-    
+
     // Call the loginUser function to send the POST request to the back end
-    login(username, password);
-  
+    await loginAccount(username, password);
+
     // Rest of your form submission logic
   };
 
