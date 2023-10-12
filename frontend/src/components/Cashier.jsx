@@ -30,6 +30,25 @@ import { FaCheck, FaTimes, FaEdit, FaSearch, FaPlusCircle } from "react-icons/fa
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
 import CashierForm from "./CashierForm";
+import { useNavigate } from 'react-router-dom';
+
+function AdminValidationModal({ isOpen, onClose, onNavigate }) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false} isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Permission Denied</ModalHeader>
+        <ModalBody>You are not an admin.</ModalBody>
+        <ModalFooter>
+          <Button colorScheme="red" onClick={onNavigate}>
+            OK
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
+
 
 function Cashier() {
   const [cashiers, setCashiers] = useState([]); // State to store product data
@@ -43,6 +62,8 @@ function Cashier() {
   const [sortCriteria, setSortCriteria] = useState("alphabetical-asc"); // Default sorting criteria that matches the backend;
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
   const [totalData, setTotalData] = useState(0);
+  const [isAdminValidationModalOpen, setIsAdminValidationModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toast = useToast();
 
@@ -62,6 +83,12 @@ function Cashier() {
         setTotalData(0);
         setTotalPages(0);
         setCashiers([]);
+      } else if (error?.response?.status == 401) {
+        setTotalData(0);
+        setTotalPages(0);
+        setCashiers([]);
+        setIsAdminValidationModalOpen(true);
+
       } else {
         console.error(error);
         toast({
@@ -133,6 +160,10 @@ function Cashier() {
         });
       }
     }
+  };
+
+  const handleNavigateToHome = () => {
+    navigate("/home")
   };
 
   const setActivePage = (itemName) => {
@@ -352,6 +383,11 @@ function Cashier() {
           <ModalFooter>{/* You can add additional modal footer elements if needed */}</ModalFooter>
         </ModalContent>
       </Modal>
+      <AdminValidationModal
+        isOpen={isAdminValidationModalOpen}
+        onClose={() => setIsAdminValidationModalOpen(false)}
+        onNavigate={handleNavigateToHome}
+      />
     </>
   );
 }
