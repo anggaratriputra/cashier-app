@@ -33,7 +33,7 @@ import { useNavigate } from "react-router-dom";
 
 function AdminValidationModal({ isOpen, onClose, onNavigate }) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCloseable={false} isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Permission Denied</ModalHeader>
@@ -47,6 +47,8 @@ function AdminValidationModal({ isOpen, onClose, onNavigate }) {
     </Modal>
   );
 }
+
+
 
 function ListProduct() {
   const [products, setProducts] = useState([]); // State to store product data
@@ -113,6 +115,10 @@ function ListProduct() {
     setActiveItem(itemName);
   };
 
+  const handleNavigateToHome = () => {
+    navigate("/home")
+  };
+
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -172,9 +178,7 @@ function ListProduct() {
     setSelectedCategory(selectedSortProductValue); // Update selectedCategory
   };
 
-  const handleNavigateToHome = () => {
-    navigate("/")
-  };
+ 
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
