@@ -1,5 +1,8 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { hideUnauthorizeModal } from "./slices/accountSlices";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -10,6 +13,39 @@ import Settings from "./components/Settings";
 import Reports from "./components/Reports";
 import UpdateProfile from "./components/UpdateProfile";
 import ListCategory from "./components/ListCategory";
+
+function AdminValidationModal() {
+  const navigate = useNavigate();
+  const { redirectTo, showUnauthorizedModal } = useSelector((state) => state.account);
+  const dispatch = useDispatch();
+  return (
+    <Modal
+      isOpen={showUnauthorizedModal}
+      onClose={() => {
+        dispatch(hideUnauthorizeModal());
+      }}
+      closeOnOverlayClick={false}
+      isCentered
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Permission Denied</ModalHeader>
+        <ModalBody>You are not an admin.</ModalBody>
+        <ModalFooter>
+          <Button
+            colorScheme="red"
+            onClick={() => {
+              navigate(redirectTo);
+              dispatch(hideUnauthorizeModal());
+            }}
+          >
+            OK
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
 
 function App() {
   return (
@@ -24,6 +60,7 @@ function App() {
       <Route path="/admin/reports" element={<Reports />} />
       <Route path="/login/update/:username" element={<UpdateProfile />} />
     </Routes>
+      <AdminValidationModal />
   );
 }
 

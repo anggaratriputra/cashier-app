@@ -31,23 +31,9 @@ import AdminSidebar from "./AdminSidebar";
 import api from "../api";
 import UpdateProductModal from "./UpdateProductModal";
 import { useNavigate } from "react-router-dom";
-
-function AdminValidationModal({ isOpen, onClose, onNavigate }) {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} isCloseable={false} isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Permission Denied</ModalHeader>
-        <ModalBody>You are not an admin.</ModalBody>
-        <ModalFooter>
-          <Button colorScheme="red" onClick={onNavigate}>
-            OK
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  );
-}
+import { useDispatch } from "react-redux";
+import { showUnauthorizedModal } from "../slices/accountSlices";
+import { logout } from "../slices/accountSlices";
 
 function ListProduct() {
   const [products, setProducts] = useState([]); // State to store product data
@@ -71,7 +57,12 @@ function ListProduct() {
   const [isAdminValidationModalOpen, setIsAdminValidationModalOpen] = useState(false);
 
   const [productIdForEdit, setProductForEdit] = useState("");
+
   const toast = useToast();
+  const dispatch = useDispatch();
+  const [categories, setCategories] = useState([]); // State to store category data
+  
+  
 
   // Fetch data from the backend API
   useEffect(() => {
@@ -85,13 +76,29 @@ function ListProduct() {
         const totalPages = Math.ceil(totalData / productsPerPage);
         setTotalData(totalData);
         setTotalPages(totalPages);
-
         setProducts(productData);
       } catch (error) {
         if (error?.response?.status == 404) {
           setTotalData(0);
           setTotalPages(0);
           setProducts([]);
+        } else if (error?.response?.status == 401) {
+          setTotalData(0);
+          setTotalPages(0);
+          setProducts([]);
+          dispatch(showUnauthorizedModal("/home"));
+        } else if (error?.response?.status == 403) {
+          toast({
+            title: "Session expired",
+            description: "Your session is expired, please login again.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            onCloseComplete() {
+              dispatch(logout());
+              navigate("/")
+            },
+          });
         } else {
           console.error(error);
           toast({
@@ -105,13 +112,26 @@ function ListProduct() {
       }
     };
 
-    if (!isAdmin) {
-      // Display the admin validation modal
-      setIsAdminValidationModalOpen(true);
-    }
-
     fetchProducts();
-  }, [isAdmin, currentPage, sortCriteria, selectedCategory, searchInput]);
+  }, [currentPage, sortCriteria, selectedCategory, searchInput]);
+
+
+  // Fetch categories from the backend API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get("/categories");
+        const categoryData = response.data.details;
+        setCategories(categoryData);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []); 
+
+
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
   };
@@ -194,7 +214,13 @@ function ListProduct() {
     { label: "Price (High to Low)", value: "price-desc" },
   ];
 
-  const sortingProduct = [{ label: "All" }, { label: "Food", value: "food" }, { label: "Drink", value: "drink" }];
+  const sortingProduct = [
+    { label: "All" }, // Default "All" option
+    ...categories.map((category) => ({
+      label: category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase(),
+      value: category.name,
+    })),
+  ];
 
   const handleSortChange = (event) => {
     const selectedSortValue = event.target.value;

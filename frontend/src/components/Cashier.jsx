@@ -30,6 +30,10 @@ import { FaCheck, FaTimes, FaEdit, FaSearch, FaPlusCircle } from "react-icons/fa
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
 import CashierForm from "./CashierForm";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showUnauthorizedModal } from "../slices/accountSlices";
+import { logout } from "../slices/accountSlices";
 
 function Cashier() {
   const [cashiers, setCashiers] = useState([]); // State to store product data
@@ -43,8 +47,10 @@ function Cashier() {
   const [sortCriteria, setSortCriteria] = useState("alphabetical-asc"); // Default sorting criteria that matches the backend;
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
   const [totalData, setTotalData] = useState(0);
+  const navigate = useNavigate();
 
   const toast = useToast();
+  const dispatch = useDispatch();
 
   const fetchCashiers = async () => {
     try {
@@ -62,6 +68,23 @@ function Cashier() {
         setTotalData(0);
         setTotalPages(0);
         setCashiers([]);
+      } else if (error?.response?.status == 401) {
+        setTotalData(0);
+        setTotalPages(0);
+        setCashiers([]);
+        dispatch(showUnauthorizedModal("/home"));
+      } else if (error?.response?.status == 403) {
+        toast({
+          title: "Session expired",
+          description: "Your session is expired, please login again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          onCloseComplete() {
+            dispatch(logout());
+            navigate("/")
+          },
+        });
       } else {
         console.error(error);
         toast({
@@ -200,10 +223,13 @@ function Cashier() {
       .put(`/cashier/${cashierId}/toggle-status`)
       .then((response) => {
         // Handle the successful response here (e.g., show a success message)
-        console.log("Status toggled successfully");
-
-        // You may want to refresh the cashier list to reflect the updated status
-        // You can do this by re-fetching the cashier data or updating the current list
+        toast({
+          title: "Success",
+          description: "Cashier status has changed.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       })
       .catch((error) => {
         // Handle any errors (e.g., show an error message)

@@ -13,8 +13,8 @@ exports.handleLogin = async (req, res) => {
       where: {
         [Op.or]: {
           email: userIdentity,
-          username: userIdentity,
-          password,
+          username: userIdentity, 
+          password
         },
       },
     });
@@ -66,14 +66,16 @@ exports.handleLogin = async (req, res) => {
 };
 
 exports.updateAccount = async (req, res) => {
-  const { username } = req.params;
+  const { id } = req.user;
   const { userName, firstName, lastName, password } = req.body;
 
   const filename = req.file?.filename;
   const photoProfile = filename;
 
   try {
-    const account = await Account.findOne({ where: { username } });
+    const account = await Account.findOne({ where: { id } });
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
 
     if (!account) {
       return res.status(404).json({
@@ -85,7 +87,7 @@ exports.updateAccount = async (req, res) => {
     account.username = userName;
     account.firstName = firstName;
     account.lastName = lastName;
-    account.password = password;
+    account.password = hashPassword;
     if (photoProfile) {
       account.photoProfile = photoProfile;
     }
@@ -182,3 +184,5 @@ exports.getSingleAccount = async (req, res) => {
     detail: account,
   });
 };
+
+

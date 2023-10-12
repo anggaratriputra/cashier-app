@@ -31,7 +31,7 @@ exports.validateToken = (req, res, next) => {
     req.user = payload;
     next();
   } catch (error) {
-    res.status(401).json({
+    res.status(403).json({
       ok: false,
       message: String(error),
     });
@@ -43,12 +43,12 @@ exports.checkRole = (req, res, next) => {
     next();
     return;
   }
-
   res.status(401).json({
     ok: false,
-    message: "Invalid account role type",
+    message: "Permission Denied",
   });
 };
+
 exports.checkRoleUser = (req, res, next) => {
   if (req.user.isActive === true) {
     next();
@@ -57,6 +57,6 @@ exports.checkRoleUser = (req, res, next) => {
 
   res.status(401).json({
     ok: false,
-    message: "Invalid account role type",
+    message: "Your account is not active, please contact an admin ",
   });
 };

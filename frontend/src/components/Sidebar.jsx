@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import { Icon, Flex, Button, Text, Image, CloseButton, Box, useColorModeValue, Avatar, Menu, MenuButton, Portal, MenuList, MenuItem } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiSettings, FiMenu } from "react-icons/fi";
-
-import Home from "../pages/Home";
-import Reports from "./Reports";
-import Settings from "./Settings";
-import UpdateProfile from "./UpdateProfile";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../slices/accountSlices";
+import { useDispatch } from "react-redux";
 
 const SidebarContent = ({ onClose, ...rest }) => {
   const [activeItem, setActiveItem] = useState("menu"); // Initialize with the default active item
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
   };
 
   return (
@@ -30,27 +34,23 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <NavItem icon={FiTrendingUp} name="Bills" isActive={activeItem === "reports"} onClick={() => setActivePage("reports")} />
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => setActivePage("settings")} />
       </Flex>
-      <Box
-        position="fixed"
-        bottom={10}
-        left={3}
-      >
-       
-       
-      <Menu>
-        <MenuButton><Avatar bg='red.500' /></MenuButton>
-        <Portal>
-          <MenuList>
-            <MenuItem>Your Profile</MenuItem>
-            <MenuItem>Edit Profile</MenuItem>
-            <MenuItem>Log Out</MenuItem>
-          </MenuList>
-        </Portal>
+      <Box position="fixed" bottom={10} left={3}>
+        <Menu>
+          <MenuButton>
+            <Avatar bg="red.500" />
+          </MenuButton>
+          <Portal>
+            <MenuList>
+              <MenuItem>Your Profile</MenuItem>
+              <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/editprofile")}>
+                Edit Profile
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+            </MenuList>
+          </Portal>
         </Menu>
-        
+      </Box>
     </Box>
-
-</Box>
   );
 };
 

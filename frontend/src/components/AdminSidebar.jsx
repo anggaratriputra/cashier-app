@@ -6,10 +6,18 @@ import { FaCashRegister } from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { MdFastfood } from "react-icons/md";
+import { logout } from "../slices/accountSlices";
+import { useDispatch } from "react-redux";
 import Menu from "./Menu";
 
 const AdminSidebar = ({ activeItem }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
+
 
   return (
     <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">
@@ -30,18 +38,21 @@ const AdminSidebar = ({ activeItem }) => {
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => navigate("/admin/settings")} />
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
-        {/* <Menu>
+
+      <Menu>
           <MenuButton>
             <Avatar bg="red.500" />
           </MenuButton>
           <Portal>
             <MenuList>
               <MenuItem>Your Profile</MenuItem>
-              <MenuItem>Edit Profile</MenuItem>
-              <MenuItem>Log Out</MenuItem>
+              <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/login/update/:username")}>
+                Edit Profile
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </MenuList>
           </Portal>
-        </Menu> */}
+        </Menu>
       </Box>
     </Box>
   );

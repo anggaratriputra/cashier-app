@@ -1,16 +1,16 @@
 import axios from "axios";
 
 let baseURL = "http://localhost:8000";
-const token = localStorage.getItem('profile.data.token')
-// if (process.env.NODE_ENV === "production") {
-//   baseURL = ""
-// }
+
 const instance = axios.create({
   baseURL,
- headers: {
- Authorization: `Bearer ${token}`
- }
+});
+
+instance.interceptors.request.use((config) => {
+  const token = JSON.parse(localStorage.getItem("profile"))?.data?.token;
+
+  config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
 export default instance;
-
