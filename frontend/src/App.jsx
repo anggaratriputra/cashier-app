@@ -61,7 +61,7 @@ function App() {
         <Route path="/admin/cashier" element={<Cashier />} />
         <Route path="/admin/settings" element={<Settings />} />
         <Route path="/admin/reports" element={<Reports />} />
-        <Route path="/login/update/:username" element={<UpdateProfile />} />
+        <Route path="/editprofile" element={<UpdateProfile />} />
       </Routes>
       <AdminValidationModal />
     </>
