@@ -17,6 +17,8 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  
+
   const login = async (username, password) => {
     try {
       const response = await api.post('/login', {
@@ -40,6 +42,13 @@ function Login() {
     }
     } catch (error) {
     console.error('Error:', error);
+    toast({
+      title: "Failed to login!",
+      description: "Username or password is incorrect",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
   }
 };
 
