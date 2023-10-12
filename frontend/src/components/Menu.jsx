@@ -24,4 +24,4 @@ function Menu() {
   );
 }
 
-export default Home;
+export default Menu;
