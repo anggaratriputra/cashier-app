@@ -66,14 +66,14 @@ exports.handleLogin = async (req, res) => {
 };
 
 exports.updateAccount = async (req, res) => {
-  const { username } = req.params;
+  const { id } = req.user;
   const { userName, firstName, lastName, password } = req.body;
 
   const filename = req.file?.filename;
   const photoProfile = filename;
 
   try {
-    const account = await Account.findOne({ where: { username } });
+    const account = await Account.findOne({ where: { id } });
 
     if (!account) {
       return res.status(404).json({
