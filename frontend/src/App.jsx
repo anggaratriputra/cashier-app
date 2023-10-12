@@ -14,6 +14,7 @@ import UpdateProfile from "./components/UpdateProfile";
 import { useSelector, useDispatch } from "react-redux";
 import { hideUnauthorizeModal } from "./slices/accountSlices";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import UpdateAdminProfile from "./components/UpdateAdminProfile";
 
 function AdminValidationModal() {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ function App() {
         <Route path="/admin/settings" element={<Settings />} />
         <Route path="/admin/reports" element={<Reports />} />
         <Route path="/editprofile" element={<UpdateProfile />} />
+        <Route path="/admin/editprofile" element={<UpdateAdminProfile />} />
       </Routes>
       <AdminValidationModal />
     </>
