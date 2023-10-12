@@ -48,25 +48,6 @@ function AdminValidationModal({ isOpen, onClose, onNavigate }) {
     </Modal>
   );
 }
-import UpdateProductModal from "./UpdateProductModal";
-import { useNavigate } from "react-router-dom";
-
-function AdminValidationModal({ isOpen, onClose, onNavigate }) {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} isCloseable={false} isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Permission Denied</ModalHeader>
-        <ModalBody>You are not an admin.</ModalBody>
-        <ModalFooter>
-          <Button colorScheme="red" onClick={onNavigate}>
-            OK
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  );
-}
 
 function ListProduct() {
   const [products, setProducts] = useState([]); // State to store product data
@@ -80,14 +61,6 @@ function ListProduct() {
   const [totalData, setTotalData] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const profileData = localStorage.getItem("profile"); // Get the profile data from localStorage
-  const profile = JSON.parse(profileData);
-  const isAdmin = profile?.data?.profile?.isAdmin || false;
-
-  const [isAdminValidationModalOpen, setIsAdminValidationModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
