@@ -42,7 +42,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
           <Portal>
             <MenuList>
               <MenuItem>Your Profile</MenuItem>
-              <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/login/update/:username")}>
+              <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/editprofile")}>
                 Edit Profile
               </MenuItem>
               <MenuItem onClick={handleLogout}>Log Out</MenuItem>

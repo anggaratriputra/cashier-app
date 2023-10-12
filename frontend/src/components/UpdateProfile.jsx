@@ -10,7 +10,7 @@ import { useDropzone } from "react-dropzone";
 
 function UpdateProfile() {
 
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [activeItem, setActiveItem] = useState("updateProfile");
   const toast = useToast();
@@ -120,7 +120,6 @@ function UpdateProfile() {
           <Text fontWeight="bold" fontSize="2xl" mb="20px">
             Update Profile
           </Text>
-      
           <form onSubmit={formik.handleSubmit}>
             <FormControl isInvalid={formik.errors.firstName && formik.touched.firstName}>
               <FormLabel>First Name</FormLabel>

@@ -38,14 +38,16 @@ const AdminSidebar = ({ activeItem }) => {
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => navigate("/admin/settings")} />
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
-        <Menu>
+      <Menu>
           <MenuButton>
             <Avatar bg="red.500" />
           </MenuButton>
           <Portal>
             <MenuList>
               <MenuItem>Your Profile</MenuItem>
-              <MenuItem>Edit Profile</MenuItem>
+              <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/login/update/:username")}>
+                Edit Profile
+              </MenuItem>
               <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </MenuList>
           </Portal>
