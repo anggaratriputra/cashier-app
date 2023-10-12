@@ -1,4 +1,5 @@
-import { Box, Flex, Text, Input, Button, FormControl, FormLabel, FormErrorMessage, useToast, InputRightElement } from "@chakra-ui/react";
+import { Box, Flex, Text, Input, Button, FormControl, FormLabel, FormErrorMessage, useToast, InputRightElement, IconButton, InputGroup } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import api from "../api";
@@ -21,9 +22,9 @@ function UpdateProfile() {
 
 
   const { acceptedFiles, getRootProps } = useDropzone({
-    accept: "image/", //only img file will be acc
+    accept: "image/jpeg, image/png",
     onDrop: (acceptedFiles) => {
-      formik.setFieldValue("image", acceptedFiles[0]);
+      formik.setFieldValue("photoProfile", acceptedFiles[0]);
     },
   });
 
@@ -37,8 +38,8 @@ function UpdateProfile() {
   .matches(
     '^(?=.*?[a-zA-Z])(?=.*?[0-9]).{6,}$',
     'Must contain at least 6 characters, including at least one letter and one number'),
-    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Required'),
-  });
+    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Required')
+});
 
   const formik = useFormik({
     initialValues: {
@@ -47,7 +48,7 @@ function UpdateProfile() {
       email: "",
       password: "",
       confirmPassword: "",
-      photoProfile: "",
+      photoProfile: null,
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -58,13 +59,14 @@ function UpdateProfile() {
     data.append('email', values.email);
     data.append('password', values.password);
     data.append('confirmPassword', values.confirmPassword);
-    data.append('photoProfile', values.photoProfile);
-
-    // Append the photoProfile if it's a file (e.g., an image)
     if (values.photoProfile instanceof File) {
       data.append('photoProfile', values.photoProfile);
     }
-        await api.patch(`/login/update/${username}`, data, {});
+        await api.patch(`/login/profile`, data, {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }
+        });
 
         //handle success or redirect to another page
         console.log("Profile successfully updated!");
@@ -118,6 +120,7 @@ function UpdateProfile() {
           <Text fontWeight="bold" fontSize="2xl" mb="20px">
             Update Profile
           </Text>
+      
           <form onSubmit={formik.handleSubmit}>
             <FormControl isInvalid={formik.errors.firstName && formik.touched.firstName}>
               <FormLabel>First Name</FormLabel>
@@ -139,7 +142,24 @@ function UpdateProfile() {
 
             <FormControl isInvalid={formik.errors.password && formik.touched.password}>
               <FormLabel>Password</FormLabel>
-             <Input type="{showPassword ? 'text' : 'password'}" id="password" name="password" placeholder="Password" value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur} />
+              <InputGroup>
+             <Input 
+             type="{showPassword ? 'text' : 'password'}"
+             id="password"
+             name="password"
+             placeholder="Password"
+             value={formik.values.password}
+             onChange={formik.handleChange}
+             onBlur={formik.handleBlur} 
+             />
+             <InputRightElement>
+                <IconButton
+                  size="sm"
+                  onClick={() => setShowPassword(!showPassword)}
+                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                />
+              </InputRightElement>
+              </InputGroup>
               <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
             </FormControl>
 
