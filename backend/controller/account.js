@@ -67,15 +67,16 @@ exports.handleLogin = async (req, res) => {
 
 exports.updateAccount = async (req, res) => {
   const { username } = req.params;
-  const { userName, firstName, lastName, password, photoProfile } = req.body;
+  const { userName, firstName, lastName, password } = req.body;
 
-  console.log(req.file);
+  const filename = req.file?.filename;
+  const photoProfile = filename;
 
   try {
     const account = await Account.findOne({ where: { username } });
-    console.log(account);
+
     if (!account) {
-      res.status(404).json({
+      return res.status(404).json({
         ok: false,
         message: "Account Not Found!",
       });
@@ -85,7 +86,9 @@ exports.updateAccount = async (req, res) => {
     account.firstName = firstName;
     account.lastName = lastName;
     account.password = password;
-    account.photoProfile = photoProfile;
+    if (photoProfile) {
+      account.photoProfile = photoProfile;
+    }
     await account.save();
 
     res.status(200).json({
@@ -94,7 +97,7 @@ exports.updateAccount = async (req, res) => {
       detail: account,
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       ok: false,
       message: "Failed to update account!",
       detail: String(error),
@@ -178,30 +181,4 @@ exports.getSingleAccount = async (req, res) => {
     ok: true,
     detail: account,
   });
-
-  exports.uploadPhoto = async (req, res) => {
-    const { filename } = req.file;
-    const { id: accountId } = req.user;
-
-    try {
-      const profile = await Profile.findOne({ where: { accountId } });
-      if (profile.profilePicture) {
-        // delete old profile picture
-        fs.rmSync(__dirname + "/../public/" + profile.profilePicture);
-      }
-
-      profile.profilePicture = filename;
-      await profile.save();
-
-      res.json({
-        ok: true,
-        data: "Profile picture updated",
-      });
-    } catch (error) {
-      res.status(500).json({
-        ok: false,
-        message: String(error),
-      });
-    }
-  };
 };
