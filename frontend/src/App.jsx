@@ -25,8 +25,7 @@ function AdminValidationModal() {
         dispatch(hideUnauthorizeModal());
       }}
       closeOnOverlayClick={false}
-      isCentered
-    >
+      isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Permission Denied</ModalHeader>
@@ -37,8 +36,7 @@ function AdminValidationModal() {
             onClick={() => {
               navigate(redirectTo);
               dispatch(hideUnauthorizeModal());
-            }}
-          >
+            }}>
             OK
           </Button>
         </ModalFooter>
@@ -49,18 +47,20 @@ function AdminValidationModal() {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/admin/addproduct" element={<AddProduct />} />
-      <Route path="/admin/category" element={<ListCategory />} />
-      <Route path="/admin/listproduct" element={<ListProduct />} />
-      <Route path="/admin/cashier" element={<Cashier />} />
-      <Route path="/admin/settings" element={<Settings />} />
-      <Route path="/admin/reports" element={<Reports />} />
-      <Route path="/login/update/:username" element={<UpdateProfile />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/admin/addproduct" element={<AddProduct />} />
+        <Route path="/admin/category" element={<ListCategory />} />
+        <Route path="/admin/listproduct" element={<ListProduct />} />
+        <Route path="/admin/cashier" element={<Cashier />} />
+        <Route path="/admin/settings" element={<Settings />} />
+        <Route path="/admin/reports" element={<Reports />} />
+        <Route path="/login/update/:username" element={<UpdateProfile />} />
+      </Routes>
       <AdminValidationModal />
+    </>
   );
 }
 

@@ -378,7 +378,6 @@ function ListProduct() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <AdminValidationModal isOpen={isAdminValidationModalOpen} onClose={() => setIsAdminValidationModalOpen(false)} onNavigate={handleNavigateToHome} />
     </>
   );
 }

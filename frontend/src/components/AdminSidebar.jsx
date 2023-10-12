@@ -39,7 +39,7 @@ const AdminSidebar = ({ activeItem }) => {
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
 
-      <Menu>
+      {/* <Menu>
           <MenuButton>
             <Avatar bg="red.500" />
           </MenuButton>
@@ -52,7 +52,7 @@ const AdminSidebar = ({ activeItem }) => {
               <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </MenuList>
           </Portal>
-        </Menu>
+        </Menu> */}
       </Box>
     </Box>
   );
