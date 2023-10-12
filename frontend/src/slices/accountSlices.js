@@ -4,6 +4,8 @@ const initialState = {
   //Login
   isLoggedIn: window.localStorage.getItem("isLoggedIn") === "true",
   profile: window.localStorage.getItem("profile") ? JSON.parse(window.localStorage.getItem("profile")) : {},
+  showUnauthorizedModal: false,
+  redirectTo: "",
 };
 const accountSlices = createSlice({
   name: "account",
@@ -22,8 +24,16 @@ const accountSlices = createSlice({
       window.localStorage.setItem("isLoggedIn", false);
       window.localStorage.setItem("profile", JSON.stringify({}));
     },
+    showUnauthorizedModal(state, action) {
+      state.showUnauthorizedModal = true;
+      state.redirectTo = action.payload;
+    },
+    hideUnauthorizeModal(state) {
+      state.showUnauthorizedModal = false;
+      state.redirectTo = "";
+    },
   },
 });
 
-export const { login, logout } = accountSlices.actions;
+export const { login, logout, showUnauthorizedModal, hideUnauthorizeModal } = accountSlices.actions;
 export default accountSlices.reducer;

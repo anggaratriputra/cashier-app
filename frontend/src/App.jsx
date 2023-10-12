@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -11,21 +11,60 @@ import Reports from "./components/Reports";
 import UpdateProduct from "./components/UpdateProduct";
 import Category from "./components/Category";
 import UpdateProfile from "./components/UpdateProfile";
+import { useSelector, useDispatch } from "react-redux";
+import { hideUnauthorizeModal } from "./slices/accountSlices";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+
+function AdminValidationModal() {
+  const navigate = useNavigate();
+  const { redirectTo, showUnauthorizedModal } = useSelector((state) => state.account);
+  const dispatch = useDispatch();
+  return (
+    <Modal
+      isOpen={showUnauthorizedModal}
+      onClose={() => {
+        dispatch(hideUnauthorizeModal());
+      }}
+      closeOnOverlayClick={false}
+      isCentered
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Permission Denied</ModalHeader>
+        <ModalBody>You are not an admin.</ModalBody>
+        <ModalFooter>
+          <Button
+            colorScheme="red"
+            onClick={() => {
+              navigate(redirectTo);
+              dispatch(hideUnauthorizeModal());
+            }}
+          >
+            OK
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/admin/addproduct" element={<AddProduct />} />
-      <Route path="/admin/products/update" element={<UpdateProduct />} />
-      <Route path="/admin/category" element={<Category />} />
-      <Route path="/admin/listproduct" element={<ListProduct />} />
-      <Route path="/admin/cashier" element={<Cashier />} />
-      <Route path="/admin/settings" element={<Settings />} />
-      <Route path="/admin/reports" element={<Reports />} />
-      <Route path="/login/update/:username" element={<UpdateProfile />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/admin/addproduct" element={<AddProduct />} />
+        <Route path="/admin/products/update" element={<UpdateProduct />} />
+        <Route path="/admin/category" element={<Category />} />
+        <Route path="/admin/listproduct" element={<ListProduct />} />
+        <Route path="/admin/cashier" element={<Cashier />} />
+        <Route path="/admin/settings" element={<Settings />} />
+        <Route path="/admin/reports" element={<Reports />} />
+        <Route path="/login/update/:username" element={<UpdateProfile />} />
+      </Routes>
+      <AdminValidationModal />
+    </>
   );
 }
 

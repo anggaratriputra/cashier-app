@@ -31,7 +31,7 @@ exports.validateToken = (req, res, next) => {
     req.user = payload;
     next();
   } catch (error) {
-    res.status(401).json({
+    res.status(403).json({
       ok: false,
       message: String(error),
     });

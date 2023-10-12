@@ -30,25 +30,8 @@ import { FaCheck, FaEdit, FaSearch, FaTimes } from "react-icons/fa";
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-
-function AdminValidationModal({ isOpen, onClose, onNavigate }) {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false} isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Permission Denied</ModalHeader>
-        <ModalBody>You are not an admin.</ModalBody>
-        <ModalFooter>
-          <Button colorScheme="red" onClick={onNavigate}>
-            OK
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  );
-}
-
-
+import { useDispatch } from "react-redux";
+import { showUnauthorizedModal } from "../slices/accountSlices";
 
 function ListProduct() {
   const [products, setProducts] = useState([]); // State to store product data
@@ -63,14 +46,9 @@ function ListProduct() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
   const navigate = useNavigate();
-
-  const profileData = localStorage.getItem("profile"); // Get the profile data from localStorage
-  const profile = JSON.parse(profileData);
-  const isAdmin = profile?.data?.profile?.isAdmin || false;
-
-  const [isAdminValidationModalOpen, setIsAdminValidationModalOpen] = useState(false);
-
   const toast = useToast();
+  const dispatch = useDispatch();
+  
 
   // Fetch data from the backend API
   useEffect(() => {
@@ -84,13 +62,28 @@ function ListProduct() {
         const totalPages = Math.ceil(totalData / productsPerPage);
         setTotalData(totalData);
         setTotalPages(totalPages);
-
         setProducts(productData);
       } catch (error) {
         if (error?.response?.status == 404) {
           setTotalData(0);
           setTotalPages(0);
           setProducts([]);
+        } else if (error?.response?.status == 401) {
+          setTotalData(0);
+          setTotalPages(0);
+          setProducts([]);
+          dispatch(showUnauthorizedModal("/home"));
+        } else if (error?.response?.status == 403) {
+          toast({
+            title: "Session expired",
+            description: "Your session is expired, please login again.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            onCloseComplete() {
+              navigate("/")
+            },
+          });
         } else {
           console.error(error);
           toast({
@@ -104,19 +97,10 @@ function ListProduct() {
       }
     };
 
-    if (!isAdmin) {
-      // Display the admin validation modal
-      setIsAdminValidationModalOpen(true);
-    }
-
     fetchProducts();
-  }, [isAdmin, currentPage, sortCriteria, selectedCategory, searchInput]);
+  }, [currentPage, sortCriteria, selectedCategory, searchInput]);
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
-  };
-
-  const handleNavigateToHome = () => {
-    navigate("/home")
   };
 
   const handlePageChange = (newPage) => {
@@ -178,7 +162,6 @@ function ListProduct() {
     setSelectedCategory(selectedSortProductValue); // Update selectedCategory
   };
 
- 
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
@@ -312,11 +295,6 @@ function ListProduct() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <AdminValidationModal
-        isOpen={isAdminValidationModalOpen}
-        onClose={() => setIsAdminValidationModalOpen(false)}
-        onNavigate={handleNavigateToHome}
-      />
     </>
   );
 }
