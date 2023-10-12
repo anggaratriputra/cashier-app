@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Icon, Flex, Button, Text, Image, CloseButton, Box, useColorModeValue, Avatar, Menu, MenuButton, Portal, MenuList, MenuItem } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiSettings, FiMenu } from "react-icons/fi";
+import { Icon, Flex, Image, CloseButton, Box, useColorModeValue, Avatar, Menu, MenuButton, Portal, MenuList, MenuItem } from "@chakra-ui/react";
+import { FiHome, FiTrendingUp, FiSettings } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../slices/accountSlices";
 import { useDispatch } from "react-redux";

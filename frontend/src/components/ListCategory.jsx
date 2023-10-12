@@ -55,7 +55,7 @@ export default function ListCategory() {
       const response = await api.get("/categories");
 
       if (response.data.ok) {
-        setCategories(response.data.categories);
+        setCategories(response.data.details);
       }
     } catch (error) {
       if (error.response.status !== 404) {
@@ -138,7 +138,7 @@ export default function ListCategory() {
           <form onSubmit={formik.handleSubmit}>
             <FormControl isInvalid={formik.errors.name && formik.touched.name}>
               <FormLabel htmlFor="name">Category Name</FormLabel>
-              <Input type="text" id="name" name="name" placeholder="Category Name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur} />
+              <Input type="text" id="name" name="name" placeholder="Category Name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur} w={'80vw'} />
               <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
             </FormControl>
 
