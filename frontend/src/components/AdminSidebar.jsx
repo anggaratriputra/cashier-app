@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Flex, Image, Box, useColorModeValue, Text } from "@chakra-ui/react";
+import { Icon, Flex, Image, Box, useColorModeValue, Text, Menu, MenuButton, Avatar, Portal, MenuList, MenuItem } from "@chakra-ui/react";
 import { FiTrendingUp, FiSettings } from "react-icons/fi";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import { FaCashRegister } from "react-icons/fa";
@@ -29,6 +29,20 @@ const AdminSidebar = ({ activeItem }) => {
         <NavItem icon={TbReportSearch} name="Reports" isActive={activeItem === "reports"} onClick={() => navigate("/admin/reports")} />
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => navigate("/admin/settings")} />
       </Flex>
+      <Box position="fixed" bottom={10} left={3}>
+        <Menu>
+          <MenuButton>
+            <Avatar bg="red.500" />
+          </MenuButton>
+          <Portal>
+            <MenuList>
+              <MenuItem>Your Profile</MenuItem>
+              <MenuItem>Edit Profile</MenuItem>
+              <MenuItem>Log Out</MenuItem>
+            </MenuList>
+          </Portal>
+        </Menu>
+      </Box>
     </Box>
   );
 };

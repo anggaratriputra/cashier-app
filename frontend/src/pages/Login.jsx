@@ -8,6 +8,7 @@ import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../slices/accountSlices";
+import { logout } from "../slices/accountSlices";
 import YupPassword from "yup-password";
 YupPassword(yup);
 
@@ -17,7 +18,7 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const login = async (username, password) => {
+  const loginAccount = async (username, password) => {
     try {
       const response = await api.post('/login', {
         user_identity: username,
@@ -28,14 +29,19 @@ function Login() {
       if (response.status === 200) {
   
         const responseData = response.data;
-        const token = responseData.data.token;
         const isAdmin = responseData.data.profile.isAdmin === true;
-        localStorage.setItem('token', token);
+        const isActive = responseData.data.profile.isActive === true;
+
+        dispatch(login(responseData));
         
         if (isAdmin) {
         navigate("/admin/addproduct");
       } else {
+        if (isActive) {
         navigate("/home");
+        } else {
+          //toast error
+        } 
       }
     }
     } catch (error) {
@@ -47,7 +53,7 @@ function Login() {
     const { username, password } = values;
     
     // Call the loginUser function to send the POST request to the back end
-    login(username, password);
+    loginAccount(username, password);
   
     // Rest of your form submission logic
   };
