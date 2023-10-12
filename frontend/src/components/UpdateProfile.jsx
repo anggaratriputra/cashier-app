@@ -29,9 +29,12 @@ function UpdateProfile() {
     firstName: yup.string().max(10, 'Must be 10 characters or less').required('Required'),
     lastName: yup.string().max(15, 'Must be 15 characters or less').required('Required'),
     email: yup.string().email('Invalid email address').required('Required'),
-    password: yup.string().required('Please enter your password.').matches(
-                    '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-                    'Must contain at least 8 characters, one uppercase, one lowercase, one number and one special case character'),
+    password: yup
+  .string()
+  .required('Please enter your password.')
+  .matches(
+    '^(?=.*?[a-zA-Z])(?=.*?[0-9]).{6,}$',
+    'Must contain at least 6 characters, including at least one letter and one number'),
     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Required'),
   });
 
