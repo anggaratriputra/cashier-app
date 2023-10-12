@@ -81,7 +81,9 @@ exports.deleteCategory = async (req, res) => {
 
 exports.getAllCategory = async (req, res) => {
   try {
-    const categories = await Category.findAll();
+    const categories = await Category.findAll({
+      attributes: ['id', 'name'], // Fetch only the 'id' and 'name' columns
+    });
 
     if (!categories || categories.length === 0) {
       return res.status(404).json({
@@ -93,7 +95,7 @@ exports.getAllCategory = async (req, res) => {
     res.status(200).json({
       ok: true,
       message: "Categories retrieved successfully",
-      categories: categories,
+      details: categories,
     });
   } catch (error) {
     res.status(500).json({

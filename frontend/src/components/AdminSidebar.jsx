@@ -6,13 +6,17 @@ import { FaCashRegister } from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { MdFastfood } from "react-icons/md";
+import { logout } from "../slices/accountSlices";
+import { useDispatch } from "react-redux";
 
 const AdminSidebar = ({ activeItem }) => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleLogout = () => {
+    dispatch(logout());
     navigate("/");
   };
+
 
   return (
     <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">

@@ -32,6 +32,7 @@ import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showUnauthorizedModal } from "../slices/accountSlices";
+import { logout } from "../slices/accountSlices";
 
 function ListProduct() {
   const [products, setProducts] = useState([]); // State to store product data
@@ -48,6 +49,8 @@ function ListProduct() {
   const navigate = useNavigate();
   const toast = useToast();
   const dispatch = useDispatch();
+  const [categories, setCategories] = useState([]); // State to store category data
+  
   
 
   // Fetch data from the backend API
@@ -81,6 +84,7 @@ function ListProduct() {
             duration: 3000,
             isClosable: true,
             onCloseComplete() {
+              dispatch(logout());
               navigate("/")
             },
           });
@@ -99,6 +103,24 @@ function ListProduct() {
 
     fetchProducts();
   }, [currentPage, sortCriteria, selectedCategory, searchInput]);
+
+
+  // Fetch categories from the backend API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get("/categories");
+        const categoryData = response.data.details;
+        setCategories(categoryData);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []); 
+
+
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
   };
@@ -150,7 +172,13 @@ function ListProduct() {
     { label: "Price (High to Low)", value: "price-desc" },
   ];
 
-  const sortingProduct = [{ label: "All" }, { label: "Food", value: "food" }, { label: "Drink", value: "drink" }];
+  const sortingProduct = [
+    { label: "All" }, // Default "All" option
+    ...categories.map((category) => ({
+      label: category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase(),
+      value: category.name,
+    })),
+  ];
 
   const handleSortChange = (event) => {
     const selectedSortValue = event.target.value;

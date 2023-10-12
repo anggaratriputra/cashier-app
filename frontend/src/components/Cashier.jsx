@@ -33,6 +33,7 @@ import CashierForm from "./CashierForm";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showUnauthorizedModal } from "../slices/accountSlices";
+import { logout } from "../slices/accountSlices";
 
 function Cashier() {
   const [cashiers, setCashiers] = useState([]); // State to store product data
@@ -80,6 +81,7 @@ function Cashier() {
           duration: 3000,
           isClosable: true,
           onCloseComplete() {
+            dispatch(logout());
             navigate("/")
           },
         });
