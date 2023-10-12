@@ -1,11 +1,12 @@
 import React from "react";
-import { Icon, Flex, Image, Box, useColorModeValue } from "@chakra-ui/react";
+import { Icon, Flex, Image, Box, useColorModeValue, MenuButton, Avatar, Portal, MenuList, MenuItem } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import { FaCashRegister } from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { MdFastfood } from "react-icons/md";
+import Menu from "./Menu";
 
 const AdminSidebar = ({ activeItem }) => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const AdminSidebar = ({ activeItem }) => {
         <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => navigate("/admin/settings")} />
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
-        <Menu>
+        {/* <Menu>
           <MenuButton>
             <Avatar bg="red.500" />
           </MenuButton>
@@ -40,7 +41,7 @@ const AdminSidebar = ({ activeItem }) => {
               <MenuItem>Log Out</MenuItem>
             </MenuList>
           </Portal>
-        </Menu>
+        </Menu> */}
       </Box>
     </Box>
   );

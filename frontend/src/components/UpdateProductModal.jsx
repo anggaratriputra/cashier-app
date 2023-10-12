@@ -2,14 +2,11 @@ import { Input, Button, FormControl, FormLabel, FormErrorMessage, useToast, Moda
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import api from "../api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-function UpdateProductModal({ isOpen, onClose, productId, onSave }) {
-  const [updateProductName, setUpdateProductName] = useState(productId.productName);
-  const [updateProductPrice, setUpdateProductPrice] = useState(productId.price);
-  const [updateProductcategory, setUpdateProductCategory] = useState(productId.category);
-  const [updateProductdescription, setUpdateProductDescription] = useState(productId.description);
+function UpdateProductModal({ isOpen, onClose, productId }) {
+  const [selectedFileName, setSelectedFileName] = useState(productId.image);
   const toast = useToast();
 
   const validationSchema = Yup.object({
@@ -22,40 +19,39 @@ function UpdateProductModal({ isOpen, onClose, productId, onSave }) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: "image/", //only img file will be acc
     onDrop: (acceptedFiles) => {
-      formik.setFieldValue("image", acceptedFiles[0]);
+      formik.setFieldValue("image", acceptedFiles[0].name);
+      setSelectedFileName(acceptedFiles[0].name);
     },
   });
-
-  const handleSave = () => {
-    onSave(productId.id, updateProductName, updateProductPrice, updateProductcategory, updateProductdescription);
-    onClose();
-  };
+  //   onSave(productId.id, updateProductName, updateProductPrice, updateProductcategory, updateProductdescription, selectedFile, selectedFileName);
+  //   onClose();
+  // };
 
   const formik = useFormik({
     initialValues: {
-      productName: "",
-      price: "",
-      category: "",
-      description: "",
-      image: null,
+      productName: productId.name,
+      price: productId.price,
+      category: productId.category,
+      description: productId.description,
+      image: productId.image,
     },
     validationSchema,
     onSubmit: async (values) => {
       try {
-        
         const formData = new FormData();
-        formData.append("name", values.name);
+        formData.append("productName", values.productName);
         formData.append("price", values.price);
         formData.append("category", values.category);
         formData.append("description", values.description);
-        formData.append("img", values.image);
+        formData.append("image", values.image);
 
         // Send a PATCH request to API to update the product
-        await api.patch(`/update/products/${productId.id}`, formData, {
+        await api.patch(`/products/update/${productId.id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
+        setSelectedFileName('')
 
         toast({
           title: "Product Updated",
@@ -64,6 +60,7 @@ function UpdateProductModal({ isOpen, onClose, productId, onSave }) {
           duration: 3000,
           isClosable: true,
         });
+        onClose()
       } catch (error) {
         toast({
           title: "Product failed to update!",
@@ -76,84 +73,90 @@ function UpdateProductModal({ isOpen, onClose, productId, onSave }) {
       }
     },
   });
+  //   // Fetch the existing product details and populate the form
+  //   const fetchProductDetails = async () => {
+  //     try {
+  //       const response = await api.get(`/products`);
+  //       const product = response.data.details;
 
-  useEffect(() => {
-    // Fetch the existing product details and populate the form
-    const fetchProductDetails = async () => {
-      try {
-        const response = await api.get(`/products`);
-        const product = response.data.details;
+  //       // Set the initial form values based on the fetched product details
+  //       formik.setValues({
+  //         image: product.image,
+  //         productName: product.name,
+  //         price: product.price,
+  //         category: product.category,
+  //         description: product.description,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error fetching product details:", error);
+  //       toast({
+  //         title: "failed to get product!",
+  //         description: String(error),
+  //         status: "error",
+  //         duration: 3000,
+  //         isClosable: true,
+  //       });
+  //     }
+  //   };
 
-        // Set the initial form values based on the fetched product details
-        formik.setValues({
-          productName: product.name,
-          price: product.price,
-          category: product.category,
-          description: product.description,
-        });
-      } catch (error) {
-        console.error("Error fetching product details:", error);
-        toast({
-          title: "failed to get product!",
-          description: String(error),
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    };
+  //   fetchProductDetails();
+  // }, []);
 
-    fetchProductDetails();
-  }, [productId.name, formik]);
-
-  useEffect(() => {
-    setUpdateProductName(productId.name);
-    setUpdateProductPrice(productId.price);
-    setUpdateProductCategory(productId.category);
-    setUpdateProductDescription(productId.description);
-  }, [productId]);
+  // useEffect(() => {
+  //   setUpdateProductName(productId.name);
+  //   setUpdateProductPrice(productId.price);
+  //   setUpdateProductCategory(productId.category);
+  //   setUpdateProductDescription(productId.description);
+  //   setSelectedFile(productId.image);
+  //   setSelectedFileName(productId.image);
+  // }, [productId]);
 
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Update Product</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={formik.handleSubmit}>
+            <ModalHeader>Update Product</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
               <FormControl isInvalid={formik.errors.productName && formik.touched.productName}>
                 <FormLabel>Product Name</FormLabel>
-                <Input type="text" placeholder="Product Name" value={updateProductName} onChange={(e) => setUpdateProductName(e.target.value)} />
+                <Input type="text" placeholder={`${productId.name}`} value={formik.values.productName} onChange={formik.handleChange} name="productName" />
+                <FormErrorMessage>{formik.errors.productName}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={formik.errors.price && formik.touched.price}>
                 <FormLabel>Product Price</FormLabel>
-                <Input type="number" placeholder="Product Price" value={updateProductPrice} onChange={(e) => setUpdateProductPrice(e.target.value)} />
+                <Input type="number" placeholder={`${productId.price}`} value={formik.values.price} onChange={formik.handleChange} name="price" />
+                <FormErrorMessage>{formik.errors.price}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={formik.errors.category && formik.touched.category}>
                 <FormLabel>Product Category</FormLabel>
-                <Input type="text" placeholder="Product Category" value={updateProductcategory} onChange={(e) => setUpdateProductCategory(e.target.value)} />
+                <Input type="text" placeholder={`${productId.category}`} value={formik.values.category} onChange={formik.handleChange} name="category" />
+                <FormErrorMessage>{formik.errors.category}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={formik.errors.description && formik.touched.description}>
                 <FormLabel>Product Description</FormLabel>
-                <Textarea placeholder="Product Description" value={updateProductdescription} onChange={(e) => setUpdateProductDescription(e.target.value)} />
+                <Textarea placeholder={`${productId.description}`} value={formik.values.description} onChange={formik.handleChange} name="description" />
+                <FormErrorMessage>{formik.errors.description}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={formik.errors.image && formik.touched.image}>
                 <FormLabel>Product Image</FormLabel>
                 <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
-                  <input {...getRootProps()} />
+                  <input {...getInputProps()} />
                   <p>Drag 'n' drop an image here, or click to select an image</p>
                 </div>
+                <p>Selected File: {selectedFileName}</p>
                 <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
               </FormControl>
-            </form>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" onClick={handleSave}>
-              Update Product
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" type="submit">
+                Update Product
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>

@@ -73,39 +73,6 @@ function ListProduct() {
   const [productIdForEdit, setProductForEdit] = useState("");
   const toast = useToast();
 
-  const handleSaveProducts = async (productId, updateProductName, updateProductPrice, updateProductcategory, updateProductdescription, image) => {
-    try {
-      const response = await api.patch(`/products/update/${productId}`, { productName: updateProductName, price: updateProductPrice, category: updateProductcategory, description: updateProductdescription, image });
-      if (response.data.ok) {
-        // Update the UI with the new product if the API call is successful
-        const updatedProduct = products.map((product) => {
-          if (product.id === productId) {
-            return { ...product, name: updateProductName, price: updateProductPrice, category: updateProductcategory, description: updateProductdescription };
-          } else {
-            return product;
-          }
-        });
-        setProducts(updatedProduct);
-      } else {
-        toast({
-          title: "Error!",
-          description: "Error updating Product. Please try again.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error!",
-        description: "Error updating Product. Please try again.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
-
   // Fetch data from the backend API
   useEffect(() => {
     const fetchProducts = async () => {
@@ -368,7 +335,7 @@ function ListProduct() {
           </Flex>
         </Box>
       </Flex>
-      <UpdateProductModal isOpen={isModalOpen} productId={productIdForEdit} onClose={() => setIsModalOpen(false)} onSave={handleSaveProducts} />
+      <UpdateProductModal isOpen={isModalOpen} productId={productIdForEdit} onClose={() => setIsModalOpen(false)} />
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>

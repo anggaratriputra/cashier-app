@@ -142,7 +142,7 @@ export default function ListCategory() {
               <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
             </FormControl>
 
-            <Button mt={4} colorScheme="teal" isLoading={formik.isSubmitting} type="submit">
+            <Button mt={4} bgColor={'orange.300'} color={'white'} isLoading={formik.isSubmitting} type="submit">
               Create Category
             </Button>
           </form>

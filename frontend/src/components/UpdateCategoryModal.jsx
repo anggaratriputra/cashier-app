@@ -28,7 +28,7 @@ export default function CategoryUpdateModal({ isOpen, categoryToEdit, onSave, on
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSave}>
+            <Button colorScheme="yellow" mr={3} onClick={handleSave}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>
