@@ -10,6 +10,10 @@ import { MdFastfood } from "react-icons/md";
 const AdminSidebar = ({ activeItem }) => {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    navigate("/");
+  };
+
   return (
     <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">
       {/* Sidebar Header */}
@@ -38,7 +42,7 @@ const AdminSidebar = ({ activeItem }) => {
             <MenuList>
               <MenuItem>Your Profile</MenuItem>
               <MenuItem>Edit Profile</MenuItem>
-              <MenuItem>Log Out</MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </MenuList>
           </Portal>
         </Menu>

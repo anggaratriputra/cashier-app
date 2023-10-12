@@ -13,8 +13,8 @@ exports.handleLogin = async (req, res) => {
       where: {
         [Op.or]: {
           email: userIdentity,
-          username: userIdentity,
-          password,
+          username: userIdentity, 
+          password
         },
       },
     });

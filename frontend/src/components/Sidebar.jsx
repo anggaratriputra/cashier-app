@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { Icon, Flex, Button, Text, Image, CloseButton, Box, useColorModeValue, Avatar, Menu, MenuButton, Portal, MenuList, MenuItem } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiSettings, FiMenu } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 import Home from "../pages/Home";
 import Reports from "./Reports";
 import Settings from "./Settings";
 import UpdateProfile from "./UpdateProfile";
 
+
 const SidebarContent = ({ onClose, ...rest }) => {
   const [activeItem, setActiveItem] = useState("menu"); // Initialize with the default active item
+  const navigate = useNavigate()
 
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
+  };
+
+  const handleLogout = () => {
+    navigate("/");
   };
 
   return (
@@ -42,8 +49,8 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <Portal>
           <MenuList>
             <MenuItem>Your Profile</MenuItem>
-            <MenuItem>Edit Profile</MenuItem>
-            <MenuItem>Log Out</MenuItem>
+            <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/login/update/:username")}>Edit Profile</MenuItem>
+            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
           </MenuList>
         </Portal>
         </Menu>
@@ -57,6 +64,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
 const NavItem = ({ icon, name, isActive, onClick }) => {
   const activeColor = useColorModeValue("white", "gray.900");
   const activeBgColor = "red";
+  
 
   return (
     <Flex

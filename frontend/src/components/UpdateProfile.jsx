@@ -2,13 +2,14 @@ import { Box, Flex, Text, Input, Button, FormControl, FormLabel, FormErrorMessag
 import { useFormik } from "formik";
 import * as yup from "yup";
 import api from "../api";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 
 function UpdateProfile() {
 
+    const [showPassword, setShowPassword] = useState(false);
 
   const [activeItem, setActiveItem] = useState("updateProfile");
   const toast = useToast();
@@ -17,6 +18,7 @@ function UpdateProfile() {
   };
 
   const { username } = useParams();
+
 
   const { acceptedFiles, getRootProps } = useDropzone({
     accept: "image/", //only img file will be acc
@@ -29,9 +31,12 @@ function UpdateProfile() {
     firstName: yup.string().max(10, 'Must be 10 characters or less').required('Required'),
     lastName: yup.string().max(15, 'Must be 15 characters or less').required('Required'),
     email: yup.string().email('Invalid email address').required('Required'),
-    password: yup.string().required('Please enter your password.').matches(
-                    '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-                    'Must contain at least 8 characters, one uppercase, one lowercase, one number and one special case character'),
+    password: yup
+  .string()
+  .required('Please enter your password.')
+  .matches(
+    '^(?=.*?[a-zA-Z])(?=.*?[0-9]).{6,}$',
+    'Must contain at least 6 characters, including at least one letter and one number'),
     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Required'),
   });
 
@@ -53,6 +58,7 @@ function UpdateProfile() {
     data.append('email', values.email);
     data.append('password', values.password);
     data.append('confirmPassword', values.confirmPassword);
+    data.append('photoProfile', values.photoProfile);
 
     // Append the photoProfile if it's a file (e.g., an image)
     if (values.photoProfile instanceof File) {
@@ -85,7 +91,7 @@ function UpdateProfile() {
   useEffect(() => {
     const fetchProfileDetails = async () => {
       try {
-        const response = await api.get(`/login/profile`);
+        const response = await api.get(`/login/profile/`);
         const profile = response.data.detail; // Assuming your API response structure has a "detail" field
 
         // Set the initial form values based on the fetched profile details
