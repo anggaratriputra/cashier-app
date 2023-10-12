@@ -29,6 +29,24 @@ import {
 import { FaCheck, FaEdit, FaSearch, FaTimes } from "react-icons/fa";
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
+import { useNavigate } from "react-router-dom";
+
+function AdminValidationModal({ isOpen, onClose, onNavigate }) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} isCloseable={false} isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Permission Denied</ModalHeader>
+        <ModalBody>You are not an admin.</ModalBody>
+        <ModalFooter>
+          <Button colorScheme="red" onClick={onNavigate}>
+            OK
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
 
 function ListProduct() {
   const [products, setProducts] = useState([]); // State to store product data
@@ -42,6 +60,13 @@ function ListProduct() {
   const [totalData, setTotalData] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
+  const navigate = useNavigate();
+
+  const profileData = localStorage.getItem("profile"); // Get the profile data from localStorage
+  const profile = JSON.parse(profileData);
+  const isAdmin = profile?.data?.profile?.isAdmin || false;
+
+  const [isAdminValidationModalOpen, setIsAdminValidationModalOpen] = useState(false);
 
   const toast = useToast();
 
@@ -77,8 +102,13 @@ function ListProduct() {
       }
     };
 
+    if (!isAdmin) {
+      // Display the admin validation modal
+      setIsAdminValidationModalOpen(true);
+    }
+
     fetchProducts();
-  }, [currentPage, sortCriteria, selectedCategory, searchInput]);
+  }, [isAdmin, currentPage, sortCriteria, selectedCategory, searchInput]);
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
   };
@@ -142,6 +172,9 @@ function ListProduct() {
     setSelectedCategory(selectedSortProductValue); // Update selectedCategory
   };
 
+  const handleNavigateToHome = () => {
+    navigate("/")
+  };
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
@@ -275,6 +308,11 @@ function ListProduct() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <AdminValidationModal
+        isOpen={isAdminValidationModalOpen}
+        onClose={() => setIsAdminValidationModalOpen(false)}
+        onNavigate={handleNavigateToHome}
+      />
     </>
   );
 }
