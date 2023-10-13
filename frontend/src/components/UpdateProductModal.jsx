@@ -18,8 +18,9 @@ function UpdateProductModal({ isOpen, onClose, productId }) {
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: "image/", //only img file will be acc
+    maxSize: 2000000,
     onDrop: (acceptedFiles) => {
-      formik.setFieldValue("image", acceptedFiles[0].name);
+      formik.setFieldValue("image", acceptedFiles[0]);
       setSelectedFileName(acceptedFiles[0].name);
     },
   });
@@ -143,7 +144,7 @@ function UpdateProductModal({ isOpen, onClose, productId }) {
               <FormControl isInvalid={formik.errors.image && formik.touched.image}>
                 <FormLabel>Product Image</FormLabel>
                 <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
-                  <input {...getInputProps()} />
+                  <input {...getInputProps()} onChange={(event) => formik.setFieldValue("image", event.currentTarget.files[0])} />
                   <p>Drag 'n' drop an image here, or click to select an image</p>
                 </div>
                 <p>Selected File: {selectedFileName}</p>

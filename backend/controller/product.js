@@ -46,7 +46,7 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { productName, price, category, description, image } = req.body;
+  const { productName, price, category, description } = req.body;
 
   try {
     const product = await Product.findByPk(id);
@@ -58,8 +58,13 @@ exports.updateProduct = async (req, res) => {
       });
     }
 
-    if (image) {
-      product.image = image;
+    if (req.file) {
+      product.image = req.file.filename;
+    } else {
+      return res.status(404).json({
+        ok: false,
+        message: "Failed to upload image!",
+      });
     }
     if (productName) {
       product.name = productName;
