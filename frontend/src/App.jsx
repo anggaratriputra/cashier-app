@@ -12,12 +12,9 @@ import Cashier from "./components/Cashier";
 import Settings from "./components/Settings";
 import Reports from "./components/Reports";
 import UpdateProfile from "./components/UpdateProfile";
-import { useSelector, useDispatch } from "react-redux";
-import { hideUnauthorizeModal } from "./slices/accountSlices";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import UpdateAdminProfile from "./components/UpdateAdminProfile";
 import ListCategory from "./components/ListCategory";
-
+import Menu from "./components/Menu";
 
 function AdminValidationModal() {
   const navigate = useNavigate();
@@ -64,6 +61,7 @@ function App() {
         <Route path="/admin/reports" element={<Reports />} />
         <Route path="/editprofile" element={<UpdateProfile />} />
         <Route path="/admin/editprofile" element={<UpdateAdminProfile />} />
+        <Route path="/menu" element={<Menu />} />
       </Routes>
       <AdminValidationModal />
     </>
