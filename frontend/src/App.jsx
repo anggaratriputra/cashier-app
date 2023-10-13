@@ -13,7 +13,7 @@ import Reports from "./components/Reports";
 import UpdateProfile from "./components/UpdateProfile";
 import UpdateAdminProfile from "./components/UpdateAdminProfile";
 import ListCategory from "./components/ListCategory";
-
+import Menu from "./components/Menu";
 
 function AdminValidationModal() {
   const navigate = useNavigate();
@@ -60,6 +60,7 @@ function App() {
         <Route path="/admin/reports" element={<Reports />} />
         <Route path="/editprofile" element={<UpdateProfile />} />
         <Route path="/admin/editprofile" element={<UpdateAdminProfile />} />
+        <Route path="/menu" element={<Menu />} />
       </Routes>
       <AdminValidationModal />
     </>
