@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Icon, Flex, Image, CloseButton, Box, useColorModeValue, Avatar, Menu, MenuButton, Portal, MenuList, MenuItem } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiSettings } from "react-icons/fi";
+import { useFormikContext } from "formik";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../slices/accountSlices";
 import { useDispatch } from "react-redux";
@@ -12,6 +13,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
   };
+
 
   const handleLogout = () => {
     dispatch(logout());
@@ -37,7 +39,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       <Box position="fixed" bottom={10} left={3}>
         <Menu>
           <MenuButton>
-            <Avatar bg="red.500" />
+         <Avatar bg="red.500" />
           </MenuButton>
           <Portal>
             <MenuList>

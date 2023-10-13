@@ -3,7 +3,6 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { hideUnauthorizeModal } from "./slices/accountSlices";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
-
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AddProduct from "./components/AddProduct";
