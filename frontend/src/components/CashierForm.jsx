@@ -10,7 +10,7 @@ const CashierForm = ({ onSubmit }) => {
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
     email: Yup.string().email("Invalid email format").required("Email is required"),
-    password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+    password: Yup.string().required("Password is required!").matches("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{6,}$", "Must contain at least 6 characters, including at least one letter and one number"),
     // Add more validation rules as needed
   });
 
