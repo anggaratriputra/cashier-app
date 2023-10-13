@@ -43,7 +43,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
           </MenuButton>
           <Portal>
             <MenuList>
-              <MenuItem>Your Profile</MenuItem>
+              <MenuItem name="Your Profile" isActive={activeItem === "UserProfile"} onClick={() => navigate("/profile")}>Your Profile</MenuItem>
               <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/editprofile")}>
                 Edit Profile
               </MenuItem>
