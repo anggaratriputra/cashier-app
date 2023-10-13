@@ -50,6 +50,17 @@ exports.checkRole = (req, res, next) => {
 };
 
 exports.checkRoleUser = (req, res, next) => {
+  if (req.user.isAdmin === false) {
+    next();
+    return;
+  }
+  res.status(401).json({
+    ok: false,
+    message: "Permission Denied",
+  });
+};
+
+exports.checkRoleUserActive = (req, res, next) => {
   if (req.user.isActive === true) {
     next();
     return;
