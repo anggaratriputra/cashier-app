@@ -11,7 +11,7 @@ import { useDropzone } from "react-dropzone";
 function UpdateProfile() {
 
   const [showPassword, setShowPassword] = useState(false);
-
+  const [selectedFileName, setSelectedFileName] = useState("");
   const [activeItem, setActiveItem] = useState("updateProfile");
   const toast = useToast();
   const setActivePage = (newProfile) => {
@@ -22,11 +22,15 @@ function UpdateProfile() {
 
 
   const { acceptedFiles, getRootProps } = useDropzone({
-    accept: "image/jpeg, image/png",
+    accept: "image/",
+    maxSize: 2000000,
     onDrop: (acceptedFiles) => {
       formik.setFieldValue("photoProfile", acceptedFiles[0]);
+      setSelectedFileName(acceptedFiles[0].name);
     },
   });
+
+
 
   const validationSchema = yup.object({
     firstName: yup.string().max(10, 'Must be 10 characters or less').required('Required'),
