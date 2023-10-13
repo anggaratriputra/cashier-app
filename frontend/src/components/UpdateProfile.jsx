@@ -15,6 +15,7 @@ function UpdateProfile() {
   const username = useSelector((state) => state.account.profile.data.profile.username);
   const [showPassword, setShowPassword] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
+  const [selectedFileName, setSelectedFileName] = useState("");
   const toast = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,11 +26,15 @@ function UpdateProfile() {
   };
 
   const { acceptedFiles, getRootProps } = useDropzone({
-    accept: "image/jpeg, image/png",
+    accept: "image/",
+    maxSize: 2000000,
     onDrop: (acceptedFiles) => {
       formik.setFieldValue("photoProfile", acceptedFiles[0]);
+      setSelectedFileName(acceptedFiles[0].name);
     },
   });
+
+
 
   const validationSchema = yup.object({
     username: yup.string().max(15, "Must be 15 characters or less").required("Required"),
