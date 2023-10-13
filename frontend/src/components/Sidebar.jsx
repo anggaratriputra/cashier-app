@@ -21,7 +21,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
   };
 
   return (
-    <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh" {...rest}>
+    <Box transition="3s ease" bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 64 }} pos="fixed" h="100vh" {...rest}>
       {/* Sidebar Header */}
       <Flex h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex gap={2} alignItems="center" justifyContent="center">
@@ -34,7 +34,6 @@ const SidebarContent = ({ onClose, ...rest }) => {
       <Flex direction="column">
         <NavItem icon={FiHome} name="Menu" isActive={activeItem === "menu"} onClick={() => setActivePage("menu")} />
         <NavItem icon={FiTrendingUp} name="Bills" isActive={activeItem === "reports"} onClick={() => setActivePage("reports")} />
-        <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => setActivePage("settings")} />
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
         <Menu>
@@ -59,6 +58,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
 const NavItem = ({ icon, name, isActive, onClick }) => {
   const activeColor = useColorModeValue("white", "gray.900");
   const activeBgColor = "red";
+  const fontWeight = isActive ? "bold" : "normal"; // Set the font-weight conditionally
 
   return (
     <Flex
@@ -74,6 +74,7 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
       }}
       backgroundColor={isActive ? activeBgColor : ""}
       color={isActive ? activeColor : ""}
+      fontWeight={fontWeight} // Apply font-weight conditionally
       onClick={onClick}
     >
       {icon && (

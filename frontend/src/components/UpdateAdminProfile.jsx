@@ -18,18 +18,22 @@ function UpdateAdminProfile() {
   const toast = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [selectedFileName, setSelectedFileName] = useState("");
 
 
   const setActivePage = (newProfile) => {
     setActiveItem(newProfile);
   };
 
-  const { acceptedFiles, getRootProps } = useDropzone({
-    accept: "image/jpeg, image/png",
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    accept: "image/", //only img file will be acc
+    maxSize: 2000000,
     onDrop: (acceptedFiles) => {
-      formik.setFieldValue("photoProfile", acceptedFiles[0]);
+      formik.setFieldValue("image", acceptedFiles[0]);
+      setSelectedFileName(acceptedFiles[0].name);
     },
   });
+
 
   const validationSchema = yup.object({
     username: yup.string().max(15, "Must be 15 characters or less").required("Required"),
@@ -51,13 +55,23 @@ function UpdateAdminProfile() {
       data.append("firstName", values.firstName);
       data.append("lastName", values.lastName);
       data.append("email", values.email);
-      data.append("password", values.password);
-      data.append("confirmPassword", values.confirmPassword);
+  
+      if (values.password !== null) {
+        data.append("password", values.password);
+      }
+  
       if (values.photoProfile instanceof File) {
         data.append("photoProfile", values.photoProfile);
       }
-      const response = await api.patch(`/login/admin/profile`, data);
-      
+  
+      const response = 
+      await api.patch(`/login/admin/profile`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setSelectedFileName('')
+  
       if (response.data.ok) {
         // Optionally, you can display a success toast or take any other action here
         toast({
@@ -164,8 +178,8 @@ function UpdateAdminProfile() {
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"column"} h={"100vh"} p={"20px"} bgColor={"#f7f7f7"} ml={{ base: 0, md: 60 }}>
-        <Box mt={4}>
+      <Flex direction={"column"} h={"100vh"} p={"20px"} bgColor={"#f7f7f7"} ml={{ base: 0, md: 64}}>
+        <Box mt={4} ml={6}>
           <Text fontWeight="bold" fontSize="2xl" mb="20px">
             Update Profile
           </Text>
@@ -226,13 +240,15 @@ function UpdateAdminProfile() {
                 <Text color="red.500">{formik.touched.name ? formik.errors.name : ""}</Text>
               </FormControl>
             </Box>
-            <FormControl isInvalid={formik.errors.photoProfile && formik.touched.photoProfile}>
-              <FormLabel>Profile Picture</FormLabel>
-              <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer", width:"400px"}}>
-                <p>Drag 'n' drop an image here, or click to select an image</p>
-              </div>
-              <FormErrorMessage>{formik.errors.photoProfile}</FormErrorMessage>
-            </FormControl>
+           <FormControl isInvalid={formik.errors.image && formik.touched.image}>
+                <FormLabel>Photo Profile</FormLabel>
+                <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
+                  <input {...getInputProps()} onChange={(event) => formik.setFieldValue("image", event.currentTarget.files[0])} />
+                  <p>Drag 'n' drop an image here, or click to select an image</p>
+                </div>
+                <p>Selected File: {selectedFileName}</p>
+                <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
+              </FormControl>
             <Box mt={4} display="flex" justifyContent="left">
               <Button type="submit" colorScheme="red">
                 Update

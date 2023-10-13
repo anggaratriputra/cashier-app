@@ -75,8 +75,7 @@ exports.updateAccount = async (req, res) => {
   try {
     const account = await Account.findOne({ where: { id } });
     const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-
+    
     if (!account) {
       return res.status(404).json({
         ok: false,
@@ -84,13 +83,21 @@ exports.updateAccount = async (req, res) => {
       });
     }
 
+    // Update the account information
     account.username = userName;
     account.firstName = firstName;
     account.lastName = lastName;
-    account.password = hashPassword;
+
+    // Check if the "password" field is provided and not null
+    if (password) {
+      const hashPassword = await bcrypt.hash(password, salt);
+      account.password = hashPassword;
+    }
+    
     if (photoProfile) {
       account.photoProfile = photoProfile;
     }
+
     await account.save();
 
     res.status(200).json({

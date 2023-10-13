@@ -240,7 +240,7 @@ function Cashier() {
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"column"} ml={{ base: 0, md: 60 }} h="100vh" bgColor="#f7f7f7">
+      <Flex direction={"column"} ml={{ base: 0, md: 64 }} h="100vh" bgColor="#f7f7f7">
         <Box mt="38px" ml="40px">
           <Text mb={4} fontWeight="bold" fontSize="2xl">
             Cashiers List

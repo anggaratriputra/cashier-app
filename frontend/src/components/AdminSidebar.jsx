@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Flex, Image, Box, useColorModeValue, MenuButton, Avatar, Portal, MenuList, MenuItem, Menu } from "@chakra-ui/react";
+import { Icon, Flex, Image, Box, useColorModeValue, MenuButton, Avatar, Portal, MenuList, MenuItem, Menu, Text } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import { FaCashRegister } from "react-icons/fa";
@@ -8,8 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { MdFastfood } from "react-icons/md";
 import { logout } from "../slices/accountSlices";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const AdminSidebar = ({ activeItem }) => {
+  const username = useSelector((state) => state?.account?.profile?.data?.profile?.username);
+  const photo = useSelector((state) => state?.account?.profile?.data?.profile?.photoProfile);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = () => {
@@ -17,9 +20,8 @@ const AdminSidebar = ({ activeItem }) => {
     navigate("/");
   };
 
-
   return (
-    <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 60 }} pos="fixed" h="100vh">
+    <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 64 }} pos="fixed" h="100vh">
       {/* Sidebar Header */}
       <Flex direction="column" h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex alignItems="center" justifyContent="center">
@@ -34,14 +36,18 @@ const AdminSidebar = ({ activeItem }) => {
         <NavItem icon={MdFastfood} name="Product List" isActive={activeItem === "listProduct"} onClick={() => navigate("/admin/listproduct")} />
         <NavItem icon={FaCashRegister} name="Cashier List" isActive={activeItem === "cashier"} onClick={() => navigate("/admin/cashier")} />
         <NavItem icon={TbReportSearch} name="Reports" isActive={activeItem === "reports"} onClick={() => navigate("/admin/reports")} />
-        <NavItem icon={FiSettings} name="Settings" isActive={activeItem === "settings"} onClick={() => navigate("/admin/settings")} />
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
-
-      <Menu>
-          <MenuButton>
-            <Avatar bg="red.500" />
-          </MenuButton>
+        <Menu>
+          <Flex direction={"row"} gap={2}>
+            <MenuButton>
+              <Avatar src={`http://localhost:8000/${photo}`} bg="red.500" />
+            </MenuButton>
+            <Box>
+              <Text>{username} </Text>
+              <Text fontWeight={"bold"}>ADMIN</Text>
+            </Box>
+          </Flex>
           <Portal>
             <MenuList>
               <MenuItem>Your Profile</MenuItem>
@@ -60,6 +66,7 @@ const AdminSidebar = ({ activeItem }) => {
 const NavItem = ({ icon, name, isActive, onClick }) => {
   const activeColor = useColorModeValue("white", "gray.900");
   const activeBgColor = "red";
+  const fontWeight = isActive ? "bold" : "normal"; // Set the font-weight conditionally
 
   return (
     <Flex
@@ -75,7 +82,9 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
       }}
       backgroundColor={isActive ? activeBgColor : ""}
       color={isActive ? activeColor : ""}
-      onClick={onClick}>
+      fontWeight={fontWeight} // Apply font-weight conditionally
+      onClick={onClick}
+    >
       {icon && (
         <Icon
           mr="4"
@@ -90,5 +99,4 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
     </Flex>
   );
 };
-
 export default AdminSidebar;
