@@ -5,10 +5,15 @@ import api from "../api";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useDropzone } from "react-dropzone";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../slices/accountSlices";
 
 function AddProduct() {
   const [activeItem, setActiveItem] = useState("addProduct");
   const toast = useToast();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
   };
@@ -60,6 +65,31 @@ function AddProduct() {
           isClosable: true,
         });
       } catch (error) {
+        if (error?.response?.status == 401) {
+          toast({
+            title: "You are not an admin!",
+            description: "You do not have access to this page!",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            onCloseComplete() {
+              dispatch(logout());
+              navigate("/");
+            },
+          });
+        } else if (error?.response?.status == 403) {
+          toast({
+            title: "Session expired",
+            description: "Your session is expired, please login again.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            onCloseComplete() {
+              dispatch(logout());
+              navigate("/");
+            },
+          });
+        }
         toast({
           title: "Product failed to build!",
           description: String(error),
