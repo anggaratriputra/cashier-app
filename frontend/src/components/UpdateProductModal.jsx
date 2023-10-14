@@ -74,43 +74,6 @@ function UpdateProductModal({ isOpen, onClose, productId }) {
       }
     },
   });
-  //   // Fetch the existing product details and populate the form
-  //   const fetchProductDetails = async () => {
-  //     try {
-  //       const response = await api.get(`/products`);
-  //       const product = response.data.details;
-
-  //       // Set the initial form values based on the fetched product details
-  //       formik.setValues({
-  //         image: product.image,
-  //         productName: product.name,
-  //         price: product.price,
-  //         category: product.category,
-  //         description: product.description,
-  //       });
-  //     } catch (error) {
-  //       console.error("Error fetching product details:", error);
-  //       toast({
-  //         title: "failed to get product!",
-  //         description: String(error),
-  //         status: "error",
-  //         duration: 3000,
-  //         isClosable: true,
-  //       });
-  //     }
-  //   };
-
-  //   fetchProductDetails();
-  // }, []);
-
-  // useEffect(() => {
-  //   setUpdateProductName(productId.name);
-  //   setUpdateProductPrice(productId.price);
-  //   setUpdateProductCategory(productId.category);
-  //   setUpdateProductDescription(productId.description);
-  //   setSelectedFile(productId.image);
-  //   setSelectedFileName(productId.image);
-  // }, [productId]);
 
   return (
     <>

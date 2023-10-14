@@ -138,7 +138,7 @@ function AddProduct() {
             <FormControl isInvalid={formik.errors.image && formik.touched.image}>
               <FormLabel>Product Image</FormLabel>
               <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
-                <input {...getRootProps()} />
+                <input {...getRootProps()} style={{cursor: "pointer", backgroundColor:"#f7f7f7"}}/>
                 <p>Drag 'n' drop an image here, or click to select an image</p>
               </div>
               <FormErrorMessage>{formik.errors.image}</FormErrorMessage>

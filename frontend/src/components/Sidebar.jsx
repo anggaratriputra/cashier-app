@@ -36,7 +36,8 @@ const Sidebar = ({ activeItem }) => {
   }, []);
 
   return (
-    <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 64 }} pos="fixed" h="100vh">
+
+    <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w="20vw" h="100vh" {...rest}>
       {/* Sidebar Header */}
       <Flex direction="column" h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex alignItems="center" justifyContent="center">
