@@ -9,13 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 const SidebarContent = ({ onClose, ...rest }) => {
   const username = useSelector((state) => state?.account?.profile?.data?.profile?.username);
   const photo = useSelector((state) => state?.account?.profile?.data?.profile?.photoProfile);
-  const [activeItem, setActiveItem] = useState("menu"); // Initialize with the default active item
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const setActivePage = (itemName) => {
-    setActiveItem(itemName);
+  
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
   };
-
 
   const handleLogout = () => {
     dispatch(logout());
@@ -41,7 +41,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <Menu>
         <Flex direction={"row"} gap={2}>
             <MenuButton>
-              <Avatar src={`http://localhost:8000/public/${photo}`}  bg="red.500" />
+            <Avatar src={`http://localhost:8000/public/${photo}`} bg="red.500" />
             </MenuButton>
             <Box>
               <Text>{username} </Text>
@@ -99,5 +99,6 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
     </Flex>
   );
 };
+
 
 export default SidebarContent;
