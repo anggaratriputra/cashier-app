@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Order from "./Order";
 import { FaSearch } from "react-icons/fa";
+import { addSelectedProduct, removeSelectedProduct } from "../slices/orderSlices";
+import { useDispatch, useSelector } from "react-redux";
 
 function Menu2() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [activeItem, setActiveItem] = useState("listProduct");
+  const [activeItem, setActiveItem] = useState("menu2");
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortingCriteria, setSortingCriteria] = useState("name-asc");
@@ -19,8 +21,19 @@ function Menu2() {
   const [productsPerPage] = useState(10);
   const toast = useToast();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const paginate = (index) => setCurrentPage(index);
+  const selectedProducts = useSelector((state) => state.order.selectedProducts);
+  const handleBoxClick = (product) => {
+    // Check if the product is already in the array
+    const isProductSelected = selectedProducts.some((selectedProduct) => selectedProduct.id === product.id);
+
+    // If the product is not already selected, add it to the array
+    if (!isProductSelected) {
+      dispatch(addSelectedProduct(product));
+    }
+    // If the product is already selected, do nothing
+  };
 
   const filterProductsByCategory = (categoryName) => {
     setSelectedCategory(categoryName);
@@ -102,13 +115,13 @@ function Menu2() {
   return (
     <Flex>
       <Sidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"column"} ml={{ base: 0, md: 64 }} maxW="55%" h="100vh" bgColor="#f7f7f7">
+      <Flex direction={"column"} ml={{ base: 0, md: 64 }} width={"60vw"} h="100vh" bgColor="#f7f7f7">
         <Box mt="38px">
           <Flex gap={10} alignItems={"center"}>
             <Text ml="40px" fontSize="2xl">
               <b>Menu </b>Category
             </Text>
-            <InputGroup w={"35vw"} >
+            <InputGroup w={"35vw"}>
               <InputLeftElement pointerEvents="none">
                 <Icon as={FaSearch} color="gray.300" />
               </InputLeftElement>
@@ -163,7 +176,7 @@ function Menu2() {
           </Box>
         </Box>
 
-        <Box display={"flex"} mt="38px" w={"55vw"} justifyContent={"space-between"}>
+        <Box display={"flex"} mt="38px" w={"50vw"} justifyContent={"space-between"}>
           <Text ml="40px" fontSize="2xl">
             <b>Choose</b> Order
           </Text>
@@ -177,16 +190,31 @@ function Menu2() {
           </Box>
         </Box>
 
-        <Box display="flex" justifyContent={"center"}  maxHeight="460px">
+        <Box display="flex" justifyContent="center" maxHeight="465px">
           <Box mt={4} overflowY="scroll">
             <SimpleGrid columns={4} spacing={2}>
               {filteredProducts.map((product) => (
-                <Flex direction={"column"} alignItems={"center"} justifyContent={"center"} boxShadow={"lg"} key={product.id} m="10px" p="10px" width="180px" height="200px" bg="white" borderRadius="10px" color="black">
-                  <Heading fontSize="sm" textAlign={"center"}>
+                <Flex
+                  direction="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="lg"
+                  key={product.id}
+                  m="10px"
+                  p="10px"
+                  width="180px"
+                  height="200px"
+                  borderRadius="14px"
+                  color="black"
+                  _hover={{ bg: "red.700", color: "yellow.300" }} // Change background color to red on hover
+                  transition="background-color 0.3s, color 0.3s"
+                  onClick={() => handleBoxClick(product)} // Dispatch the action to set the selected product
+                >
+                  <Text fontWeight={"bold"} fontSize="md" textAlign="center">
                     {product.name}
-                  </Heading>
-                  <Image w="80%" h="60%" src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
-                  <Text fontSize="sm" textAlign={"center"}>
+                  </Text>
+                  <Image w="75%" h="60%" src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
+                  <Text fontWeight={"medium"} fontSize="sm" textAlign="center">
                     {formatToRupiah(product.price)}
                   </Text>
                 </Flex>
