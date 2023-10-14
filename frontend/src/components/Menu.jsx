@@ -91,7 +91,7 @@ function Menu() {
     <>
       <Flex>
         <SidebarContent />
-        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"80vw"} overflowY={"scroll"}>
+        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"60vw"} overflowY={"scroll"}>
           <Box mt="38px" ml="40px">
             <Text fontSize={"2xl"}>
               <b>Search</b> Category
@@ -152,7 +152,7 @@ function Menu() {
             </Box>
           </Box>
 
-          <Box display={"flex"} mt="38px" w={"70vw"} justifyContent={"space-between"}>
+          <Box display={"flex"} mt="38px" w={"55vw"} justifyContent={"space-between"}>
             <Text ml="40px" fontSize="2xl">
               <b>Choose</b> Order
             </Text>
@@ -177,7 +177,7 @@ function Menu() {
             ))}
           </Box>
 
-          <Box display={"flex"} justifyContent={"center"}>
+          <Box display={"flex"} justifyContent={"center"} mb={'10px'}>
             <Text fontSize={"xl"} mr={"10px"}>
               Page:
             </Text>
