@@ -20,6 +20,8 @@ app.use("/products", productRouter)
 app.use("/login", loginRouter);
 app.use("/cashier", cashierRouter)
 
+app.use("/public", express.static(__dirname + "/public"));
+
 app.use((req, res) => {
   console.log(`404: ${req.url}`);
   res.status(404).json({

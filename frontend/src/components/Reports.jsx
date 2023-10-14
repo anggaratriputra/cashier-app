@@ -10,7 +10,7 @@ function Reports() {
   return (
     <>
     <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"row"} ml={{ base: 0, md: 60 }}>
+      <Flex direction={"row"} ml={{ base: 0, md: 64 }}>
         <Box bgColor={"#f7f7f7"} h={"100vh"} w={"100vw"}>
           <Text fontWeight="bold" mt="38px" ml="40px" fontSize="2xl">
           Reports

@@ -6,6 +6,7 @@ const initialState = {
   profile: window.localStorage.getItem("profile") ? JSON.parse(window.localStorage.getItem("profile")) : {},
   showUnauthorizedModal: false,
   redirectTo: "",
+  userPhotoProfile: null,
 };
 const accountSlices = createSlice({
   name: "account",
@@ -32,8 +33,11 @@ const accountSlices = createSlice({
       state.showUnauthorizedModal = false;
       state.redirectTo = "";
     },
+    updatePhotoProfile(state,action) {
+      state.userPhotoProfile = action.payload;
+    }
   },
 });
 
-export const { login, logout, showUnauthorizedModal, hideUnauthorizeModal } = accountSlices.actions;
+export const { login, logout, showUnauthorizedModal, hideUnauthorizeModal, updatePhotoProfile } = accountSlices.actions;
 export default accountSlices.reducer;
