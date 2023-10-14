@@ -130,7 +130,7 @@ export default function ListCategory() {
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"row"} ml={{ base: 0, md: 60 }}>
+      <Flex direction={"row"} ml={{ base: 0, md: 64 }}>
         <Box bgColor={"#f7f7f7"} h={"100vh"} w={"100vw"} p={"20px"}>
           <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
             Add Category

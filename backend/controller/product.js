@@ -60,12 +60,15 @@ exports.updateProduct = async (req, res) => {
 
     if (req.file) {
       product.image = req.file.filename;
+
     } else {
       return res.status(404).json({
         ok: false,
         message: "Failed to upload image!",
       });
     }
+
+
     if (productName) {
       product.name = productName;
     }

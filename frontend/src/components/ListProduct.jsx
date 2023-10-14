@@ -53,8 +53,6 @@ function ListProduct() {
   const toast = useToast();
   const dispatch = useDispatch();
   const [categories, setCategories] = useState([]); // State to store category data
-  
-  
 
   // Fetch data from the backend API
   useEffect(() => {
@@ -88,7 +86,7 @@ function ListProduct() {
             isClosable: true,
             onCloseComplete() {
               dispatch(logout());
-              navigate("/")
+              navigate("/");
             },
           });
         } else {
@@ -107,7 +105,6 @@ function ListProduct() {
     fetchProducts();
   }, [currentPage, sortCriteria, selectedCategory, searchInput]);
 
-
   // Fetch categories from the backend API
   useEffect(() => {
     const fetchCategories = async () => {
@@ -121,8 +118,7 @@ function ListProduct() {
     };
 
     fetchCategories();
-  }, []); 
-
+  }, []);
 
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
@@ -230,7 +226,7 @@ function ListProduct() {
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"column"} ml={{ base: 0, md: 60 }} h="100vh" bgColor="#f7f7f7">
+      <Flex direction={"column"} ml={{ base: 0, md: 64 }} maxW="100%" h="100vh" bgColor="#f7f7f7">
         <Box mt="38px" ml="40px">
           <Text mb={4} fontWeight="bold" fontSize="2xl">
             Product List
@@ -295,7 +291,8 @@ function ListProduct() {
                   style={{
                     backgroundColor: product.isActive ? null : "red", // Background color
                     color: product.isActive ? "black" : "white", // Font color
-                  }}>
+                  }}
+                >
                   <Td>{product.id}</Td>
                   <Td>{product.name}</Td>
                   <Td>{formatToRupiah(product.price)}</Td>

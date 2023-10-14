@@ -7,7 +7,7 @@ import api from "../api";
 //   import { add } from "../slices/users";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../slices/accountSlices";
+import { login, updatePhotoProfile } from "../slices/accountSlices";
 import YupPassword from "yup-password";
 YupPassword(yup);
 
@@ -29,14 +29,16 @@ function Login() {
         const responseData = response.data;
         const isAdmin = responseData.data.profile.isAdmin === true;
         const isActive = responseData.data.profile.isActive === true;
+        const photo = responseData.data.profile.photoProfile;
 
         dispatch(login(responseData));
+        dispatch(updatePhotoProfile(photo))
 
         if (isAdmin) {
           navigate("/admin/addproduct");
         } else {
           if (isActive) {
-            navigate("/home");
+            navigate("/menu");
           } else {
             toast({
               title: "Failed to login!",
