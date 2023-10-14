@@ -108,7 +108,7 @@ function Menu2() {
             <Text ml="40px" fontSize="2xl">
               <b>Menu </b>Category
             </Text>
-            <InputGroup w={"35vw"} mt={"10px"} p={"10px"}>
+            <InputGroup w={"35vw"} >
               <InputLeftElement pointerEvents="none">
                 <Icon as={FaSearch} color="gray.300" />
               </InputLeftElement>
@@ -167,7 +167,7 @@ function Menu2() {
           <Text ml="40px" fontSize="2xl">
             <b>Choose</b> Order
           </Text>
-          <Box display={"flex"} alignItems={"center"} mr={14}>
+          <Box display={"flex"} alignItems={"center"} mr={24}>
             <Select value={sortingCriteria} onChange={handleSortingChange}>
               <option value="name-asc">Sort by Name (A-Z)</option>
               <option value="name-desc">Sort by Name (Z-A)</option>
@@ -177,11 +177,11 @@ function Menu2() {
           </Box>
         </Box>
 
-        <Box display="flex" ml="30px" overflowY="scroll" maxHeight="410px">
-          <Box>
+        <Box display="flex" justifyContent={"center"}  maxHeight="460px">
+          <Box mt={4} overflowY="scroll">
             <SimpleGrid columns={4} spacing={2}>
               {filteredProducts.map((product) => (
-                <Flex direction={"column"} alignItems={"center"} justifyContent={"center"} boxShadow={"lg"} key={product.id} m="10px" p="10px" width="160px" height="180px" bg="white" borderRadius="10px" color="black">
+                <Flex direction={"column"} alignItems={"center"} justifyContent={"center"} boxShadow={"lg"} key={product.id} m="10px" p="10px" width="180px" height="200px" bg="white" borderRadius="10px" color="black">
                   <Heading fontSize="sm" textAlign={"center"}>
                     {product.name}
                   </Heading>
