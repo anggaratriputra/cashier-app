@@ -41,7 +41,7 @@ const AdminSidebar = ({ activeItem }) => {
         <Menu>
           <Flex direction={"row"} gap={2}>
             <MenuButton>
-              <Avatar src={`http://localhost:8000/${photo}`} bg="red.500" />
+              <Avatar src={`http://localhost:8000/public/${photo}`} bg="red.500" />
             </MenuButton>
             <Box>
               <Text>{username} </Text>

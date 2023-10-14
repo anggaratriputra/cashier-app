@@ -69,9 +69,6 @@ exports.updateAccount = async (req, res) => {
   const { id } = req.user;
   const { userName, firstName, lastName, password } = req.body;
 
-  const filename = req.file?.filename;
-  const photoProfile = filename;
-
   try {
     const account = await Account.findOne({ where: { id } });
     const salt = await bcrypt.genSalt(10);
@@ -89,13 +86,16 @@ exports.updateAccount = async (req, res) => {
     account.lastName = lastName;
 
     // Check if the "password" field is provided and not null
-    if (password) {
+    if (password !== undefined && password !== null && password.trim() !== "") {
       const hashPassword = await bcrypt.hash(password, salt);
       account.password = hashPassword;
     }
-    
-    if (photoProfile) {
-      account.photoProfile = photoProfile;
+
+    if (req.file) {
+      account.photoProfile = req.file.filename;
+
+    } else {
+      account.photoProfile = account.photoProfile || null;
     }
 
     await account.save();

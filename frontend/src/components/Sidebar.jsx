@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Icon, Flex, Image, CloseButton, Box, useColorModeValue, Avatar, Menu, MenuButton, Portal, MenuList, MenuItem } from "@chakra-ui/react";
+import { Icon, Flex, Image, CloseButton, Box, useColorModeValue, Avatar, Menu, MenuButton, Portal, MenuList, MenuItem, Text } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiSettings } from "react-icons/fi";
 import { useFormikContext } from "formik";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../slices/accountSlices";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const SidebarContent = ({ onClose, ...rest }) => {
+  const username = useSelector((state) => state?.account?.profile?.data?.profile?.username);
+  const photo = useSelector((state) => state?.account?.profile?.data?.profile?.photoProfile);
   const [activeItem, setActiveItem] = useState("menu"); // Initialize with the default active item
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -37,9 +39,15 @@ const SidebarContent = ({ onClose, ...rest }) => {
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
         <Menu>
-          <MenuButton>
-         <Avatar bg="red.500" />
-          </MenuButton>
+        <Flex direction={"row"} gap={2}>
+            <MenuButton>
+              <Avatar src={`http://localhost:8000/public/${photo}`}  bg="red.500" />
+            </MenuButton>
+            <Box>
+              <Text>{username} </Text>
+              <Text fontWeight={"bold"}>CASHIER</Text>
+            </Box>
+          </Flex>
           <Portal>
             <MenuList>
               <MenuItem>Your Profile</MenuItem>
