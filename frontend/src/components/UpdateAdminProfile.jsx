@@ -177,7 +177,7 @@ function UpdateAdminProfile() {
 
   return (
     <>
-      <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} profilePhotoUrl={profilePhotoUrl} />
+      <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
       <Flex direction={"column"} h={"100vh"} p={"20px"} bgColor={"#f7f7f7"} ml={{ base: 0, md: 64 }}>
         <Box mt={4} ml={6}>
           <Text fontWeight="bold" fontSize="2xl" mb="20px">

@@ -37,7 +37,7 @@ const Sidebar = ({ activeItem }) => {
 
   return (
 
-    <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w="20vw" h="100vh" {...rest}>
+    <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 64 }} pos="fixed" h="100vh">
       {/* Sidebar Header */}
       <Flex direction="column" h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex alignItems="center" justifyContent="center">
@@ -48,6 +48,7 @@ const Sidebar = ({ activeItem }) => {
       {/* Sidebar Navigation */}
       <Flex direction="column">
         <NavItem icon={FiHome} name="Menu" isActive={activeItem === "menu"} onClick={() => navigate("/menu")} />
+        <NavItem icon={FiHome} name="Menu2" isActive={activeItem === "menu"} onClick={() => navigate("/menu2")} />
         <NavItem icon={FiTrendingUp} name="Bills" isActive={activeItem === "bills"} onClick={() => navigate("/bills")} />
       </Flex>
       <Box position="fixed" bottom={10} left={3}>

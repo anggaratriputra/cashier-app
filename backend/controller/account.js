@@ -180,7 +180,7 @@ exports.getSingleAccount = async (req, res) => {
   const account = await Account.findOne({ where: { username } });
 
   if (!account) {
-    res.status(404).json({
+    return res.status(404).json({
       ok: false,
       message: "Account Not Found!",
     });
