@@ -49,15 +49,7 @@ function ListProduct() {
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-
-  const profileData = localStorage.getItem("profile"); // Get the profile data from localStorage
-  const profile = JSON.parse(profileData);
-  const isAdmin = profile?.data?.profile?.isAdmin || false;
-
-  const [isAdminValidationModalOpen, setIsAdminValidationModalOpen] = useState(false);
-
   const [productIdForEdit, setProductForEdit] = useState("");
-
   const toast = useToast();
   const dispatch = useDispatch();
   const [categories, setCategories] = useState([]); // State to store category data

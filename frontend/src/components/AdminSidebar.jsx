@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Flex, Image, Box, useColorModeValue, MenuButton, Avatar, Portal, MenuList, MenuItem } from "@chakra-ui/react";
+import { Icon, Flex, Image, Box, useColorModeValue, MenuButton, Avatar, Portal, MenuList, MenuItem, Menu } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import { FaCashRegister } from "react-icons/fa";
@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { MdFastfood } from "react-icons/md";
 import { logout } from "../slices/accountSlices";
 import { useDispatch } from "react-redux";
-import Menu from "./Menu";
 
 const AdminSidebar = ({ activeItem }) => {
   const navigate = useNavigate();
@@ -39,7 +38,7 @@ const AdminSidebar = ({ activeItem }) => {
       </Flex>
       <Box position="fixed" bottom={10} left={3}>
 
-      {/* <Menu>
+      <Menu>
           <MenuButton>
             <Avatar bg="red.500" />
           </MenuButton>
@@ -52,7 +51,7 @@ const AdminSidebar = ({ activeItem }) => {
               <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </MenuList>
           </Portal>
-        </Menu> */}
+        </Menu>
       </Box>
     </Box>
   );
