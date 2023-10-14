@@ -48,12 +48,12 @@ const Sidebar = ({ activeItem }) => {
       {/* Sidebar Navigation */}
       <Flex direction="column">
         <NavItem icon={FiHome} name="Menu" isActive={activeItem === "menu"} onClick={() => navigate("/menu")} />
-        <NavItem icon={FiHome} name="Menu2" isActive={activeItem === "menu"} onClick={() => navigate("/menu2")} />
+        <NavItem icon={FiHome} name="Menu2" isActive={activeItem === "menu2"} onClick={() => navigate("/menu2")} />
         <NavItem icon={FiTrendingUp} name="Bills" isActive={activeItem === "bills"} onClick={() => navigate("/bills")} />
       </Flex>
-      <Box position="fixed" bottom={10} left={3}>
+      <Box position="fixed" bottom={10} left={6}>
         <Menu>
-          <Flex direction={"row"} gap={2}>
+          <Flex direction={"row"} gap={4}>
             <MenuButton>
               <Avatar src={`http://localhost:8000/public/${photo}`} bg="red.500" />
             </MenuButton>
@@ -78,8 +78,8 @@ const Sidebar = ({ activeItem }) => {
 };
 
 const NavItem = ({ icon, name, isActive, onClick }) => {
-  const activeColor = useColorModeValue("white", "gray.900");
-  const activeBgColor = "red";
+  const activeColor = useColorModeValue("yellow.300");
+  const activeBgColor = "red.700";
   const fontWeight = isActive ? "bold" : "normal"; // Set the font-weight conditionally
 
   return (
@@ -91,8 +91,8 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
       role="group"
       cursor="pointer"
       _hover={{
-        bg: "red",
-        color: "white",
+        bg: "red.700",
+        color: "yellow.300",
       }}
       backgroundColor={isActive ? activeBgColor : ""}
       color={isActive ? activeColor : ""}
@@ -104,7 +104,7 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
           mr="4"
           fontSize="30"
           _groupHover={{
-            color: "white",
+            color: "yellow.300",
           }}
           as={icon}
         />

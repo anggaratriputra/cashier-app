@@ -53,9 +53,9 @@ function AdminSidebar({ setActivePage, activeItem }) {
         <NavItem icon={FaCashRegister} name="Cashier List" isActive={activeItem === "cashier"} onClick={() => navigate("/admin/cashier")} />
         <NavItem icon={TbReportSearch} name="Reports" isActive={activeItem === "reports"} onClick={() => navigate("/admin/reports")} />
       </Flex>
-      <Box position="fixed" bottom={10} left={3}>
+      <Box position="fixed" bottom={10} left={6}>
         <Menu>
-          <Flex direction={"row"} gap={2}>
+          <Flex direction={"row"} gap={4}>
             <MenuButton>
               <Avatar src={`http://localhost:8000/public/${photo}`} bg="red.500" />
             </MenuButton>
@@ -80,8 +80,8 @@ function AdminSidebar({ setActivePage, activeItem }) {
 }
 
 const NavItem = ({ icon, name, isActive, onClick }) => {
-  const activeColor = useColorModeValue("white", "gray.900");
-  const activeBgColor = "red";
+  const activeColor = useColorModeValue("yellow.300");
+  const activeBgColor = "red.700";
   const fontWeight = isActive ? "bold" : "normal"; // Set the font-weight conditionally
 
   return (
@@ -93,8 +93,8 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
       role="group"
       cursor="pointer"
       _hover={{
-        bg: "red",
-        color: "white",
+        bg: "red.700",
+        color: "yellow.300",
       }}
       backgroundColor={isActive ? activeBgColor : ""}
       color={isActive ? activeColor : ""}
@@ -106,7 +106,7 @@ const NavItem = ({ icon, name, isActive, onClick }) => {
           mr="4"
           fontSize="30"
           _groupHover={{
-            color: "white",
+            color: "yellow.300",
           }}
           as={icon}
         />
