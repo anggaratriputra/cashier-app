@@ -7,7 +7,7 @@ import api from "../api";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
-import { logout } from "../slices/accountSlices";
+import { logout, updatePhotoProfile } from "../slices/accountSlices";
 import { showUnauthorizedModal } from "../slices/accountSlices";
 import { useNavigate } from "react-router-dom";
 
@@ -57,25 +57,24 @@ function UpdateProfile() {
       data.append("lastName", values.lastName);
       data.append("email", values.email);
 
-      if (values.photoProfile)
-      data.append("photoProfile", values.photoProfile);
+      if (values.photoProfile) data.append("photoProfile", values.photoProfile);
 
       if (values.password) {
         data.append("password", values.password);
       }
 
-      console.log(values.photoProfile)
+      console.log(values.photoProfile);
       const response = await api.patch(`/login/profile`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      
-      
+
       if (response.data.ok) {
         newPasswordRef.current.value = ""; // Reset "New Password" field
         confirmPasswordRef.current.value = ""; // Reset "Confirm Password" field
-        setSelectedFileName('')
+        setSelectedFileName("");
+        dispatch(updatePhotoProfile(response.data.detail.photoProfile));
         toast({
           title: "Profile Changed",
           description: "Your profile has been changed.",
@@ -119,7 +118,7 @@ function UpdateProfile() {
   useEffect(() => {
     const fetchProfileDetails = async () => {
       try {
-        const response = await api.get(`/login/profile/admin/${username}`);
+        const response = await api.get(`/login/profile/${username}`);
         const profile = response.data.detail;
 
         formik.setValues({
@@ -131,7 +130,7 @@ function UpdateProfile() {
         });
       } catch (error) {
         if (error?.response?.status == 401) {
-          dispatch(showUnauthorizedModal("/home"));
+          dispatch(showUnauthorizedModal("/admin/addproduct"));
         } else if (error?.response?.status == 403) {
           toast({
             title: "Session expired",
@@ -154,7 +153,7 @@ function UpdateProfile() {
             isClosable: true,
           });
         }
-      };
+      }
     };
 
     fetchProfileDetails();
@@ -208,14 +207,7 @@ function UpdateProfile() {
               <FormControl>
                 <FormLabel htmlFor="newPassword">New Password</FormLabel>
                 <InputGroup w={"400px"}>
-                  <Input
-                    ref={newPasswordRef}
-                    onChange={formik.handleChange}
-                    name="newPassword"
-                    type={showPassword ? "text" : "password"}
-                    id="newPassword"
-                    placeholder="New Password"
-                  />
+                  <Input ref={newPasswordRef} onChange={formik.handleChange} name="newPassword" type={showPassword ? "text" : "password"} id="newPassword" placeholder="New Password" />
                   <InputRightElement>
                     <Button h="1.75rem" mr={2} size="sm" onClick={() => setShowPassword(!showPassword)}>
                       {showPassword ? <ViewOffIcon /> : <ViewIcon />}
@@ -229,14 +221,7 @@ function UpdateProfile() {
               <FormControl>
                 <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
                 <InputGroup w={"400px"}>
-                  <Input
-                    ref={confirmPasswordRef}
-                    onChange={formik.handleChange}
-                    name="confirmPassword"
-                    type={showPassword ? "text" : "password"}
-                    id="confirmPassword"
-                    placeholder="Confirm Password"
-                  />
+                  <Input ref={confirmPasswordRef} onChange={formik.handleChange} name="confirmPassword" type={showPassword ? "text" : "password"} id="confirmPassword" placeholder="Confirm Password" />
                   <InputRightElement>
                     <Button h="1.75rem" mr={2} size="sm" onClick={() => setShowPassword(!showPassword)}>
                       {showPassword ? <ViewOffIcon /> : <ViewIcon />}
@@ -249,7 +234,7 @@ function UpdateProfile() {
             <FormControl isInvalid={formik.errors.image && formik.touched.image}>
               <FormLabel>Photo Profile</FormLabel>
               <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
-              <input {...getInputProps()} name="photoProfile" onChange={(event) => formik.setFieldValue("photoProfile", event.currentTarget.files[0])} />
+                <input {...getInputProps()} name="photoProfile" onChange={(event) => formik.setFieldValue("photoProfile", event.currentTarget.files[0])} />
                 <p>Drag 'n' drop an image here, or click to select an image</p>
               </div>
               <p>Selected File: {selectedFileName}</p>

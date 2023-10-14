@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 function Home() {
   return (
     <>
-      <Sidebar/>
+      <Sidebar />
       <Flex direction={"row"} ml={{ base: 0, md: 60 }}>
         <Box bgColor={"#f7f7f7"} h={"100vh"} w={"60vw"}>
           <Text mt="38px" ml="40px" fontSize="2xl">

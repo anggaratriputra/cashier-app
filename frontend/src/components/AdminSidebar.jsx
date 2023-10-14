@@ -9,16 +9,32 @@ import { MdFastfood } from "react-icons/md";
 import { logout } from "../slices/accountSlices";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import api from "../api";
 
-const AdminSidebar = ({ activeItem }) => {
+function AdminSidebar({ setActivePage, activeItem }) {
+  const [userProfile, setUserProfile] = useState(null);
   const username = useSelector((state) => state?.account?.profile?.data?.profile?.username);
-  const photo = useSelector((state) => state?.account?.profile?.data?.profile?.photoProfile);
+  const photo = useSelector((state) => state.account.userPhotoProfile);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
   };
+
+  useEffect(() => {
+    // Make an HTTP request to fetch the user's profile information
+    api
+      .get(`login/myprofile/${username}`)
+      .then((response) => {
+        setUserProfile(response.data.detail);
+      })
+      .catch((error) => {
+        console.error("Error fetching user profile:", error);
+      });
+  }, []);
 
   return (
     <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: 64 }} pos="fixed" h="100vh">
@@ -61,7 +77,7 @@ const AdminSidebar = ({ activeItem }) => {
       </Box>
     </Box>
   );
-};
+}
 
 const NavItem = ({ icon, name, isActive, onClick }) => {
   const activeColor = useColorModeValue("white", "gray.900");
