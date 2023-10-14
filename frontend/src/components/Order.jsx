@@ -1,4 +1,4 @@
-import { Box, Flex, Image, SimpleGrid, Text, Button } from "@chakra-ui/react";
+import { Box, Flex, Image, SimpleGrid, Text, Button, Divider } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementCount, decrementCount } from "../slices/orderSlices"; // Import the appropriate actions
 
@@ -16,17 +16,25 @@ function Order() {
 
   return (
     <Flex direction="column" width="33vw" h="100vh" bgColor="red.700">
+      <style>
+        {`
+          .scroll-container::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+          }
+        `}
+      </style>
       <Box mt="38px" mx={{ base: 0, md: 8 }}>
         <Flex alignItems="center">
           <Text color="yellow.300" fontSize="2xl">
             <b>Order</b> Menu
           </Text>
         </Flex>
-        <Box display="flex" justifyContent="center" maxHeight="600px">
-          <Box mt={4}>
-            <SimpleGrid columns={1} spacing={2}>
+        <Box display="flex" justifyContent="center" maxHeight="600px" overflowY={"scroll"} className="scroll-container">
+          <Box mt={4} h={"550px"} className="scroll-container">
+            <SimpleGrid columns={1} spacing={2} className="scroll-container">
               {selectedProducts?.map((selectedProduct) => (
-                <Box px={6} display={"flex"} justifyContent={"space-between"} alignItems={"center"} gap={2} h="80px" borderRadius={"10px"} w="400px" boxShadow={"lg"} bg="white" key={selectedProduct.id}>
+                <Box px={6} display={"flex"} justifyContent={"space-between"} alignItems={"center"} gap={2} h="80px" borderRadius={"10px"} w="420px" boxShadow={"lg"} bg="white" key={selectedProduct.id}>
                   <Image w="20%" src={`http://localhost:8000/public/${selectedProduct.image}`} />
                   <Flex direction="column">
                     <Text color="black" fontWeight={"bold"}>
@@ -55,9 +63,17 @@ function Order() {
         </Box>
       </Box>
       {total > 0 && (
-        <Flex ml={8}>
-          <Text color="yellow.300" fontSize="xl" textAlign="left" mt="10px">
-            Total Price: {formatToRupiah(total)}
+        <Box my={2}>
+          <Divider />
+        </Box>
+      )}
+      {total > 0 && (
+        <Flex alignItems="center" justifyContent="space-between" mx={8}>
+          <Text color="yellow.300" fontSize="xl" mt="10px">
+            Sub Total
+          </Text>
+          <Text color="yellow.300" fontWeight="bold" fontSize="xl">
+            {formatToRupiah(total)}
           </Text>
         </Flex>
       )}
