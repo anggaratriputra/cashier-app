@@ -2,7 +2,7 @@ import { Box, Button, ButtonGroup, Flex, Heading, Image, Input, Select, Text, us
 import { useEffect, useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-import SidebarContent from "./Sidebar";
+import Sidebar from "./Sidebar";
 
 function Menu() {
   const [products, setProducts] = useState([]);
@@ -90,7 +90,7 @@ function Menu() {
   return (
     <>
       <Flex>
-        <SidebarContent />
+        <Sidebar />
         <Box bgColor={"#f7f7f7"} h={"100vh"} w={"60vw"} overflowY={"scroll"}>
           <Box mt="38px" ml="40px">
             <Text fontSize={"2xl"}>
