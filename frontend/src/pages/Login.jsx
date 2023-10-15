@@ -1,4 +1,4 @@
-import { Box, Button, Container, FormControl, FormErrorMessage, FormLabel, Input, Center, InputGroup, InputRightElement, VStack, useDisclosure, useToast, Flex, AbsoluteCenter, Image } from "@chakra-ui/react";
+import { Box, Button, Container, FormControl, FormErrorMessage, FormLabel, Input, Center, InputGroup, InputRightElement, VStack, useDisclosure, useToast, Flex, AbsoluteCenter, Image, HStack, Checkbox } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import * as yup from "yup";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
@@ -74,8 +74,8 @@ function Login() {
   };
 
   const loginSchema = yup.object().shape({
-    username: yup.string().required("username can't be empty").min(6, "minimum characters is 6"),
-    password: yup.string().required("password can't be empty"),
+    username: yup.string().required("Username can't be empty").min(6, "Minimum characters is 6"),
+    password: yup.string().required("Password can't be empty"),
   });
   return (
     <Box position="relative" h="100vh">
@@ -115,7 +115,12 @@ function Login() {
                         </FormControl>
                       )}
                     </Field>
-
+                    <HStack justify='space-between'>
+            <Checkbox defaultChecked>Remember me</Checkbox>
+            <Button variant="text" size="sm">
+              Forgot password?
+            </Button>
+          </HStack>
                     <Center>
                       <Button isLoading={isSubmitting} type="submit" colorScheme="red" variant="solid" w={450} boxShadow={"md"}>
                         Login
