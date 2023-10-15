@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   Avatar,
-  Box,
   Center,
-  Divider,
   Heading,
   Text,
-  VStack,
   Button,
   Flex
 } from "@chakra-ui/react";

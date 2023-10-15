@@ -62,8 +62,8 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/editprofile" element={<UpdateProfile />} />
         <Route path="/admin/editprofile" element={<UpdateAdminProfile />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/menu2" element={<Menu2/>} />
+        <Route path="/menu" element={<Menu2 />} />
+        {/* <Route path="/menu2" element={<Menu/>} /> */}
       </Routes>
       <AdminValidationModal />
     </>

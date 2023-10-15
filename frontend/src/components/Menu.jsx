@@ -90,8 +90,8 @@ function Menu() {
   return (
     <>
       <Flex>
-        <Sidebar />
-        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"60vw"} overflowY={"scroll"}>
+        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"80vw"} overflowY={"scroll"}>
+          {/* <Sidebar /> */}
           <Box mt="38px" ml="40px">
             <Text fontSize={"2xl"}>
               <b>Search</b> Category
@@ -177,7 +177,7 @@ function Menu() {
             ))}
           </Box>
 
-          <Box display={"flex"} justifyContent={"center"} mb={'10px'}>
+          <Box display={"flex"} justifyContent={"center"} mb={"10px"}>
             <Text fontSize={"xl"} mr={"10px"}>
               Page:
             </Text>
