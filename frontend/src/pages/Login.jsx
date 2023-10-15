@@ -79,7 +79,7 @@ function Login() {
     password: yup.string().required("password can't be empty"),
   });
   return (
-    <Box position="relative" h="100vh">
+    <Box position="relative" bg={"red.700"} h="100vh">
       <AbsoluteCenter>
         <Container maxW="lg" bgColor="white" boxShadow="md" p="6" rounded="md" bg="white" mt={5}>
           <Box pt={7} px={5} pb={5}>

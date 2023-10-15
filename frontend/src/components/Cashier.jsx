@@ -348,7 +348,7 @@ function Cashier() {
           </Box>
         </Box>
       </Flex>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered motionPreset='slideInBottom'>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Confirm Status Change</ModalHeader>
@@ -366,7 +366,7 @@ function Cashier() {
       </Modal>
 
       {/* Modal for adding a new cashier */}
-      <Modal isOpen={isOpenForm} onClose={onCloseForm} isCentered>
+      <Modal isOpen={isOpenForm} onClose={onCloseForm} isCentered motionPreset='slideInBottom'>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add New Cashier</ModalHeader>

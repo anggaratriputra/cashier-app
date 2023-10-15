@@ -7,14 +7,18 @@ const orderSlices = createSlice({
   },
   reducers: {
     addSelectedProduct: (state, action) => {
-      const { id } = action.payload;
+      const { id, count } = action.payload;
       const existingProduct = state.selectedProducts.find(product => product.id === id);
       if (existingProduct) {
-        // If the product already exists, increment the count
-        existingProduct.count += 1;
+        // If the product already exists, use the count from the payload if it's provided
+        if (count) {
+          existingProduct.count += count;
+        } else {
+          existingProduct.count += 1;
+        }
       } else {
-        // If it's a new product, add it with a count of 1
-        state.selectedProducts.push({ ...action.payload, count: 1 });
+        // If it's a new product, add it with a count of 1, or the count from the payload if provided
+        state.selectedProducts.push({ ...action.payload, count: count || 1 });
       }
     },
     removeSelectedProduct: (state, action) => {

@@ -44,9 +44,9 @@ function ListProduct() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [productIdForStatusChange, setProductIdForStatusChange] = useState(null);
   const [sortCriteria, setSortCriteria] = useState("alphabetical-asc"); // Default sorting criteria that matches the backend;
-  const [totalData, setTotalData] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [totalData, setTotalData] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [productIdForEdit, setProductForEdit] = useState("");
