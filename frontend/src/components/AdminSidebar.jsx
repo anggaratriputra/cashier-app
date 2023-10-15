@@ -66,7 +66,7 @@ function AdminSidebar({ setActivePage, activeItem }) {
           </Flex>
           <Portal>
             <MenuList>
-              <MenuItem>Your Profile</MenuItem>
+            <MenuItem name="Your Profile" isActive={activeItem === "AdminProfile"} onClick={() => navigate("/admin/profile")}>Your Profile</MenuItem>
               <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/admin/editprofile")}>
                 Edit Profile
               </MenuItem>
