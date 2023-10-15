@@ -1,7 +1,6 @@
-import { Box, Button, Container, FormControl, FormErrorMessage, FormLabel, Heading, Input, Center, InputGroup, InputRightElement, VStack, useDisclosure, useToast, Text, Flex, AbsoluteCenter, Image } from "@chakra-ui/react";
+import { Box, Button, Container, FormControl, FormErrorMessage, FormLabel, Input, Center, InputGroup, InputRightElement, VStack, useDisclosure, useToast, Flex, AbsoluteCenter, Image } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import * as yup from "yup";
-import { RiSpeakLine } from "react-icons/ri";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import api from "../api";
 //   import { add } from "../slices/users";
