@@ -6,7 +6,7 @@ import { FaCashRegister } from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { MdFastfood } from "react-icons/md";
-import { logout } from "../slices/accountSlices";
+import { logout, updatePhotoProfile } from "../slices/accountSlices";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
@@ -30,6 +30,7 @@ function AdminSidebar({ setActivePage, activeItem }) {
       .get(`login/myprofile/${username}`)
       .then((response) => {
         setUserProfile(response.data.detail);
+        dispatch(updatePhotoProfile(response.data.detail.photoProfile))
       })
       .catch((error) => {
         console.error("Error fetching user profile:", error);

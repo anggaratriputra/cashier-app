@@ -6,7 +6,7 @@ const initialState = {
   profile: window.localStorage.getItem("profile") ? JSON.parse(window.localStorage.getItem("profile")) : {},
   showUnauthorizedModal: false,
   redirectTo: "",
-  userPhotoProfile: null,
+  userPhotoProfile: "",
 };
 const accountSlices = createSlice({
   name: "account",
@@ -33,9 +33,9 @@ const accountSlices = createSlice({
       state.showUnauthorizedModal = false;
       state.redirectTo = "";
     },
-    updatePhotoProfile(state,action) {
+    updatePhotoProfile(state, action) {
       state.userPhotoProfile = action.payload;
-    }
+    },
   },
 });
 

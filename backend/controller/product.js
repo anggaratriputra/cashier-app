@@ -133,7 +133,7 @@ exports.deactivateProduct = async (req, res) => {
 };
 
 exports.getAllProducts = async (req, res) => {
-  const limit = parseInt(req.query.limit) || 10;
+  const limit = parseInt(req.query.limit) || 100;
   const page = parseInt(req.query.page) || 1;
   const sort = req.query.sort; // Get the sorting parameter from the query
   const category = req.query.category; // Get the category filter from the query

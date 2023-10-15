@@ -14,8 +14,9 @@ import UpdateAdminProfile from "./components/UpdateAdminProfile";
 import ListCategory from "./components/ListCategory";
 import UserProfile from "./components/UserProfile";
 import Menu from "./components/Menu";
-import Menu2 from "./components/Menu2";
+import MenuTemp from "./components/MenuTemp";
 import AdminProfile from "./components/AdminProfile";
+
 
 function AdminValidationModal() {
   const navigate = useNavigate();
@@ -64,8 +65,8 @@ function App() {
         <Route path="/admin/profile" element={<AdminProfile />} />
         <Route path="/editprofile" element={<UpdateProfile />} />
         <Route path="/admin/editprofile" element={<UpdateAdminProfile />} />
-        <Route path="/menu" element={<Menu2 />} />
-        {/* <Route path="/menu2" element={<Menu/>} /> */}
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/menutemp" element={<MenuTemp/>} />
       </Routes>
       <AdminValidationModal />
     </>
