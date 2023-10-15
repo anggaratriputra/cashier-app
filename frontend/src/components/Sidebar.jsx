@@ -49,7 +49,7 @@ const Sidebar = ({ activeItem }) => {
 
       {/* Sidebar Navigation */}
       <Flex direction="column">
-        <NavItem icon={FiHome} name="Menu2" isActive={activeItem === "menu2"} onClick={() => navigate("/menu2")} />
+        <NavItem icon={FiHome} name="Menu" isActive={activeItem === "menu"} onClick={() => navigate("/menu")} />
         <NavItem icon={FiTrendingUp} name="Bills" isActive={activeItem === "bills"} onClick={() => navigate("/bills")} />
       </Flex>
       <Box position="fixed" bottom={10} left={6}>
@@ -66,9 +66,7 @@ const Sidebar = ({ activeItem }) => {
           <Portal>
             <MenuList>
               <MenuItem name="Your Profile" isActive={activeItem === "UserProfile"} onClick={() => navigate("/profile")}>Your Profile</MenuItem>
-              <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/editprofile")}>
-                Edit Profile
-              </MenuItem>
+              <MenuItem name="Update Profile" isActive={activeItem === "UpdateProfile"} onClick={() => navigate("/editprofile")}>Edit Profile</MenuItem>
               <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </MenuList>
           </Portal>
