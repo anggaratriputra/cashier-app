@@ -196,7 +196,6 @@ exports.getSingleAccount = async (req, res) => {
 };
 
 exports.initiatePasswordReset = async (req, res) => {
-  const account = Account;
   try {
     const { email } = req.body;
 
@@ -223,7 +222,7 @@ exports.initiatePasswordReset = async (req, res) => {
     const templateRaw = fs.readFileSync(__dirname + "/../templates/index.html", "utf-8");
     const templateCompile = hbs.compile(templateRaw);
     const emailHTML = templateCompile({
-      userName: account.username,
+      userName: user.firstName,
       resetLink,
     });
 
@@ -237,7 +236,7 @@ exports.initiatePasswordReset = async (req, res) => {
 
     const mailOption = {
       from: process.env.SMTP_USER,
-      to: user.email,
+      to: "fauzasmg22@gmail.com",
       subject: "Reset Your Password",
       html: emailHTML,
     };
