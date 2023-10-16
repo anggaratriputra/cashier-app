@@ -11,6 +11,7 @@ import { logout } from "../slices/accountSlices";
 
 function AddProduct() {
   const [activeItem, setActiveItem] = useState("addProduct");
+  const [selectedFileName, setSelectedFileName] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,12 +24,14 @@ function AddProduct() {
     price: Yup.number().required("Price is required"),
     category: Yup.string().required("Category is required"),
     description: Yup.string().required("Description is required"),
+    image: Yup.mixed().required("Image is required"),
   });
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: "image/", //only img file will be acc
     onDrop: (acceptedFiles) => {
       formik.setFieldValue("image", acceptedFiles[0]);
+      setSelectedFileName(acceptedFiles[0].name);
     },
   });
 
@@ -72,6 +75,26 @@ function AddProduct() {
             status: "error",
             duration: 3000,
             isClosable: true,
+          });
+        } else if (error?.response?.status == 400) {
+          toast({
+            title: "Product already exists!",
+            description: "Product names must be unique.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            onCloseComplete() {
+              dispatch(logout());
+              navigate("/");
+            },
+          });
+        } else if (error?.response?.status == 400) {
+          toast({
+            title: "Product already exists!",
+            description: "Product names must be unique.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
             onCloseComplete() {
               dispatch(logout());
               navigate("/");
@@ -89,14 +112,15 @@ function AddProduct() {
               navigate("/");
             },
           });
+        } else {
+          toast({
+            title: "Product failed to build!",
+            description: String(error),
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
         }
-        toast({
-          title: "Product failed to build!",
-          description: String(error),
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
       }
     },
   });
@@ -105,49 +129,52 @@ function AddProduct() {
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
       <Flex direction={"row"} ml={{ base: 0, md: 60 }}>
-        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"100vw"} p={"20px"}>
-          <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
-            Add Product
-          </Text>
+        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"100vw"} p={"40px"}>
+          <Box bgColor={"white.700"} boxShadow={"md"} border={"1px solid"} borderColor={"blackAlpha.100"} p={"20px"} h={"90vh"} borderRadius={"10px"}>
+            <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
+              Add Product
+            </Text>
 
-          <form onSubmit={formik.handleSubmit}>
-            <FormControl isInvalid={formik.errors.name && formik.touched.name}>
-              <FormLabel>Product Name</FormLabel>
-              <Input type="text" id="productName" name="name" placeholder="Product Name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur}></Input>
-              <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
-            </FormControl>
+            <form onSubmit={formik.handleSubmit}>
+              <FormControl isInvalid={formik.errors.name && formik.touched.name}>
+                <FormLabel>Product Name</FormLabel>
+                <Input type="text" id="productName" name="name" placeholder="Product Name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur}></Input>
+                <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
+              </FormControl>
 
-            <FormControl isInvalid={formik.errors.price && formik.touched.price}>
-              <FormLabel>Price</FormLabel>
-              <Input type="number" id="price" name="price" placeholder="Price" value={formik.values.price} onChange={formik.handleChange} onBlur={formik.handleBlur}></Input>
-              <FormErrorMessage>{formik.errors.price}</FormErrorMessage>
-            </FormControl>
+              <FormControl isInvalid={formik.errors.price && formik.touched.price}>
+                <FormLabel>Price</FormLabel>
+                <Input type="number" id="price" name="price" placeholder="Price" value={formik.values.price} onChange={formik.handleChange} onBlur={formik.handleBlur}></Input>
+                <FormErrorMessage>{formik.errors.price}</FormErrorMessage>
+              </FormControl>
 
-            <FormControl isInvalid={formik.errors.category && formik.touched.category}>
-              <FormLabel>Category</FormLabel>
-              <Input type="text" id="category" name="category" placeholder="Category" value={formik.values.category} onChange={formik.handleChange} onBlur={formik.handleBlur}></Input>
-              <FormErrorMessage>{formik.errors.category}</FormErrorMessage>
-            </FormControl>
+              <FormControl isInvalid={formik.errors.category && formik.touched.category}>
+                <FormLabel>Category</FormLabel>
+                <Input type="text" id="category" name="category" placeholder="Category" value={formik.values.category} onChange={formik.handleChange} onBlur={formik.handleBlur}></Input>
+                <FormErrorMessage>{formik.errors.category}</FormErrorMessage>
+              </FormControl>
 
-            <FormControl isInvalid={formik.errors.description && formik.touched.description}>
-              <FormLabel>Description</FormLabel>
-              <Input type="text" id="description" name="description" placeholder="description" value={formik.values.description} onChange={formik.handleChange} onBlur={formik.handleBlur}></Input>
-              <FormErrorMessage>{formik.errors.description}</FormErrorMessage>
-            </FormControl>
+              <FormControl isInvalid={formik.errors.description && formik.touched.description}>
+                <FormLabel>Description</FormLabel>
+                <Input type="text" id="description" name="description" placeholder="description" value={formik.values.description} onChange={formik.handleChange} onBlur={formik.handleBlur}></Input>
+                <FormErrorMessage>{formik.errors.description}</FormErrorMessage>
+              </FormControl>
 
-            <FormControl isInvalid={formik.errors.image && formik.touched.image}>
-              <FormLabel>Product Image</FormLabel>
-              <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
-                <input {...getRootProps()} style={{cursor: "pointer", backgroundColor:"#f7f7f7"}}/>
-                <p>Drag 'n' drop an image here, or click to select an image</p>
-              </div>
-              <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
-            </FormControl>
+              <FormControl isInvalid={formik.errors.image && formik.touched.image}>
+                <FormLabel>Product Image</FormLabel>
+                <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
+                  <input {...getRootProps()} style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }} />
+                  <Text>Drag 'n' drop an image here, or click to select an image</Text>
+                </div>
+                <Text>Selected File: {selectedFileName}</Text>
+                <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
+              </FormControl>
 
-            <Button type="submit" mt={"10px"}>
-              Create Product
-            </Button>
-          </form>
+              <Button type="submit" mt={"10px"}>
+                Create Product
+              </Button>
+            </form>
+          </Box>
         </Box>
       </Flex>
     </>

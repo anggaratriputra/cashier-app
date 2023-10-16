@@ -279,10 +279,6 @@ function Menu() {
                 </Flex>
               ))}
             </SimpleGrid>
-          </Box>
-        </Box>
-      </Flex>
-
       {selectedProducts.length > 0 && (
         <motion.div initial={{ opacity: 0, scale: 1 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.1 }} transition={{ duration: 0.6 }}>
           <Flex width="24vw">
