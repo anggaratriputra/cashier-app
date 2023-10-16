@@ -3,7 +3,7 @@ import { Field, Form, Formik } from "formik";
 import * as yup from "yup";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import YupPassword from "yup-password";
 YupPassword(yup);
 
@@ -11,14 +11,18 @@ function ResetPassword() {
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen: showPassword, onToggle: onTogglePassword } = useDisclosure();
+  const [searchParams] = useSearchParams();
+
+  const code = searchParams.get("code");
   
   const loginSchema = yup.object().shape({
     password: yup.string().required("Password is required!").matches("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{6,}$", "Must contain at least 6 characters, including at least one letter and one number"),
   });
 
   const handleSubmit = async (values) => {
+    
     try {
-        const response = await api.post("/login/reset-password/", values);
+        const response = await api.post(`/login/reset-password/`, values);
         
     if (response.status === 200) {
         toast({
@@ -82,7 +86,7 @@ function ResetPassword() {
                 
                     <Center>
                       <Button isLoading={isSubmitting} type="submit" colorScheme="red" variant="solid" w={450} boxShadow={"md"}>
-                        Request Password
+                        Reset Password
                       </Button>
                     </Center>
                   </VStack>
