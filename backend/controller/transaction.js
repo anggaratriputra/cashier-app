@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const { Product, Transaction, TransactionItem } = require("../models");
 
 exports.handleCreateTransaction = async (req, res) => {
+  const accountId = req.user.id;
   const { items, paymentType } = req.body;
 
   try {
@@ -19,11 +20,11 @@ exports.handleCreateTransaction = async (req, res) => {
 
     // Apply the 5% tax
     const totalChargeWithTax = totalCharge + totalCharge * 0.05;
-
     // console.log(productList, "asdasd", totalChargeWithTax);
     const transaction = new Transaction({
       totalPrice: totalChargeWithTax,
       paymentBy: paymentType,
+      accountId,
     });
 
     // Save the transaction to the database
