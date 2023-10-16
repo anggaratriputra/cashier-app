@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import api from "../api";
 import CategoryUpdateModal from "./UpdateCategoryModal";
 import ConfirmationModal from "./ConfirmationModal";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../slices/accountSlices";
 
 export default function ListCategory() {
   const [activeItem, setActiveItem] = useState("category");
@@ -14,6 +17,8 @@ export default function ListCategory() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const setActivePage = (itemName) => {
     setActiveItem(itemName);
   };
@@ -58,13 +63,37 @@ export default function ListCategory() {
         setCategories(response.data.details);
       }
     } catch (error) {
-      if (error.response.status !== 404) {
+      if (error.response.status === 404) {
         toast({
           title: "Error!",
           description: "Error fetching categories. Please try again.",
           status: "error",
           duration: 3000,
           isClosable: true,
+        });
+      } else if (error?.response?.status === 403) {
+        toast({
+          title: "Session expired",
+          description: "Your session is expired, please login again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          onCloseComplete() {
+            dispatch(logout());
+            navigate("/");
+          },
+        });
+      } else if (error?.response?.status === 401) {
+        toast({
+          title: "You are not an admin!",
+          description: "You do not have access to this page!",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          onCloseComplete() {
+            dispatch(logout());
+            navigate("/");
+          },
         });
       }
     }
