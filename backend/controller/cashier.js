@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const { Account } = require("../models");
 const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
 
 exports.getAllCashiers = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
