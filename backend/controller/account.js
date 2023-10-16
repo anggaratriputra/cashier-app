@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { Account } = require("../models");
 const fs = require("fs");
+const mailer = require("nodemailer");
+const hbs = require("handlebars");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const crypto = require("crypto");
 
@@ -14,8 +16,8 @@ exports.handleLogin = async (req, res) => {
       where: {
         [Op.or]: {
           email: userIdentity,
-          username: userIdentity, 
-          password
+          username: userIdentity,
+          password,
         },
       },
     });
@@ -73,7 +75,7 @@ exports.updateAccount = async (req, res) => {
   try {
     const account = await Account.findOne({ where: { id } });
     const salt = await bcrypt.genSalt(10);
-    
+
     if (!account) {
       return res.status(404).json({
         ok: false,
@@ -94,7 +96,6 @@ exports.updateAccount = async (req, res) => {
 
     if (req.file) {
       account.photoProfile = req.file.filename;
-
     } else {
       account.photoProfile = account.photoProfile || null;
     }
@@ -193,65 +194,69 @@ exports.getSingleAccount = async (req, res) => {
   });
 };
 
-
 exports.initiatePasswordReset = async (req, res) => {
+  const account = Account;
   try {
-    const {email} = req.body;
+    const { email } = req.body;
 
     if (!email) {
-      return res.status(400).json({ 
-      ok: false,
-      error: "Email is required",
-    });
-  }
-
-  const user = await Account.findOne({ where: { email } });
-
-if (!user) {
-  return res.status(400).json({
-   message: "User not found",
-  });
-}
-
-const uniqueCode = crypto.randomBytes(20).toString('hex');
-
-user.uniqueCode = uniqueCode; 
-
-await user.save();
-
-const resetLink = `http://localhost:3000/reset-password?code=${uniqueCode}`;
-const transporter = nodemailer.createTransport({
-service: 'Gmail',
-auth: {
-  user: process.env.SMTP_USER,
-  pass: process.env.SMTP_PASS,
-  },
-});
-
-  const mailOption = {
-    from: process.env.SMTP_USER,
-    to: user.email,
-    subject: "Password Reset",
-    //sementara
-    html: `Click this <a href="${resetLink}">link</a> to reset your password.`,
-  };
-
-  transporter.sendMail(mailOption, (error, info) => {
-    if (error) {
-      return res.status(500).json({
-        message: error.message,
+      return res.status(400).json({
+        ok: false,
+        error: "Email is required",
       });
     }
 
-    res.status(200).json({
-      message: "Reset link sent",
-      data: uniqueCode
+    const user = await Account.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found",
+      });
+    }
+
+    const uniqueCode = crypto.randomBytes(20).toString("hex");
+
+    user.uniqueCode = uniqueCode;
+
+    const resetLink = `http://localhost:3000/reset-password?code=${uniqueCode}`;
+    const templateRaw = fs.readFileSync(__dirname + "/../templates/index.html", "utf-8");
+    const templateCompile = hbs.compile(templateRaw);
+    const emailHTML = templateCompile({
+      userName: account.username,
+      resetLink,
     });
-  });
+
+    const transporter = mailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const mailOption = {
+      from: process.env.SMTP_USER,
+      to: user.email,
+      subject: "Reset Your Password",
+      html: emailHTML,
+    };
+
+    transporter.sendMail(mailOption, (error, info) => {
+      if (error) {
+        return res.status(500).json({
+          message: error.message,
+        });
+      }
+
+      res.status(200).json({
+        message: "Reset link sent",
+        data: uniqueCode,
+      });
+    });
+    await user.save();
   } catch (error) {
     res.status(500).json({
       message: error.message,
     });
   }
 };
-
