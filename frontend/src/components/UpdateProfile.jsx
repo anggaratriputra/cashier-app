@@ -10,9 +10,10 @@ import Sidebar from "./Sidebar";
 import { logout, updatePhotoProfile } from "../slices/accountSlices";
 import { showUnauthorizedModal } from "../slices/accountSlices";
 import { useNavigate } from "react-router-dom";
+import { color } from "framer-motion";
 
 function UpdateProfile() {
-  const username = useSelector((state) => state.account.profile.data.profile.username);
+  const username = useSelector((state) => state?.account?.profile?.data?.profile?.username);
   const [showPassword, setShowPassword] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const toast = useToast();
@@ -56,11 +57,13 @@ function UpdateProfile() {
       data.append("firstName", values.firstName);
       data.append("lastName", values.lastName);
       data.append("email", values.email);
-      if (values.photoProfile) data.append("photoProfile", values.photoProfile);
+      if (values.photoProfile) {
+        data.append("photoProfile", values.photoProfile);
+      }
       if (values.newPassword) {
         data.append("password", values.newPassword);
       }
-      
+
       const response = await api.patch(`/login/profile`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -117,6 +120,8 @@ function UpdateProfile() {
       try {
         const response = await api.get(`/login/profile/${username}`);
         const profile = response.data.detail;
+        const photoProfile = profile.photoProfile
+
 
         formik.setValues({
           username: profile.username,
@@ -125,6 +130,8 @@ function UpdateProfile() {
           email: profile.email,
           photoProfile: profile.photoProfile,
         });
+
+
       } catch (error) {
         if (error?.response?.status == 401) {
           dispatch(showUnauthorizedModal("/admin/addproduct"));
@@ -173,77 +180,79 @@ function UpdateProfile() {
   return (
     <>
       <Sidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"column"} h={"100vh"} p={"20px"} bgColor={"#f7f7f7"} ml={{ base: 0, md: 64 }}>
-        <Box mt={4} ml={6}>
-          <Text fontWeight="bold" fontSize="2xl" mb="20px">
-            Update Profile
-          </Text>
-          <form onSubmit={formik.handleSubmit}>
-            <Box mt={2}>
-              <FormControl>
-                <FormLabel htmlFor="firstName">First Name</FormLabel>
-                <Input w={"400px"} onChange={formik.handleChange} name="firstName" value={formik.values.firstName} type="text" id="firstName" placeholder="First Name" />
-                <Text color="red.500">{formik.touched.firstName ? formik.errors.firstName : ""}</Text>
+      <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} h={"100vh"} p={"20px"} bgColor={"#f7f7f7"}  ml={{ base: 0, md: 64 }}>
+        <Flex justifyContent={"center"} w={"33vw"} borderRadius={"14px"} bgColor={"white"} color={"black"} boxShadow={"lg"}>
+          <Box my={4}>
+            <Text fontWeight="bold" fontSize="2xl" mb="20px">
+              Update Profile
+            </Text>
+            <form onSubmit={formik.handleSubmit}>
+              <Box mt={2}>
+                <FormControl>
+                  <FormLabel htmlFor="firstName">First Name</FormLabel>
+                  <Input w={"400px"} onChange={formik.handleChange} name="firstName" value={formik.values.firstName} type="text" id="firstName" placeholder="First Name" />
+                  <Text color="red.500">{formik.touched.firstName ? formik.errors.firstName : ""}</Text>
+                </FormControl>
+              </Box>
+              <Box mt={2}>
+                <FormControl>
+                  <FormLabel htmlFor="lastName">Last Name</FormLabel>
+                  <Input w={"400px"} onChange={formik.handleChange} name="lastName" value={formik.values.lastName} type="text" id="lastName" placeholder="Last Name" />
+                  <Text color="red.500">{formik.touched.lastName ? formik.errors.lastName : ""}</Text>
+                </FormControl>
+              </Box>
+              <Box mt={2}>
+                <FormControl>
+                  <FormLabel htmlFor="email">Email</FormLabel>
+                  <Input w={"400px"} onChange={formik.handleChange} name="email" value={formik.values.email} type="text" id="email" placeholder="Email" />
+                  <Text color="red.500">{formik.touched.email ? formik.errors.email : ""}</Text>
+                </FormControl>
+              </Box>
+              <Box mt={2}>
+                <FormControl>
+                  <FormLabel htmlFor="newPassword">New Password</FormLabel>
+                  <InputGroup w={"400px"}>
+                    <Input ref={newPasswordRef} onChange={formik.handleChange} name="newPassword" type={showPassword ? "text" : "password"} id="newPassword" placeholder="New Password" />
+                    <InputRightElement>
+                      <Button h="1.75rem" mr={2} size="sm" onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  <Text color="red.500">{formik.touched.newPassword ? formik.errors.newPassword : ""}</Text>
+                </FormControl>
+              </Box>
+              <Box mt={2}>
+                <FormControl>
+                  <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                  <InputGroup w={"400px"}>
+                    <Input ref={confirmPasswordRef} onChange={formik.handleChange} name="confirmPassword" type={showPassword ? "text" : "password"} id="confirmPassword" placeholder="Confirm Password" />
+                    <InputRightElement>
+                      <Button h="1.75rem" mr={2} size="sm" onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  <Text color="red.500">{formik.touched.confirmPassword ? formik.errors.confirmPassword : ""}</Text>
+                </FormControl>
+              </Box>
+              <FormControl isInvalid={formik.errors.image && formik.touched.image}>
+                <FormLabel>Photo Profile</FormLabel>
+                <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer", width: "400px" }}>
+                  <input {...getInputProps()} name="photoProfile" onChange={(event) => formik.setFieldValue("photoProfile", event.currentTarget.files[0])} />
+                  <p>Drag 'n' drop an image here, or click to select an image</p>
+                </div>
+                <p>Selected File: {selectedFileName}</p>
+                <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
               </FormControl>
-            </Box>
-            <Box mt={2}>
-              <FormControl>
-                <FormLabel htmlFor="lastName">Last Name</FormLabel>
-                <Input w={"400px"} onChange={formik.handleChange} name="lastName" value={formik.values.lastName} type="text" id="lastName" placeholder="Last Name" />
-                <Text color="red.500">{formik.touched.lastName ? formik.errors.lastName : ""}</Text>
-              </FormControl>
-            </Box>
-            <Box mt={2}>
-              <FormControl>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <Input w={"400px"} onChange={formik.handleChange} name="email" value={formik.values.email} type="text" id="email" placeholder="Email" />
-                <Text color="red.500">{formik.touched.email ? formik.errors.email : ""}</Text>
-              </FormControl>
-            </Box>
-            <Box mt={2}>
-              <FormControl>
-                <FormLabel htmlFor="newPassword">New Password</FormLabel>
-                <InputGroup w={"400px"}>
-                  <Input ref={newPasswordRef} onChange={formik.handleChange} name="newPassword" type={showPassword ? "text" : "password"} id="newPassword" placeholder="New Password" />
-                  <InputRightElement>
-                    <Button h="1.75rem" mr={2} size="sm" onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <Text color="red.500">{formik.touched.newPassword ? formik.errors.newPassword : ""}</Text>
-              </FormControl>
-            </Box>
-            <Box mt={2}>
-              <FormControl>
-                <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-                <InputGroup w={"400px"}>
-                  <Input ref={confirmPasswordRef} onChange={formik.handleChange} name="confirmPassword" type={showPassword ? "text" : "password"} id="confirmPassword" placeholder="Confirm Password" />
-                  <InputRightElement>
-                    <Button h="1.75rem" mr={2} size="sm" onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <Text color="red.500">{formik.touched.confirmPassword ? formik.errors.confirmPassword : ""}</Text>
-              </FormControl>
-            </Box>
-            <FormControl isInvalid={formik.errors.image && formik.touched.image}>
-              <FormLabel>Photo Profile</FormLabel>
-              <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
-                <input {...getInputProps()} name="photoProfile" onChange={(event) => formik.setFieldValue("photoProfile", event.currentTarget.files[0])} />
-                <p>Drag 'n' drop an image here, or click to select an image</p>
-              </div>
-              <p>Selected File: {selectedFileName}</p>
-              <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
-            </FormControl>
-            <Box mt={4} display="flex" justifyContent="left">
-              <Button type="submit" colorScheme="red">
-                Update
-              </Button>
-            </Box>
-          </form>
-        </Box>
+              <Box mt={4} display="flex" justifyContent="left">
+                <Button type="submit" colorScheme="red">
+                  Update
+                </Button>
+              </Box>
+            </form>
+          </Box>
+        </Flex>
       </Flex>
     </>
   );

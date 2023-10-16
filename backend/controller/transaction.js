@@ -13,6 +13,7 @@ exports.handleCreateTransaction = async (req, res) => {
         },
       },
     });
+    
     const totalCharge = productList.reduce((total, product) => {
       const [item] = items.filter((item) => item.productId === product.id);
       return total + product.price * item.quantity;

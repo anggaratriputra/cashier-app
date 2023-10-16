@@ -4,7 +4,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     return queryInterface.addColumn("Transactions", "paymentBy", {
-      type: Sequelize.ENUM("cash", "qris", "creditcard"),
+      type: Sequelize.ENUM("cash", "qris", "creditcard", "debitcard"),
       defaultValue: null,
     });
   },
