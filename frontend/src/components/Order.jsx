@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { incrementCount, decrementCount, removeSelectedProduct } from "../slices/orderSlices";
+import { incrementCount, decrementCount, removeSelectedProduct, clearSelectedProduct } from "../slices/orderSlices";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import { motion } from "framer-motion";
 import { Box, Flex, Image, SimpleGrid, Text, Button, Divider, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Select, Input, useToast } from "@chakra-ui/react";
@@ -81,6 +81,14 @@ function Order() {
   };
 
   const handleCreateTransaction = async () => {
+    if (paymentType === "cash") {
+      if (isNaN(cashAmount) || cashAmount < total + total * 0.05) {
+        // Invalid cash amount, do not proceed with the transaction
+        // You can display an error message to the user or take appropriate action.
+        return;
+      }
+    }
+
     const items = selectedProducts.map((product) => ({
       productId: product.id,
       quantity: product.count,
@@ -97,15 +105,18 @@ function Order() {
           title: "Transaction Added",
           description: "New transaction has been added successfully.",
           status: "success",
-          duration: 3000,
+          duration: 1800,
           isClosable: true,
+          onCloseComplete() {
+            dispatch(clearSelectedProduct());
+          },
         });
       } else {
         toast({
           title: "Error!",
           description: "Failed to add new transaction. Please try again.",
           status: "error",
-          duration: 3000,
+          duration: 1800,
           isClosable: true,
         });
       }
@@ -115,7 +126,7 @@ function Order() {
           title: "Error!",
           description: error.response?.data?.error,
           status: "error",
-          duration: 3000,
+          duration: 1800,
           isClosable: true,
         });
       } else {
@@ -131,14 +142,6 @@ function Order() {
       }
     }
   };
-
-  const handleCashAmountChange = (e) => {
-    const rawValue = e.target.value;
-    const sanitizedValue = rawValue.replace(/[^0-9]/g, ""); // Remove non-numeric characters
-    const numericValue = parseInt(sanitizedValue, 10); // Convert to an integer
-    setCashAmount(numericValue); // Update state with the sanitized numeric value
-  };
-
   return (
     <Flex direction="column" width="30vw" h="100vh" bgColor="red.700">
       <style>
@@ -149,14 +152,14 @@ function Order() {
           }
         `}
       </style>
-      <Box mt="38px" mx={{ base: 0, md: 4 }}>
-        <Flex ml={6} alignItems="center">
-          <Text color="yellow.300" fontSize="2xl">
+      <Box mt="38px" mx={{ base: 0, md: 2 }}>
+        <Flex justifyContent={"center"} alignItems="center">
+          <Text textAlign="center" color="yellow.300" fontSize="2xl">
             <b>Order</b> Menu
           </Text>
         </Flex>
         <Box display="flex" mt={4} justifyContent="center" maxHeight="400px" className="scroll-container">
-          <Box p={4} h={"400px"} className="scroll-container" overflowY={"scroll"}>
+          <Box h={"400px"} p={4} className="scroll-container" overflowY={"scroll"}>
             <SimpleGrid columns={1} spacing={2} className="scroll-container">
               {selectedProducts?.map((selectedProduct, index) => (
                 <motion.div variants={itemVariants} initial="initial" animate="animate" exit="initial" key={selectedProduct.id}>
@@ -166,13 +169,13 @@ function Order() {
                     justifyContent={"space-between"}
                     alignItems={"center"}
                     gap={2}
-                    borderRadius={"14px"}
+                    borderRadius={"8px"}
                     w="300px"
-                    h={"100px"}
-                    boxShadow={"lg"}
+                    h={"90px"}
+                    boxShadow={"2xl"}
                     bg="white"
-                    transition="background 0.4s, transform 0.2s"
-                    _hover={{ background: "yellow.100", transform: "scale(1.05)" }}
+                    transition="background 0.4s, transform 0.8s"
+                    _hover={{ background: "yellow.100", transform: "scale(1.05)"}}
                     onContextMenu={(e) => e.preventDefault()}
                     onMouseDown={(e) => {
                       const timer = setTimeout(() => handleLongPress(selectedProduct), longPressDuration);
@@ -276,6 +279,7 @@ function Order() {
               >
                 <option value="cash">Cash</option>
                 <option value="qris">QRIS</option>
+                <option value="debitcard">Debit Card</option>
                 <option value="creditcard">Credit Card</option>
               </Select>
             </Flex>
@@ -294,6 +298,7 @@ function Order() {
           <ModalHeader>
             {paymentType === "cash" && "Cash Payment"}
             {paymentType === "creditcard" && "Credit Card Payment"}
+            {paymentType === "debitcard" && "Debit Card Payment"}
             {paymentType === "qris" && "QRIS Payment"}
           </ModalHeader>
           <ModalCloseButton />
@@ -314,7 +319,18 @@ function Order() {
                   />
                 </Flex>
               )}
-              {paymentType === "creditcard" && "Credit Card Payment"}
+              {paymentType === "creditcard" && (
+                <Flex direction={"column"} gap={4} justifyContent={"center"} alignItems={"center"}>
+                  <Text fontWeight={"bold"}>Waiting EDC Machine</Text>
+                  <Image w={"80%"} src="https://1.bp.blogspot.com/-CEyh4wMF3JA/YMOrAyUMN8I/AAAAAAAAGBA/X6OP2DL7wFE_TxTk8y9wMb3FHDtoBiY2gCLcBGAsYHQ/s800/ezgif.com-video-to-gif__4_.gif" />
+                </Flex>
+              )}
+              {paymentType === "debitcard" && (
+                <Flex direction={"column"} gap={4} justifyContent={"center"} alignItems={"center"}>
+                  <Text fontWeight={"bold"}>Waiting EDC Machine</Text>
+                  <Image w={"80%"} src="https://1.bp.blogspot.com/-CEyh4wMF3JA/YMOrAyUMN8I/AAAAAAAAGBA/X6OP2DL7wFE_TxTk8y9wMb3FHDtoBiY2gCLcBGAsYHQ/s800/ezgif.com-video-to-gif__4_.gif" />
+                </Flex>
+              )}
               {paymentType === "qris" && (
                 <Flex justifyContent={"center"} alignItems={"center"}>
                   <Image w={"90%"} src="https://i.ibb.co/5xjjD4P/qr-dummy.png" />
@@ -329,12 +345,13 @@ function Order() {
                 </Text>
               )}
             </Flex>
+            <Flex justifyContent={"center"} alignItems={"center"} mt={"10px"}>
+              <Button w="80px" bgColor="red.700" color={"yellow.300"} _hover={{ background: "red.900" }} onClick={handleCreateTransaction} disabled={paymentType === "cash" && (isNaN(cashAmount) || cashAmount < total + total * 0.05)}>
+                Pay
+              </Button>
+            </Flex>
           </ModalBody>
-          <ModalFooter>
-            <Button w="160px" bgColor="red.700" color={"yellow.300"} _hover={{ background: "red.900" }} onClick={handleCreateTransaction}>
-              Pay
-            </Button>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
     </Flex>
