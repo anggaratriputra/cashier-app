@@ -23,6 +23,7 @@ function AddProduct() {
     price: Yup.number().required("Price is required"),
     category: Yup.string().required("Category is required"),
     description: Yup.string().required("Description is required"),
+    image: Yup.mixed().required('Image is required')
   });
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -72,6 +73,26 @@ function AddProduct() {
             status: "error",
             duration: 3000,
             isClosable: true,
+          });
+        } else if (error?.response?.status == 400) {
+          toast({
+            title: "Product already exists!",
+            description: "Product names must be unique.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            onCloseComplete() {
+              dispatch(logout());
+              navigate("/");
+            },
+          });
+        } else if (error?.response?.status == 400) {
+          toast({
+            title: "Product already exists!",
+            description: "Product names must be unique.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
             onCloseComplete() {
               dispatch(logout());
               navigate("/");
@@ -89,14 +110,15 @@ function AddProduct() {
               navigate("/");
             },
           });
+        } else {
+          toast({
+            title: "Product failed to build!",
+            description: String(error),
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
         }
-        toast({
-          title: "Product failed to build!",
-          description: String(error),
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
       }
     },
   });
@@ -138,7 +160,7 @@ function AddProduct() {
             <FormControl isInvalid={formik.errors.image && formik.touched.image}>
               <FormLabel>Product Image</FormLabel>
               <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
-                <input {...getRootProps()} style={{cursor: "pointer", backgroundColor:"#f7f7f7"}}/>
+                <input {...getRootProps()} style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }} />
                 <p>Drag 'n' drop an image here, or click to select an image</p>
               </div>
               <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
