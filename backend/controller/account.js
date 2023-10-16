@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { Account } = require("../models");
 const fs = require("fs");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+const crypto = require("crypto");
 
 exports.handleLogin = async (req, res) => {
   const { user_identity: userIdentity, password } = req.body;
@@ -192,4 +193,65 @@ exports.getSingleAccount = async (req, res) => {
   });
 };
 
+
+exports.initiatePasswordReset = async (req, res) => {
+  try {
+    const {email} = req.body;
+
+    if (!email) {
+      return res.status(400).json({ 
+      ok: false,
+      error: "Email is required",
+    });
+  }
+
+  const user = await Account.findOne({ where: { email } });
+
+if (!user) {
+  return res.status(400).json({
+   message: "User not found",
+  });
+}
+
+const uniqueCode = crypto.randomBytes(20).toString('hex');
+
+user.uniqueCode = uniqueCode; 
+
+await user.save();
+
+const resetLink = `http://localhost:3000/reset-password?code=${uniqueCode}`;
+const transporter = nodemailer.createTransport({
+service: 'Gmail',
+auth: {
+  user: process.env.SMTP_USER,
+  pass: process.env.SMTP_PASS,
+  },
+});
+
+  const mailOption = {
+    from: process.env.SMTP_USER,
+    to: user.email,
+    subject: "Password Reset",
+    //sementara
+    html: `Click this <a href="${resetLink}">link</a> to reset your password.`,
+  };
+
+  transporter.sendMail(mailOption, (error, info) => {
+    if (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+
+    res.status(200).json({
+      message: "Reset link sent",
+      data: uniqueCode
+    });
+  });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
