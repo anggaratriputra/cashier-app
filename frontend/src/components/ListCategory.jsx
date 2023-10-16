@@ -132,53 +132,53 @@ export default function ListCategory() {
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
       <Flex direction={"row"} ml={{ base: 0, md: 64 }}>
         <Box bgColor={"#f7f7f7"} h={"100vh"} w={"85vw"} p={"40px"}>
-        <Box bgColor={"white.700"} boxShadow={"md"} border={"1px solid"} borderColor={"blackAlpha.100"} p={"20px"} h={"90vh"} borderRadius={"10px"}>
-          <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
-            Add Category
-          </Text>
-          <form onSubmit={formik.handleSubmit}>
-            <FormControl isInvalid={formik.errors.name && formik.touched.name}>
-              <FormLabel htmlFor="name">Category Name</FormLabel>
-              <Input type="text" id="name" name="name" placeholder="Category Name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur} w={'100%'} />
-              <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
-            </FormControl>
+          <Box bgColor={"white.700"} boxShadow={"md"} border={"1px solid"} borderColor={"blackAlpha.100"} p={"20px"} h={"90vh"} borderRadius={"10px"}>
+            <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
+              Add Category
+            </Text>
+            <form onSubmit={formik.handleSubmit}>
+              <FormControl isInvalid={formik.errors.name && formik.touched.name}>
+                <FormLabel htmlFor="name">Category Name</FormLabel>
+                <Input type="text" id="name" name="name" placeholder="Category Name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur} w={"100%"} />
+                <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
+              </FormControl>
 
-            <Button mt={4} bgColor={'orange.300'} color={'white'} isLoading={formik.isSubmitting} type="submit">
-              Create Category
-            </Button>
-          </form>
-          <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
-            Category List
-          </Text>
-          <Box display={"flex"} flexDir={"column"}>
-            {categories.length === 0 ? (
-              <Text>Category is Empty!</Text>
-            ) : (
-              categories.map((category, index) => (
-                <div key={index}>
-                  <Box display={"flex"} w={"80vw"} h={"10%"} alignItems={"center"}>
-                    <Box display={"flex"} my={"5px"}>
-                      <Text fontSize={"20px"} minW={"67vw"}>
-                        {category.name}
-                      </Text>
-                      <Button colorScheme="red" onClick={() => handleDeleteCategory(category.name)}>
-                        Delete
-                      </Button>
-                      <Button
-                        colorScheme="blue"
-                        onClick={() => {
-                          setIsModalOpen(true);
-                          setSelectedCategory(category);
-                        }}>
-                        Edit
-                      </Button>
+              <Button mt={4} bgColor={"orange.300"} color={"white"} isLoading={formik.isSubmitting} type="submit">
+                Create Category
+              </Button>
+            </form>
+            <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
+              Category List
+            </Text>
+            <Box display={"flex"} flexDir={"column"}>
+              {categories.length === 0 ? (
+                <Text>Category is Empty!</Text>
+              ) : (
+                categories.map((category, index) => (
+                  <div key={index}>
+                    <Box display={"flex"} w={"80vw"} h={"10%"} alignItems={"center"}>
+                      <Box display={"flex"} my={"5px"}>
+                        <Text fontSize={"20px"} minW={"67vw"}>
+                          {category.name}
+                        </Text>
+                        <Button colorScheme="red" onClick={() => handleDeleteCategory(category.name)}>
+                          Delete
+                        </Button>
+                        <Button
+                          colorScheme="blue"
+                          onClick={() => {
+                            setIsModalOpen(true);
+                            setSelectedCategory(category);
+                          }}>
+                          Edit
+                        </Button>
+                      </Box>
                     </Box>
-                  </Box>
-                </div>
-              ))
-            )}
-            <CategoryUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveCategory} categoryToEdit={selectedCategory} />
-            <ConfirmationModal isOpen={isOpen} onClose={onClose} onConfirm={handleConfirmDeleteCategory} message={`Are you sure you want to delete the category: ${selectedCategory}?`} />
+                  </div>
+                ))
+              )}
+              <CategoryUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveCategory} categoryToEdit={selectedCategory} />
+              <ConfirmationModal isOpen={isOpen} onClose={onClose} onConfirm={handleConfirmDeleteCategory} message={`Are you sure you want to delete the category: ${selectedCategory}?`} />
             </Box>
           </Box>
         </Box>
