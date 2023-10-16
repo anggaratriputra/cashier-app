@@ -15,7 +15,7 @@ import { updatePhotoProfile } from "../slices/accountSlices";
 function UpdateAdminProfile() {
 
   const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
-  const username = useSelector((state) => state.account.profile.data.profile.username);
+  const username = useSelector((state) => state?.account?.profile?.data?.profile?.username);
   const [showPassword, setShowPassword] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const toast = useToast();
@@ -62,8 +62,8 @@ function UpdateAdminProfile() {
 
       if (values.photoProfile) data.append("photoProfile", values.photoProfile);
 
-      if (values.password) {
-        data.append("password", values.password);
+      if (values.newPassword) {
+        data.append("password", values.newPassword);
       }
 
       console.log(values.photoProfile);

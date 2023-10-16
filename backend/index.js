@@ -15,12 +15,14 @@ const productRouter = require("./routes/product")
 const categoryRouter = require("./routes/category")
 const loginRouter = require("./routes/login");
 const cashierRouter = require("./routes/cashier");
+const transactionRouter = require("./routes/transaction");
 
 //Routing
 app.use("/categories", categoryRouter)
 app.use("/products", productRouter)
 app.use("/login", loginRouter);
 app.use("/cashier", cashierRouter)
+app.use("/transaction", transactionRouter)
 
 app.use("/public", express.static(__dirname + "/public"));
 
@@ -30,7 +32,6 @@ app.use((req, res) => {
     msg: "NOT FOUND",
   });
 });
-
 
 app.use((err, req, res) => {
   console.log(`500: ${res.url}`);
