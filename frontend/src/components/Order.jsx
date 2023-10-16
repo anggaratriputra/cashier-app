@@ -90,16 +90,43 @@ function Order() {
         paymentType,
       });
 
-      if (response.ok) {
-        // Transaction created successfully
-        console.log("Transaction created!");
-        // You can add additional logic here, such as resetting the order or redirecting to a confirmation page.
+      if (response.data.ok) {
+        toast({
+          title: "Transaction Added",
+          description: "New transaction has been added successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       } else {
-        // Transaction creation failed
-        console.error("Transaction creation failed");
+        toast({
+          title: "Error!",
+          description: "Failed to add new transaction. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (error) {
-      console.error("Error creating transaction:", error);
+      if (error.response?.status === 400) {
+        toast({
+          title: "Error!",
+          description: error.response?.data?.error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        // Handle any errors, e.g., network issues
+        console.error("Error adding cashier:", error);
+        toast({
+          title: "Error!",
+          description: "An error occurred. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -109,8 +136,6 @@ function Order() {
     const numericValue = parseInt(sanitizedValue, 10); // Convert to an integer
     setCashAmount(numericValue); // Update state with the sanitized numeric value
   };
-
-  
 
   return (
     <Flex direction="column" width="30vw" h="100vh" bgColor="red.700">
