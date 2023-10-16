@@ -71,6 +71,8 @@ function Menu() {
               navigate("/");
             },
           });
+        } else if (error?.response?.status == 404) {
+          setProducts([]);
         } else {
           toast({
             title: "Error!",
@@ -233,41 +235,45 @@ function Menu() {
           </Box>
         </Flex>
         <Box display="flex" justifyContent="center" maxHeight="500px">
-          <Box mt={8} overflowY="scroll">
-            <SimpleGrid columns={4} spacing={2}>
-              {products.map((product) => (
-                <Flex
-                  direction="column"
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="lg"
-                  key={product.id}
-                  m="10px"
-                  p="10px"
-                  width="180px"
-                  height="200px"
-                  borderRadius="14px"
-                  color="black"
-                  _hover={{ bg: "red.700", color: "yellow.300" }} // Change background color to red on hover
-                  transition="background-color 0.3s, color 0.3s"
-                  onClick={() => handleBoxClick(product)} // Dispatch the action to set the selected product
-                >
-                  <Flex flexGrow={2}>
-                    <Text fontWeight={"bold"} fontSize="md" textAlign="center">
-                      {product.name}
-                    </Text>
+          <Box mt={8} overflowY="auto">
+            {products.length === 0 ? (
+              <Text>No Products Matches</Text>
+            ) : (
+              <SimpleGrid columns={4} spacing={2}>
+                {products.map((product) => (
+                  <Flex
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    boxShadow="lg"
+                    key={product.id}
+                    m="10px"
+                    p="10px"
+                    width="180px"
+                    height="200px"
+                    borderRadius="14px"
+                    color="black"
+                    _hover={{ bg: "red.700", color: "yellow.300" }} // Change background color to red on hover
+                    transition="background-color 0.3s, color 0.3s"
+                    onClick={() => handleBoxClick(product)} // Dispatch the action to set the selected product
+                  >
+                    <Flex flexGrow={2}>
+                      <Text fontWeight={"bold"} fontSize="md" textAlign="center">
+                        {product.name}
+                      </Text>
+                    </Flex>
+                    <Flex justifyContent="center" flexGrow={2}>
+                      <Image w="85%" h={"85%"} src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
+                    </Flex>
+                    <Flex>
+                      <Text fontWeight={"medium"} fontSize="sm" textAlign="center">
+                        {formatToRupiah(product.price)}
+                      </Text>
+                    </Flex>
                   </Flex>
-                  <Flex justifyContent="center" flexGrow={2}>
-                    <Image w="85%" h={"85%"} src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
-                  </Flex>
-                  <Flex>
-                    <Text fontWeight={"medium"} fontSize="sm" textAlign="center">
-                      {formatToRupiah(product.price)}
-                    </Text>
-                  </Flex>
-                </Flex>
-              ))}
-            </SimpleGrid>
+                ))}
+              </SimpleGrid>
+            )}
           </Box>
         </Box>
       </Flex>
@@ -280,7 +286,7 @@ function Menu() {
         </motion.div>
       )}
       {/* Add the Modal code here */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} isCentered motionPreset='slideInBottom'>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} isCentered motionPreset="slideInBottom">
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(4px)" />
         <ModalContent>
           <ModalHeader>
