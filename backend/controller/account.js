@@ -7,6 +7,7 @@ const mailer = require("nodemailer");
 const hbs = require("handlebars");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 exports.handleLogin = async (req, res) => {
   const { user_identity: userIdentity, password } = req.body;
@@ -254,6 +255,42 @@ exports.initiatePasswordReset = async (req, res) => {
       });
     });
     await user.save();
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { uniqueCode, password } = req.body;
+
+    if (!uniqueCode || !password) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
+
+    const user = await Account.findOne({ where: { uniqueCode } });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid link",
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashPassword;
+    user.uniqueCode = null;
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Password updated",
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,

@@ -234,46 +234,51 @@ function Menu() {
             </Select>
           </Box>
         </Flex>
-        <Box display="flex" justifyContent="center" maxHeight="500px">
-          <Box mt={8} overflowY="auto">
-            {products.length === 0 ? (
-              <Text>No Products Matches</Text>
-            ) : (
-              <SimpleGrid columns={4} spacing={2}>
-                {products.map((product) => (
-                  <Flex
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    boxShadow="lg"
-                    key={product.id}
-                    m="10px"
-                    p="10px"
-                    width="180px"
-                    height="200px"
-                    borderRadius="14px"
-                    color="black"
-                    _hover={{ bg: "red.700", color: "yellow.300" }} // Change background color to red on hover
-                    transition="background-color 0.3s, color 0.3s"
-                    onClick={() => handleBoxClick(product)} // Dispatch the action to set the selected product
-                  >
-                    <Flex flexGrow={2}>
-                      <Text fontWeight={"bold"} fontSize="md" textAlign="center">
-                        {product.name}
-                      </Text>
-                    </Flex>
-                    <Flex justifyContent="center" flexGrow={2}>
-                      <Image w="85%" h={"85%"} src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
-                    </Flex>
-                    <Flex>
-                      <Text fontWeight={"medium"} fontSize="sm" textAlign="center">
-                        {formatToRupiah(product.price)}
-                      </Text>
-                    </Flex>
+        <Box display="flex" justifyContent="center" maxHeight="460px">
+          <Box mt={6} overflowY="scroll">
+            <SimpleGrid columns={4} spacing={2}>
+              {products.length == 0 ? (
+                <Flex justifyContent={"center"}>
+                  <Text textAlign={"center"} fontStyle={"italic"}>
+                    No data matches.
+                  </Text>
+                </Flex>
+              ) : (
+                ""
+              )}
+              {products.map((product) => (
+                <Flex
+                  direction="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="lg"
+                  key={product.id}
+                  m="10px"
+                  p="10px"
+                  width="180px"
+                  height="190px"
+                  borderRadius="14px"
+                  color="black"
+                  transition="background-color 0.3s, color 0.3s, transform 0.3s"
+                  _hover={{ bg: "red.700", color: "yellow.300", transform: "scale(1.1)" }} // Change background color to red on hover
+                  onClick={() => handleBoxClick(product)} // Dispatch the action to set the selected product
+                >
+                  <Flex flexGrow={2}>
+                    <Text fontWeight={"bold"} fontSize="md" textAlign="center">
+                      {product.name}
+                    </Text>
                   </Flex>
-                ))}
-              </SimpleGrid>
-            )}
+                  <Flex justifyContent="center" flexGrow={2}>
+                    <Image w="100px" h={"90px"} src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
+                  </Flex>
+                  <Flex>
+                    <Text fontWeight={"medium"} fontSize="sm" textAlign="center">
+                      {formatToRupiah(product.price)}
+                    </Text>
+                  </Flex>
+                </Flex>
+              ))}
+            </SimpleGrid>
           </Box>
         </Box>
       </Flex>

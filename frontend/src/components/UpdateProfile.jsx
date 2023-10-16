@@ -56,14 +56,11 @@ function UpdateProfile() {
       data.append("firstName", values.firstName);
       data.append("lastName", values.lastName);
       data.append("email", values.email);
-
       if (values.photoProfile) data.append("photoProfile", values.photoProfile);
-
-      if (values.password) {
-        data.append("password", values.password);
+      if (values.newPassword) {
+        data.append("password", values.newPassword);
       }
-
-      console.log(values.photoProfile);
+      
       const response = await api.patch(`/login/profile`, data, {
         headers: {
           "Content-Type": "multipart/form-data",

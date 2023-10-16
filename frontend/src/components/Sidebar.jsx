@@ -1,8 +1,8 @@
 import React from "react";
 import { Icon, Flex, Image, Box, useColorModeValue, MenuButton, Avatar, Portal, MenuList, MenuItem, Menu, Text } from "@chakra-ui/react";
 import { FiSettings, FiHome, FiTrendingUp } from "react-icons/fi";
-import { BiMessageSquareAdd } from "react-icons/bi";
-import { FaCashRegister } from "react-icons/fa";
+import { BiMessageSquareAdd, BiSolidFoodMenu } from "react-icons/bi";
+import { FaFileInvoiceDollar} from "react-icons/fa";
 import { TbReportSearch } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { MdFastfood } from "react-icons/md";
@@ -16,7 +16,7 @@ import { updatePhotoProfile } from "../slices/accountSlices";
 const Sidebar = ({ activeItem }) => {
   const [userProfile, setUserProfile] = useState(null);
   const username = useSelector((state) => state?.account?.profile?.data?.profile?.username);
-  const photo = useSelector((state) => state.account.userPhotoProfile);
+  const photo = useSelector((state) => state?.account?.userPhotoProfile);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = () => {
@@ -49,8 +49,8 @@ const Sidebar = ({ activeItem }) => {
 
       {/* Sidebar Navigation */}
       <Flex direction="column">
-        <NavItem icon={FiHome} name="Menu" isActive={activeItem === "menu"} onClick={() => navigate("/menu")} />
-        <NavItem icon={FiTrendingUp} name="Bills" isActive={activeItem === "bills"} onClick={() => navigate("/bills")} />
+        <NavItem icon={BiSolidFoodMenu} name="Menu" isActive={activeItem === "menu"} onClick={() => navigate("/menu")} />
+        <NavItem icon={FaFileInvoiceDollar} name="Bills" isActive={activeItem === "bills"} onClick={() => navigate("/bills")} />
       </Flex>
       <Box position="fixed" bottom={10} left={6}>
         <Menu>
