@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { incrementCount, decrementCount, removeSelectedProduct } from "../slices/orderSlices";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import { motion } from "framer-motion";
-import { Box, Flex, Image, SimpleGrid, Text, Button, Divider, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Select, Input } from "@chakra-ui/react";
+import { Box, Flex, Image, SimpleGrid, Text, Button, Divider, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Select, Input, useToast } from "@chakra-ui/react";
 import api from "../api";
 
 function Order() {
@@ -15,6 +15,8 @@ function Order() {
   const [paymentType, setPaymentType] = useState("cash");
   const [cashAmount, setCashAmount] = useState(0);
   const [changeAmount, setChangeAmount] = useState(0);
+
+  const toast = useToast();
 
   const formatToRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
