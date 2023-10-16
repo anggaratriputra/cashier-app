@@ -1,4 +1,4 @@
-import { Input, Button, FormControl, FormLabel, FormErrorMessage, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Textarea } from "@chakra-ui/react";
+import { Input, Button, FormControl, FormLabel, FormErrorMessage, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Textarea, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import api from "../api";
@@ -108,9 +108,9 @@ function UpdateProductModal({ isOpen, onClose, productId }) {
                 <FormLabel>Product Image</FormLabel>
                 <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer" }}>
                   <input {...getInputProps()} onChange={(event) => formik.setFieldValue("image", event.currentTarget.files[0])} />
-                  <p>Drag 'n' drop an image here, or click to select an image</p>
+                  <Text>Drag 'n' drop an image here, or click to select an image</Text>
                 </div>
-                <p>Selected File: {selectedFileName}</p>
+                <Text>Selected File: {selectedFileName}</Text>
                 <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
               </FormControl>
             </ModalBody>

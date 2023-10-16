@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import api from "../api";
 //   import { add } from "../slices/users";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login, updatePhotoProfile } from "../slices/accountSlices";
 import YupPassword from "yup-password";
@@ -117,9 +117,11 @@ function Login() {
                     </Field>
                     <HStack justify='space-between'>
             <Checkbox defaultChecked>Remember me</Checkbox>
+            <Link to="/forgot-password">
             <Button variant="text" size="sm">
               Forgot password?
             </Button>
+            </Link>
           </HStack>
                     <Center>
                       <Button isLoading={isSubmitting} type="submit" colorScheme="red" variant="solid" w={450} boxShadow={"md"}>
