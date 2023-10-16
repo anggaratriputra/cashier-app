@@ -3,22 +3,29 @@ const { Category } = require("../models");
 exports.createCategory = async (req, res) => {
   const { name } = req.body;
 
-  try {
-    const result = await Category.create({
-      name,
-      isEditing: false
-    });
-
-    res.status(201).json({
-      ok: true,
-      message: "Category created!",
-      detail: result,
-    });
-  } catch (error) {
+  if (name === "") {
     res.status(400).json({
       ok: false,
-      message: String(error),
+      message: "Category cannot be empty!",
     });
+  } else {
+    try {
+      const result = await Category.create({
+        name,
+        isEditing: false,
+      });
+
+      res.status(201).json({
+        ok: true,
+        message: "Category created!",
+        detail: result,
+      });
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        message: String(error),
+      });
+    }
   }
 };
 
@@ -82,7 +89,7 @@ exports.deleteCategory = async (req, res) => {
 exports.getAllCategory = async (req, res) => {
   try {
     const categories = await Category.findAll({
-      attributes: ['id', 'name'], // Fetch only the 'id' and 'name' columns
+      attributes: ["id", "name"], // Fetch only the 'id' and 'name' columns
     });
 
     if (!categories || categories.length === 0) {
