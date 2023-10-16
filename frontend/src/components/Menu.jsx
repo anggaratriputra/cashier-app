@@ -71,6 +71,8 @@ function Menu() {
               navigate("/");
             },
           });
+        } else if (error?.response?.status == 404) {
+          setProducts([]);
         } else {
           toast({
             title: "Error!",
@@ -232,9 +234,18 @@ function Menu() {
             </Select>
           </Box>
         </Flex>
-        <Box display="flex" justifyContent="center" maxHeight="500px">
-          <Box mt={8} overflowY="scroll">
+        <Box display="flex" justifyContent="center" maxHeight="460px">
+          <Box mt={6} overflowY="scroll">
             <SimpleGrid columns={4} spacing={2}>
+              {products.length == 0 ? (
+                <Flex justifyContent={"center"}>
+                  <Text textAlign={"center"} fontStyle={"italic"}>
+                    No data matches.
+                  </Text>
+                </Flex>
+              ) : (
+                ""
+              )}
               {products.map((product) => (
                 <Flex
                   direction="column"
@@ -245,11 +256,11 @@ function Menu() {
                   m="10px"
                   p="10px"
                   width="180px"
-                  height="200px"
+                  height="190px"
                   borderRadius="14px"
                   color="black"
-                  _hover={{ bg: "red.700", color: "yellow.300" }} // Change background color to red on hover
-                  transition="background-color 0.3s, color 0.3s"
+                  transition="background-color 0.3s, color 0.3s, transform 0.3s"
+                  _hover={{ bg: "red.700", color: "yellow.300", transform: "scale(1.1)" }} // Change background color to red on hover
                   onClick={() => handleBoxClick(product)} // Dispatch the action to set the selected product
                 >
                   <Flex flexGrow={2}>
@@ -258,7 +269,7 @@ function Menu() {
                     </Text>
                   </Flex>
                   <Flex justifyContent="center" flexGrow={2}>
-                    <Image w="85%" h={"85%"} src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
+                    <Image w="100px" h={"90px"} src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
                   </Flex>
                   <Flex>
                     <Text fontWeight={"medium"} fontSize="sm" textAlign="center">
@@ -280,7 +291,7 @@ function Menu() {
         </motion.div>
       )}
       {/* Add the Modal code here */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} isCentered motionPreset='slideInBottom'>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} isCentered motionPreset="slideInBottom">
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(4px)" />
         <ModalContent>
           <ModalHeader>
