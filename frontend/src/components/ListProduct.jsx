@@ -291,8 +291,7 @@ function ListProduct() {
                   style={{
                     backgroundColor: product.isActive ? null : "red", // Background color
                     color: product.isActive ? "black" : "white", // Font color
-                  }}
-                >
+                  }}>
                   <Td>{product.id}</Td>
                   <Td>{product.name}</Td>
                   <Td>{formatToRupiah(product.price)}</Td>
@@ -350,7 +349,7 @@ function ListProduct() {
           </Flex>
         </Box>
       </Flex>
-      <UpdateProductModal isOpen={isModalOpen} productId={productIdForEdit} onClose={() => setIsModalOpen(false)} />
+      {isModalOpen && <UpdateProductModal isOpen={isModalOpen} productId={productIdForEdit} onClose={() => setIsModalOpen(false)} />}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>

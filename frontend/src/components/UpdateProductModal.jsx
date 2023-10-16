@@ -2,7 +2,7 @@ import { Input, Button, FormControl, FormLabel, FormErrorMessage, useToast, Moda
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import api from "../api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 function UpdateProductModal({ isOpen, onClose, productId }) {
@@ -24,9 +24,6 @@ function UpdateProductModal({ isOpen, onClose, productId }) {
       setSelectedFileName(acceptedFiles[0].name);
     },
   });
-  //   onSave(productId.id, updateProductName, updateProductPrice, updateProductcategory, updateProductdescription, selectedFile, selectedFileName);
-  //   onClose();
-  // };
 
   const formik = useFormik({
     initialValues: {
@@ -52,7 +49,7 @@ function UpdateProductModal({ isOpen, onClose, productId }) {
             "Content-Type": "multipart/form-data",
           },
         });
-        setSelectedFileName('')
+        setSelectedFileName("");
 
         toast({
           title: "Product Updated",
@@ -61,7 +58,7 @@ function UpdateProductModal({ isOpen, onClose, productId }) {
           duration: 3000,
           isClosable: true,
         });
-        onClose()
+        onClose();
       } catch (error) {
         toast({
           title: "Product failed to update!",
