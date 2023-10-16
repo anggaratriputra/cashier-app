@@ -5,7 +5,7 @@ exports.createProduct = async (req, res) => {
   const { name, price, category, description } = req.body;
   const { filename } = req.file;
 
-  if (!name || !price || !category || !description || !filename) {
+  if (!name || !price || !category || !description || !req.file) {
     return res.status(400).json({
       ok: false,
       message: "Please provide all required information for the product.",
@@ -60,14 +60,12 @@ exports.updateProduct = async (req, res) => {
 
     if (req.file) {
       product.image = req.file.filename;
-
     } else {
       return res.status(404).json({
         ok: false,
         message: "Failed to upload image!",
       });
     }
-
 
     if (productName) {
       product.name = productName;
@@ -89,7 +87,7 @@ exports.updateProduct = async (req, res) => {
       detail: product,
     });
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(400).json({
       ok: false,
       message: "Product failed to updated!",
