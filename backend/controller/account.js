@@ -251,7 +251,7 @@ exports.initiatePasswordReset = async (req, res) => {
 
       res.status(200).json({
         message: "Reset link sent",
-        data: uniqueCode,
+        code: uniqueCode,
       });
     });
     await user.save();
