@@ -53,3 +53,67 @@ exports.handleCreateTransaction = async (req, res) => {
     });
   }
 };
+
+exports.handleGetAllTransactionByCashier = async (req, res) => {
+  try {
+    // Retrieve all transactions along with their associated TransactionItems
+    const transactions = await Transaction.findAll({
+      where: {
+        accountId: req.user.id, // Assuming you want to filter transactions by the current user's ID
+      },
+      include: [
+        {
+          model: Product,
+         // Assuming you've defined an alias for the Product model
+          through: {
+            model: TransactionItem,
+            as: 'transactionItems', // Alias for the TransactionItem model
+          },
+        },
+      ],
+    });
+
+    res.status(200).json({
+      ok: true,
+      message: "Transactions retrieved successfully",
+      detail: transactions,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      message: "Failed to retrieve transactions",
+      detail: String(error),
+    });
+  }
+};
+
+
+exports.handleGetAllTransaction = async (req, res) => {
+  try {
+    // Retrieve all transactions along with their associated TransactionItems
+    const transactions = await Transaction.findAll({
+      include: [
+        {
+          model: Product,
+          // Assuming you've defined an alias for the Product model
+          through: {
+            model: TransactionItem,
+            as: 'transactionItems', // Alias for the TransactionItem model
+          },
+        },
+      ],
+    });
+
+    res.status(200).json({
+      ok: true,
+      message: "Transactions retrieved successfully",
+      detail: transactions,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      message: "Failed to retrieve transactions",
+      detail: String(error),
+    });
+  }
+};
