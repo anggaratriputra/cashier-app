@@ -5,7 +5,7 @@ exports.createProduct = async (req, res) => {
   const { name, price, category, description } = req.body;
   const { filename } = req.file;
 
-  if (!name || !price || !category || !description || !filename) {
+  if (!name || !price || !category || !description || !req.file) {
     return res.status(400).json({
       ok: false,
       message: "Please provide all required information for the product.",

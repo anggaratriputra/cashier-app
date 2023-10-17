@@ -68,39 +68,27 @@ function AddProduct() {
           isClosable: true,
         });
       } catch (error) {
-        if (error?.response?.status == 401) {
+        if (error?.response?.status === 401) {
           toast({
             title: "You are not an admin!",
             description: "You do not have access to this page!",
             status: "error",
             duration: 3000,
             isClosable: true,
+            onCloseComplete() {
+              dispatch(logout());
+              navigate("/");
+            },
           });
-        } else if (error?.response?.status == 400) {
+        } else if (error?.response?.status === 400) {
           toast({
             title: "Product already exists!",
             description: "Product names must be unique.",
             status: "error",
             duration: 3000,
             isClosable: true,
-            onCloseComplete() {
-              dispatch(logout());
-              navigate("/");
-            },
           });
-        } else if (error?.response?.status == 400) {
-          toast({
-            title: "Product already exists!",
-            description: "Product names must be unique.",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-            onCloseComplete() {
-              dispatch(logout());
-              navigate("/");
-            },
-          });
-        } else if (error?.response?.status == 403) {
+        } else if (error?.response?.status === 403) {
           toast({
             title: "Session expired",
             description: "Your session is expired, please login again.",
