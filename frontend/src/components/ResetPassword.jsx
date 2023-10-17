@@ -5,6 +5,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import api from "../api";
 import { useNavigate, useSearchParams} from "react-router-dom";
 import YupPassword from "yup-password";
+import { useEffect } from "react";
 YupPassword(yup);
 
 
@@ -14,8 +15,14 @@ function ResetPassword() {
   const navigate = useNavigate();
   const { isOpen: showPassword, onToggle: onTogglePassword } = useDisclosure();
 
-  
-const code = searchParams.get("code");
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (code) {
+        console.log("Code from query params:", code);
+    } else {
+        console.log("Code not found in query params");
+    }
+}, [searchParams]);
 
   
   const loginSchema = yup.object().shape({
@@ -25,7 +32,7 @@ const code = searchParams.get("code");
   const handleSubmit = async (values) => {
     
     try {
-        const response = await api.post(`/login/reset-password/`, values);
+        const response = await api.post(`/login/reset-password`, values);
 
 
         
