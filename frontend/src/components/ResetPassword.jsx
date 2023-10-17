@@ -32,10 +32,12 @@ function ResetPassword() {
   const handleSubmit = async (values) => {
     
     try {
-        const response = await api.post(`/login/reset-password`, values);
+        const data = {
+            uniqueCode: searchParams.get("code"),
+            password: values.password,
+        }
+        const response = await api.post(`/login/reset-password`, data);
 
-
-        
     if (response.status === 200) {
         toast({
             title: "Reset Password",
