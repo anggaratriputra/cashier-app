@@ -26,7 +26,7 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
-import { FaCheck, FaTimes, FaEdit, FaSearch, FaPlusCircle } from "react-icons/fa";
+import { FaCheck, FaTimes, FaSearch, FaPlusCircle } from "react-icons/fa";
 import AdminSidebar from "./AdminSidebar";
 import api from "../api";
 import CashierForm from "./CashierForm";
@@ -86,7 +86,6 @@ function Cashier() {
           },
         });
       } else {
-        console.error(error);
         toast({
           title: "Error!",
           description: String(error),
@@ -135,7 +134,6 @@ function Cashier() {
         });
       }
     } catch (error) {
-      console.log(error);
       if (error.response?.status === 400) {
         toast({
           title: "Error!",

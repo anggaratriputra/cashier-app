@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Text, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Icon, IconButton, Input, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import AdminSidebar from "./AdminSidebar";
@@ -9,6 +9,8 @@ import ConfirmationModal from "./ConfirmationModal";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../slices/accountSlices";
+import { FiDelete, FiTrash, FiTrash2 } from "react-icons/fi";
+import { FaEdit } from "react-icons/fa";
 
 export default function ListCategory() {
   const [activeItem, setActiveItem] = useState("category");
@@ -159,10 +161,10 @@ export default function ListCategory() {
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"row"} ml={{ base: 0, md: 64 }}>
-        <Box bgColor={"#f7f7f7"} h={"100vh"} w={"85vw"} p={"40px"}>
-          <Box bgColor={"white.700"} boxShadow={"md"} border={"1px solid"} borderColor={"blackAlpha.100"} p={"20px"} h={"90vh"} borderRadius={"10px"}>
-            <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
+      <Flex direction={"row"} ml={{ base: 0, md: 64 }} alignItems={"center"} justifyContent={"center"} bgColor={"#f7f7f7"}>
+        <Box h={"100vh"} w={"60vw"} alignItems={"center"} justifyContent={"center"} p={"40px"}>
+          <Box bgColor={"white.700"} boxShadow={"md"} border={"1px solid"} borderColor={"blackAlpha.100"} p={"40px"} h={"90vh"} borderRadius={"10px"}>
+            <Text fontWeight="bold" mb={"20px"} fontSize="2xl">
               Add Category
             </Text>
             <form onSubmit={formik.handleSubmit}>
@@ -171,40 +173,37 @@ export default function ListCategory() {
                 <Input type="text" id="name" name="name" placeholder="Category Name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur} w={"100%"} />
                 <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
               </FormControl>
-
-              <Button mt={4} bgColor={"orange.300"} color={"white"} isLoading={formik.isSubmitting} type="submit">
+              <Button mt={4} bgColor={"red.700"} color={"yellow.300"} _hover={{background:"red.900"}} isLoading={formik.isSubmitting} type="submit">
                 Create Category
               </Button>
             </form>
-            <Text fontWeight="bold" mt="38px" mb={"20px"} fontSize="2xl">
+            <Text fontWeight="bold" mt="18px" mb={"20px"} fontSize="2xl">
               Category List
             </Text>
             <Box display={"flex"} flexDir={"column"}>
               {categories.length === 0 ? (
                 <Text>Category is Empty!</Text>
               ) : (
-                categories.map((category, index) => (
-                  <div key={index}>
-                    <Box display={"flex"} w={"80vw"} h={"10%"} alignItems={"center"}>
-                      <Box display={"flex"} my={"5px"}>
-                        <Text fontSize={"20px"} minW={"67vw"}>
-                          {category.name}
-                        </Text>
-                        <Button colorScheme="red" onClick={() => handleDeleteCategory(category.name)}>
-                          Delete
-                        </Button>
-                        <Button
+                <Box h={"45vh"} overflowY={"auto"}>
+                  {categories.map((category, index) => (
+                    <Flex p={4} alignItems={"center"} justifyContent={"space-between"}>
+                      <Flex>
+                        <Text fontSize={"20px"}>{category.name}</Text>
+                      </Flex>
+                      <Flex gap={1}>
+                        <IconButton
                           colorScheme="blue"
                           onClick={() => {
                             setIsModalOpen(true);
                             setSelectedCategory(category);
-                          }}>
-                          Edit
-                        </Button>
-                      </Box>
-                    </Box>
-                  </div>
-                ))
+                          }}
+                          icon={<FaEdit />}
+                        ></IconButton>
+                        <IconButton icon={<FiTrash2 />} colorScheme="red" onClick={() => handleDeleteCategory(category.name)}></IconButton>
+                      </Flex>
+                    </Flex>
+                  ))}
+                </Box>
               )}
               <CategoryUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveCategory} categoryToEdit={selectedCategory} />
               <ConfirmationModal isOpen={isOpen} onClose={onClose} onConfirm={handleConfirmDeleteCategory} message={`Are you sure you want to delete the category: ${selectedCategory}?`} />
