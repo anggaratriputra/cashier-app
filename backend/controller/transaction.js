@@ -13,7 +13,7 @@ exports.handleCreateTransaction = async (req, res) => {
         },
       },
     });
-    
+
     const totalCharge = productList.reduce((total, product) => {
       const [item] = items.filter((item) => item.productId === product.id);
       return total + product.price * item.quantity;
@@ -57,24 +57,51 @@ exports.handleCreateTransaction = async (req, res) => {
 exports.handleGetAllTransactionByCashier = async (req, res) => {
   try {
     // Retrieve all transactions along with their associated TransactionItems
-    const transactions = await Transaction.findAll({
+
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const sort = req.query.sort;
+
+    const filter = {
       where: {
-        accountId: req.user.id, // Assuming you want to filter transactions by the current user's ID
+        accountId: req.user.id,
       },
       include: [
         {
           model: Product,
-         // Assuming you've defined an alias for the Product model
+          // Assuming you've defined an alias for the Product model
           through: {
             model: TransactionItem,
-            as: 'transactionItems', // Alias for the TransactionItem model
+            as: "transactionItems", // Alias for the TransactionItem model
           },
         },
       ],
-    });
+    };
+
+    if (sort) {
+      if (sort === "price-asc") {
+        filter.order = [["totalPrice", "ASC"]];
+      } else if (sort === "price-desc") {
+        filter.order = [["totalPrice", "DESC"]];
+      } else if (sort === "date-asc") {
+        filter.order = [["createdAt", "ASC"]];
+      } else if (sort === "date-desc") {
+        filter.order = [["createdAt", "DESC"]];
+      }
+    }
+    // Apply pagination;
+    filter.limit = limit;
+    filter.offset = (page - 1) * limit;
+
+    const transactions = await Transaction.findAll(filter);
+    const count = await Transaction.count({ where: filter.where });
 
     res.status(200).json({
       ok: true,
+      pagination: {
+        totalData: count,
+        page: page,
+      },
       message: "Transactions retrieved successfully",
       detail: transactions,
     });
@@ -87,7 +114,6 @@ exports.handleGetAllTransactionByCashier = async (req, res) => {
   }
 };
 
-
 exports.handleGetAllTransaction = async (req, res) => {
   try {
     // Retrieve all transactions along with their associated TransactionItems
@@ -98,7 +124,7 @@ exports.handleGetAllTransaction = async (req, res) => {
           // Assuming you've defined an alias for the Product model
           through: {
             model: TransactionItem,
-            as: 'transactionItems', // Alias for the TransactionItem model
+            as: "transactionItems", // Alias for the TransactionItem model
           },
         },
       ],

@@ -1,9 +1,7 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   Flex,
-  Heading,
   Icon,
   Image,
   Input,
@@ -40,9 +38,6 @@ function Menu() {
   const [sortCriteria, setSortCriteria] = useState("alphabetical-asc"); // Default sorting criteria that matches the backend;
   const [searchInput, setSearchInput] = useState(""); // Initialize with "All"
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [productsPerPage] = useState(10);
   const toast = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();

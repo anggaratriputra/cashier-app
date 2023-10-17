@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api"; // Import your API functions
-import { useSelector } from "react-redux";
 import AdminSidebar from "./AdminSidebar";
+import { useSelector } from "react-redux";
 
 function AdminProfile() {
   const { username } = useParams();
@@ -47,40 +47,44 @@ useEffect(() => {
   return (
 <>
   <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
+  <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
 
-  <Flex direction="row" ml={{ base: 0, md: 64 }} width="60vw" h="100vh" bgColor="#f7f7f7">
-    <Box mt="38px" p={6} w="100%">
-
-      {/* "Your Profile" section */}
-      <VStack
-      spacing={2}
-      align='stretch'>
-        <Box>
-        <Text ml="40px" fontSize="2xl" fontWeight="bold">
+  <Flex
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
+      padding="20px"
+      backgroundColor="#f7f7f7"
+    >
+  <Flex
+        justifyContent="center"
+        width="33vw"
+        borderRadius="14px"
+        backgroundColor="white"
+        color="black"
+        boxShadow="lg"
+        flexDirection="column"
+        padding="4"
+        align="center"
+      >
+        <Heading fontWeight="bold" fontSize="2xl" mb="4">
           Your Profile
-        </Text>
-        </Box>
-        <Stack direction={['column', 'row']} spacing='24px'>
-        <Box>
+        </Heading>
         <Avatar size="2xl" src={`http://localhost:8000/public/${photo}`} />
-        <Heading>{`${firstName} ${lastName}`}</Heading>
-        </Box>
-        </Stack>
-        <Box>
-        <Text>Username: {profileUsername}</Text>
-        </Box>
-        <Box>
+        <Heading as="h2" size="lg" mt="4">
+          {`${firstName} ${lastName}`}
+        </Heading>
+        <Text as="b" size="lg">ADMIN</Text>
+        <Text mt="2">Username: {profileUsername}</Text>
         <Text>Email: {email}</Text>
-        </Box>
-
-        <Box>
-        <Link to={`/editprofile`}>
-          <Button colorScheme="red">Edit Profile</Button>
+        <Link to={`/admin/editprofile`}>
+          <Button colorScheme="red" mt="4">
+            Edit Profile
+          </Button>
         </Link>
-        </Box>
-      </VStack>
-    </Box>
-  </Flex>
+        </Flex>
+        </Flex>
 </>
 
 

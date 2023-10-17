@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Flex, Text, Input, Button, FormControl, FormLabel, FormErrorMessage, useToast, InputRightElement, InputGroup } from "@chakra-ui/react";
+import { Box, Flex, Text, Input, Button, FormControl, FormLabel, FormErrorMessage, useToast, InputRightElement, InputGroup, Image } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -20,6 +20,13 @@ function UpdateProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedFileName, setSelectedFileName] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
+  const createObjectURL = (file) => {
+    if (file) {
+      return URL.createObjectURL(file);
+    }
+    return null;
+  };
 
   const newPasswordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
@@ -34,6 +41,9 @@ function UpdateProfile() {
     onDrop: (acceptedFiles) => {
       formik.setFieldValue("photoProfile", acceptedFiles[0]); // Set the selected file in formik
       setSelectedFileName(acceptedFiles[0].name);
+      setTimeout(() => {
+        setPreviewImage(createObjectURL(acceptedFiles[0]));
+      }, 0);
     },
   });
 
@@ -120,8 +130,7 @@ function UpdateProfile() {
       try {
         const response = await api.get(`/login/profile/${username}`);
         const profile = response.data.detail;
-        const photoProfile = profile.photoProfile
-
+        const photoProfile = profile.photoProfile;
 
         formik.setValues({
           username: profile.username,
@@ -130,8 +139,6 @@ function UpdateProfile() {
           email: profile.email,
           photoProfile: profile.photoProfile,
         });
-
-
       } catch (error) {
         if (error?.response?.status == 401) {
           dispatch(showUnauthorizedModal("/admin/addproduct"));
@@ -180,7 +187,7 @@ function UpdateProfile() {
   return (
     <>
       <Sidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} h={"100vh"} p={"20px"} bgColor={"#f7f7f7"}  ml={{ base: 0, md: 64 }}>
+      <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} h={"100vh"} p={"20px"} bgColor={"#f7f7f7"} ml={{ base: 0, md: 64 }}>
         <Flex justifyContent={"center"} w={"33vw"} borderRadius={"14px"} bgColor={"white"} color={"black"} boxShadow={"lg"}>
           <Box my={4}>
             <Text fontWeight="bold" fontSize="2xl" mb="20px">
@@ -238,9 +245,16 @@ function UpdateProfile() {
               </Box>
               <FormControl isInvalid={formik.errors.image && formik.touched.image}>
                 <FormLabel>Photo Profile</FormLabel>
-                <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer", width: "400px" }}>
+                <div {...getRootProps()} style={{ border: "2px dashed #cccccc", borderRadius: "4px", width: "400px", padding: "20px", cursor: "pointer" }}>
                   <input {...getInputProps()} name="photoProfile" onChange={(event) => formik.setFieldValue("photoProfile", event.currentTarget.files[0])} />
-                  <p>Drag 'n' drop an image here, or click to select an image</p>
+                  <div>
+                    {previewImage && (
+                      <Flex justifyContent={"center"}>
+                        <Image src={previewImage} w={"30%"} h={"30%"} />
+                      </Flex>
+                    )}
+                  </div>
+                  {previewImage ? null : <p>Drag 'n' drop an image here, or click to select an image</p>}
                 </div>
                 <p>Selected File: {selectedFileName}</p>
                 <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
