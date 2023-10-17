@@ -48,41 +48,47 @@ useEffect(() => {
 <>
   <Sidebar setActivePage={setActivePage} activeItem={activeItem} />
   <Flex
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      minHeight="100vh"
-      padding="20px"
-      backgroundColor="#f7f7f7"
-    >
+  direction="column"
+  alignItems="center"
+  justifyContent="center"
+  minHeight="100vh"
+  padding="20px"
+  backgroundColor="#f7f7f7"
+>
   <Flex
-        justifyContent="center"
-        width="33vw"
-        borderRadius="14px"
-        backgroundColor="white"
-        color="black"
-        boxShadow="lg"
-        flexDirection="column"
-        padding="4"
-        align="center"
-      >
-        <Heading fontWeight="bold" fontSize="2xl" mb="4">
-          Your Profile
-        </Heading>
-        <Avatar size="2xl" src={`http://localhost:8000/public/${photo}`} />
-        <Heading as="h2" size="lg" mt="4">
-          {`${firstName} ${lastName}`}
-        </Heading>
-        <Text as="b" size="lg">CASHIER</Text>
-        <Text mt="2">Username: {profileUsername}</Text>
-        <Text>Email: {email}</Text>
-        <Link to={`/editprofile`}>
-          <Button colorScheme="red" mt="4">
-            Edit Profile
-          </Button>
-        </Link>
-        </Flex>
-        </Flex>
+    justifyContent="center"
+    width="33vw"
+    borderRadius="14px"
+    backgroundColor="white"
+    color="black"
+    boxShadow="lg"
+    flexDirection="column"
+    padding="4"
+    align="center"
+  >
+    <Heading fontWeight="bold" fontSize="2xl" mb="4">
+      Your Profile
+    </Heading>
+    <Avatar size="2xl" src={`http://localhost:8000/public/${photo}`} />
+    <Heading as="h2" size="lg" mt="4">
+      {`${firstName} ${lastName}`}
+    </Heading>
+    <Text as="b" size="lg" mt="2">
+      CASHIER
+    </Text>
+    <Text mt="2">
+      <strong>Username:</strong> {profileUsername}
+    </Text>
+    <Text>
+      <strong>Email:</strong> {email}
+    </Text>
+    <Link to={`/editprofile`}>
+      <Button colorScheme="red" mt="4">
+        Edit Profile
+      </Button>
+    </Link>
+  </Flex>
+</Flex>
 </>
   );
 }
