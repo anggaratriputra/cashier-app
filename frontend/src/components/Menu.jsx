@@ -65,6 +65,17 @@ function Menu() {
             onCloseComplete() {
               navigate("/");
             },
+          })
+        } else if (error?.response?.status == 401) {
+          toast({
+            title: "You are not an admin!",
+            description: `You do not have access to this page!`,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            onCloseComplete() {
+              navigate("/");
+            },
           });
         } else if (error?.response?.status == 404) {
           setProducts([]);

@@ -1,6 +1,6 @@
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Text, useToast } from "@chakra-ui/react";
 import AdminSidebar from "./AdminSidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../api";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -111,6 +111,63 @@ function AddProduct() {
         }
       }
     },
+  });
+
+  useEffect(() => {
+    try {
+      const fetchProducts = async () => {
+        try {
+          const response = await api.get(`/products`);
+          const productData = response.data.details;
+        } catch (error) {
+          if (error?.response?.status == 401) {
+            toast({
+              title: "Session expired",
+              description: "Your are not admin!",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+              onCloseComplete() {
+                dispatch(logout());
+                navigate("/");
+              },
+            });
+          } else if (error?.response?.status == 403) {
+            toast({
+              title: "Session expired",
+              description: "Your session is expired, please login again.",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+              onCloseComplete() {
+                dispatch(logout());
+                navigate("/");
+              },
+            });
+          } else {
+            console.error(error);
+            toast({
+              title: "Error!",
+              description: String(error),
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        }
+      };
+
+      fetchProducts();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error!",
+        description: String(error),
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   });
 
   return (
