@@ -14,6 +14,7 @@ import { useParams, Link } from "react-router-dom";
 import api from "../api"; // Import your API functions
 import AdminSidebar from "./AdminSidebar";
 import { useSelector } from "react-redux";
+import AdminSidebar from "./AdminSidebar";
 
 function AdminProfile() {
   const { username } = useParams();
@@ -46,6 +47,7 @@ useEffect(() => {
 
   return (
 <>
+  <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
   <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
 
   <Flex
