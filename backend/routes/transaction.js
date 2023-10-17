@@ -11,5 +11,6 @@ const authMiddleware = require("../middleware/auth");
 // Add new transaction
 router.post("/", authMiddleware.validateToken, authMiddleware.checkRoleUser, transactionController.handleCreateTransaction);
 router.get("/", authMiddleware.validateToken, authMiddleware.checkRole, transactionController.handleGetAllTransaction);
+router.get("/:transactionId", authMiddleware.validateToken, authMiddleware.checkRole, transactionController.handleGetTransactionById);
 
 module.exports = router;

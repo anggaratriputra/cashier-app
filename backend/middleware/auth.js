@@ -38,7 +38,7 @@ exports.validateToken = (req, res, next) => {
   }
 };
 
-exports.fucheckRole = (req, res, next) => {
+exports.checkRole = (req, res, next) => {
   if (req.user.isAdmin === true) {
     next();
     return;
