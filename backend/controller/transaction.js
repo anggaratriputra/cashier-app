@@ -53,3 +53,5 @@ exports.handleCreateTransaction = async (req, res) => {
     });
   }
 };
+
+exports.handleGetAllTransaction = async (req, res) => {}

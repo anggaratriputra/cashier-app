@@ -54,7 +54,7 @@ function Menu() {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const responseData = await api.get(`/products?sort=${sortCriteria}&category=${selectedCategory}&search=${searchInput}`);
+        const responseData = await api.get(`/products/active?sort=${sortCriteria}&category=${selectedCategory}&search=${searchInput}`);
         const datas = responseData.data.details;
         // setTotalPages(totalPages);
         setProducts(datas);

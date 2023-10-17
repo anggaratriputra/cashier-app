@@ -60,14 +60,12 @@ exports.updateProduct = async (req, res) => {
 
     if (req.file) {
       product.image = req.file.filename;
-
     } else {
       return res.status(404).json({
         ok: false,
         message: "Failed to upload image!",
       });
     }
-
 
     if (productName) {
       product.name = productName;
@@ -89,7 +87,7 @@ exports.updateProduct = async (req, res) => {
       detail: product,
     });
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(400).json({
       ok: false,
       message: "Product failed to updated!",
@@ -142,6 +140,73 @@ exports.getAllProducts = async (req, res) => {
   try {
     const filter = {
       where: {},
+    };
+
+    // Apply category filter
+    if (category && category !== "All") {
+      filter.where.category = category;
+    }
+
+    // Apply search query filter using Sequelize's Op.like
+    if (search) {
+      filter.where.name = {
+        [Op.like]: `%${search}%`,
+      };
+    }
+
+    // Include sorting options
+    if (sort) {
+      if (sort === "alphabetical-asc") {
+        filter.order = [["name", "ASC"]];
+      } else if (sort === "alphabetical-desc") {
+        filter.order = [["name", "DESC"]];
+      } else if (sort === "price-asc") {
+        filter.order = [["price", "ASC"]];
+      } else if (sort === "price-desc") {
+        filter.order = [["price", "DESC"]];
+      }
+    }
+
+    // Apply pagination
+    filter.limit = limit;
+    filter.offset = (page - 1) * limit;
+
+    const products = await Product.findAndCountAll(filter);
+
+    if (!products || products.count === 0) {
+      return res.status(404).json({
+        ok: false,
+        message: "No products found!",
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      pagination: {
+        totalData: products.count,
+        page: page,
+      },
+      details: products.rows,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({
+      ok: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+exports.getAllActiveProducts = async (req, res) => {
+  const limit = parseInt(req.query.limit) || 100;
+  const page = parseInt(req.query.page) || 1;
+  const sort = req.query.sort; // Get the sorting parameter from the query
+  const category = req.query.category; // Get the category filter from the query
+  const search = req.query.search; // Get the search query from the query
+
+  try {
+    const filter = {
+      where: { isActive: true },
     };
 
     // Apply category filter
