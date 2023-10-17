@@ -41,16 +41,15 @@ const Sidebar = ({ activeItem }) => {
 
     <Box bg={useColorModeValue("white", "gray.900")} borderRight="1px" borderRightColor={useColorModeValue("gray.200", "gray.700")} w={{ base: "full", md: "18vw" }} pos="fixed" h="100vh">
       {/* Sidebar Header */}
-      <Flex direction="column" h="20" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
+      <Flex direction="column" h="14vh" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex alignItems="center" justifyContent="center">
           <Image src="https://i.ibb.co/LzsMhD0/mekdilogo2.png" w={"90%"} />
         </Flex>
       </Flex>
-
       {/* Sidebar Navigation */}
       <Flex direction="column">
         <NavItem icon={BiSolidFoodMenu} name="Menu" isActive={activeItem === "menu"} onClick={() => navigate("/menu")} />
-        <NavItem icon={FaFileInvoiceDollar} name="Bills" isActive={activeItem === "bills"} onClick={() => navigate("/bills")} />
+        <NavItem icon={FaFileInvoiceDollar} name="Transaction" isActive={activeItem === "bills"} onClick={() => navigate("/bills")} />
       </Flex>
       <Box position="fixed" bottom={10} left={6}>
         <Menu>

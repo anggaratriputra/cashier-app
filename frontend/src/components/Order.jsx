@@ -170,7 +170,7 @@ function Order() {
                     alignItems={"center"}
                     gap={2}
                     borderRadius={"8px"}
-                    w="300px"
+                    w="20vw"
                     h={"90px"}
                     boxShadow={"2xl"}
                     bg="white"
