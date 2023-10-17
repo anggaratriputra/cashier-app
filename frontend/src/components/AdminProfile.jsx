@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api"; // Import your API functions
-import Sidebar from "./Sidebar";
 import { useSelector } from "react-redux";
+import AdminSidebar from "./AdminSidebar";
 
 function AdminProfile() {
   const { username } = useParams();
@@ -46,7 +46,7 @@ useEffect(() => {
 
   return (
 <>
-  <Sidebar setActivePage={setActivePage} activeItem={activeItem} />
+  <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
 
   <Flex direction="row" ml={{ base: 0, md: 64 }} width="60vw" h="100vh" bgColor="#f7f7f7">
     <Box mt="38px" p={6} w="100%">
