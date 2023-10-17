@@ -291,7 +291,8 @@ function ListProduct() {
                   style={{
                     backgroundColor: product.isActive ? null : "red", // Background color
                     color: product.isActive ? "black" : "white", // Font color
-                  }}>
+                  }}
+                >
                   <Td>{product.id}</Td>
                   <Td>{product.name}</Td>
                   <Td>{formatToRupiah(product.price)}</Td>
@@ -321,7 +322,6 @@ function ListProduct() {
                           <Text fontWeight={"bold"}> Not Available</Text>
                           <Flex>
                             <IconButton colorScheme="red" aria-label="Not Available" icon={<FaCheck />} size="sm" mr="2" onClick={() => handleToggleAvailability(product.id)} />
-                            <IconButton colorScheme="blue" aria-label="Edit" icon={<FaEdit />} size="sm" mr="2" />
                           </Flex>
                         </>
                       )}

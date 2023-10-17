@@ -18,8 +18,7 @@ import MenuTemp from "./components/MenuTemp";
 import AdminProfile from "./components/AdminProfile";
 import ResetRequest from "./components/ResetRequest";
 import ResetPassword from "./components/ResetPassword";
-
-
+import Transaction from "./components/Transaction";
 
 function AdminValidationModal() {
   const navigate = useNavigate();
@@ -69,6 +68,7 @@ function App() {
         <Route path="/editprofile" element={<UpdateProfile />} />
         <Route path="/admin/editprofile" element={<UpdateAdminProfile />} />
         <Route path="/menu" element={<Menu />} />
+        <Route path="/transaction" element={<Transaction />} />
         <Route path="/menutemp" element={<MenuTemp/>} />
         <Route path="/forgot-password" element={<ResetRequest />} />
         <Route path="/reset-password" element={<ResetPassword />} />

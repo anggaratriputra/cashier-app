@@ -49,7 +49,7 @@ const Sidebar = ({ activeItem }) => {
       {/* Sidebar Navigation */}
       <Flex direction="column">
         <NavItem icon={BiSolidFoodMenu} name="Menu" isActive={activeItem === "menu"} onClick={() => navigate("/menu")} />
-        <NavItem icon={FaFileInvoiceDollar} name="Transaction" isActive={activeItem === "bills"} onClick={() => navigate("/bills")} />
+        <NavItem icon={FaFileInvoiceDollar} name="Transaction" isActive={activeItem === "transaction"} onClick={() => navigate("/transaction")} />
       </Flex>
       <Box position="fixed" bottom={10} left={6}>
         <Menu>

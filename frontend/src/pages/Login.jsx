@@ -27,7 +27,7 @@ function Login() {
       if (response.status === 200) {
         const responseData = response.data;
         const isAdmin = responseData.data.profile.isAdmin === true;
-        const isActive = responseData.data.profile.isActive === true;
+        const isActive = responseData.data.profile.isActive;
         const photo = responseData.data.profile.photoProfile;
 
         dispatch(login(responseData));
@@ -36,7 +36,7 @@ function Login() {
         if (isAdmin) {
           navigate("/admin/addproduct");
         } else {
-          if (isActive) {
+          if (isActive === true && isActive !== null ) {
             navigate("/menu");
           } else {
             toast({
@@ -80,7 +80,7 @@ function Login() {
   return (
     <Box position="relative" bg={"red.700"} h="100vh">
       <AbsoluteCenter>
-        <Container maxW="lg" bgColor="white" boxShadow="md" p="6" rounded="md" bg="white" mt={5}>
+        <Container maxW="lg" bgColor="white" boxShadow="md" p="6" rounded="lg" bg="white" mt={5}>
           <Box pt={7} px={5} pb={5}>
             <Flex gap="10px" mb={10} alignItems={"center"} justifyContent={"center"}>
               <Image src="https://i.ibb.co/CQY63yt/mekdilogo1.png" w={"60%"} />
