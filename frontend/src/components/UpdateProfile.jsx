@@ -20,6 +20,13 @@ function UpdateProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedFileName, setSelectedFileName] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
+  const createObjectURL = (file) => {
+    if (file) {
+      return URL.createObjectURL(file);
+    }
+    return null
+  }
 
   const newPasswordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
@@ -33,7 +40,11 @@ function UpdateProfile() {
     maxSize: 2000000,
     onDrop: (acceptedFiles) => {
       formik.setFieldValue("photoProfile", acceptedFiles[0]); // Set the selected file in formik
-      setSelectedFileName(acceptedFiles[0].name);
+     setSelectedFileName(acceptedFiles[0].name);
+     setTimeout(() => {
+     setPreviewImage(createObjectURL(acceptedFiles[0]))
+
+    }, 0);
     },
   });
 
@@ -241,6 +252,11 @@ function UpdateProfile() {
                 <div {...getRootProps()} style={{ border: "2px dashed  #cccccc", borderRadius: "4px", padding: "20px", cursor: "pointer", width: "400px" }}>
                   <input {...getInputProps()} name="photoProfile" onChange={(event) => formik.setFieldValue("photoProfile", event.currentTarget.files[0])} />
                   <p>Drag 'n' drop an image here, or click to select an image</p>
+                </div>
+                <div>
+                {previewImage && (
+                  <img src={previewImage} alt="Image Preview" style={{ maxWidth: "100px", maxHeight: "100px" }} />
+                )}
                 </div>
                 <p>Selected File: {selectedFileName}</p>
                 <FormErrorMessage>{formik.errors.image}</FormErrorMessage>
