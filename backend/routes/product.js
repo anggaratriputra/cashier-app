@@ -5,7 +5,7 @@ const { multerUpload } = require("../lib/multer");
 const productController = require("../controller/product");
 const authMiddleware = require("../middleware/auth");
 
-router.get("/", authMiddleware.validateToken, productController.getAllProducts);
+router.get("/", authMiddleware.validateToken, authMiddleware.checkRole,productController.getAllProducts);
 router.get("/active", authMiddleware.validateToken, authMiddleware.checkRoleUser, productController.getAllActiveProducts);
 router.get("/:id", authMiddleware.validateToken, productController.getSingleProduct);
 router.post("/create", authMiddleware.validateToken, authMiddleware.checkRole, multerUpload.single("img"), productController.createProduct);

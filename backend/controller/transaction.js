@@ -14,6 +14,7 @@ exports.handleCreateTransaction = async (req, res) => {
       },
     });
 
+
     const totalCharge = productList.reduce((total, product) => {
       const [item] = items.filter((item) => item.productId === product.id);
       return total + product.price * item.quantity;
@@ -139,6 +140,43 @@ exports.handleGetAllTransaction = async (req, res) => {
     res.status(400).json({
       ok: false,
       message: "Failed to retrieve transactions",
+      detail: String(error),
+    });
+  }
+};
+
+exports.handleGetTransactionById = async (req, res) => {
+  const { transactionId } = req.params;
+
+  try {
+    const transaction = await Transaction.findByPk(transactionId, {
+      include: [
+        {
+          model: Product,
+          through: {
+            model: TransactionItem,
+            as: "transactionItems",
+          },
+        },
+      ],
+    });
+
+    if (!transaction) {
+      return res.status(404).json({
+        ok: false,
+        message: "Transaction not found",
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      message: "Transaction retrieved successfully",
+      detail: transaction,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      message: "Failed to retrieve the transaction",
       detail: String(error),
     });
   }

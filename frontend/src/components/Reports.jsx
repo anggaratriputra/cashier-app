@@ -106,6 +106,7 @@ function Reports() {
     });
 
     // Calculate sales aggregate data for the filtered transactions
+    // digunakan untuk menghitung data agregat penjualan berdasarkan transaksi yang telah difilter. 
     const salesData = filteredTransactions.reduce((acc, transaction) => {
       if (!acc[transaction.createdAt]) {
         acc[transaction.createdAt] = 0;
@@ -186,7 +187,7 @@ function Reports() {
             <Text>Transaction Date: {selectedTransaction.createdAt}</Text>
             <Divider mt={4} mb={4} />
             <Text fontWeight="bold">Products:</Text>
-            {selectedTransaction.Products.map((product) => (
+            {selectedTransaction?.Products?.map((product) => (
               <Box key={product.id} borderWidth="1px" borderRadius="lg" p="4" mb="4">
                 <Text fontSize="lg" fontWeight="bold">
                   {product.name}
