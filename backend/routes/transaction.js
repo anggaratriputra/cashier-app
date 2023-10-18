@@ -9,7 +9,7 @@ const authMiddleware = require("../middleware/auth");
 
 // Add new transaction
 router.post("/", authMiddleware.validateToken, authMiddleware.checkRoleUser, transactionController.handleCreateTransaction);
-router.get("/:transactionId", authMiddleware.validateToken, authMiddleware.checkRole, transactionController.handleGetTransactionById);
+// router.get("/:transactionId", authMiddleware.validateToken, authMiddleware.checkRole, transactionController.handleGetTransactionById);
 router.get("/reports", authMiddleware.validateToken, authMiddleware.checkRole, transactionController.handleGetAllTransaction);
 router.get("/", authMiddleware.validateToken, authMiddleware.checkRoleUser, transactionController.handleGetAllTransactionByCashier);
 
