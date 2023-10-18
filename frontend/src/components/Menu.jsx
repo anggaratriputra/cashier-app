@@ -275,7 +275,7 @@ function Menu() {
                     </Text>
                   </Flex>
                   <Flex justifyContent="center" flexGrow={2}>
-                    <Image w="100px" h={"90px"} src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
+                    <Image w="100px" h={"85px"} src={`http://localhost:8000/public/${product.image}`} alt={product.name} />
                   </Flex>
                   <Flex>
                     <Text fontWeight={"medium"} fontSize="sm" textAlign="center">

@@ -14,7 +14,6 @@ exports.handleCreateTransaction = async (req, res) => {
       },
     });
 
-
     const totalCharge = productList.reduce((total, product) => {
       const [item] = items.filter((item) => item.productId === product.id);
       return total + product.price * item.quantity;
@@ -22,7 +21,6 @@ exports.handleCreateTransaction = async (req, res) => {
 
     // Apply the 5% tax
     const totalChargeWithTax = totalCharge + totalCharge * 0.05;
-    // console.log(productList, "asdasd", totalChargeWithTax);
     const transaction = new Transaction({
       totalPrice: totalChargeWithTax,
       paymentBy: paymentType,
@@ -47,6 +45,7 @@ exports.handleCreateTransaction = async (req, res) => {
       detail: result,
     });
   } catch (error) {
+    console.error("Error fetching transaction", error);
     res.status(400).json({
       ok: false,
       message: "Transaction failed",
