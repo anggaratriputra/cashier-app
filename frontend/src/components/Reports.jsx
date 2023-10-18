@@ -48,7 +48,7 @@ function Reports() {
 
   const fetchTransaction = async () => {
     try {
-      const response = await api.get("/transaction");
+      const response = await api.get("/transaction/reports");
       const transactionDatas = response.data.detail;
 
       // Format the createdAt date to the desired format(YYYY-MM-DD)
