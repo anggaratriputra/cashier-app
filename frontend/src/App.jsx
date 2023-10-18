@@ -72,7 +72,6 @@ function App() {
         <Route path="/menutemp" element={<MenuTemp/>} />
         <Route path="/forgot-password" element={<ResetRequest />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-
       </Routes>
       <AdminValidationModal />
     </>
