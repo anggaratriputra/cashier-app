@@ -175,7 +175,7 @@ function AddProduct() {
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
       <Flex direction={"row"} justifyContent={"center"} alignItems={"center"} ml={{ base: 0, md: 60 }} bgColor={"#f7f7f7"} >
         <Box h={"100vh"} w={"60vw"} p={"40px"} justifyContent={"center"}>
-          <Box bgColor={"white.700"} boxShadow={"md"} border={"1px solid"} borderColor={"blackAlpha.100"} p={"20px"} justifyContent={"center"} alignItems={"center"}  h={"90vh"} borderRadius={"10px"}>
+          <Box bgColor={"white.700"} boxShadow={"md"} border={"1px solid"} borderColor={"blackAlpha.100"} p={"20px"} pl={'50px'} pt={'30px'} justifyContent={"center"} alignItems={"center"}  h={"90vh"} borderRadius={"10px"}>
             <Text fontWeight="bold" mb={"20px"} fontSize="2xl">
               Add Product
             </Text>

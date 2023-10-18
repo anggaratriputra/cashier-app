@@ -163,10 +163,10 @@ function Reports() {
             </Text>
             <Box display={"flex"} w={"100%"} ml={"40px"} gap={3} mt={5} overflowX={"auto"}>
               {transactions.map((transaction) => (
-                <Box key={transaction.id} w={"10vw"} h={"10vw"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={'center'} shadow={"md"} p={"10px"} mb={"10px"} borderRadius={"10px"}>
+                <Box key={transaction.id} w={"12vw"} h={"10vw"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={'center'} shadow={"md"} p={"10px"} mb={"10px"} borderRadius={"10px"}>
                   <Text>Transaction ID: {transaction.id}</Text>
                   <Text>Total Price: {transaction.totalPrice}</Text>
-                  <Button onClick={() => openModal(transaction)} w={"80%"} mt={"10px"} bgColor={"red.700"} color={"yellow.300"} _hover={{ bgColor: "red.500" }}>
+                  <Button onClick={() => openModal(transaction)} w={"80%"} mt={"10px"} bgColor={"red.700"} color={"yellow.300"} _hover={{ bgColor: "red.500" }} p={'25px'}>
                     View Products
                   </Button>
                 </Box>
