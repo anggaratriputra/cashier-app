@@ -27,6 +27,8 @@ function ResetPassword() {
   
   const loginSchema = yup.object().shape({
     password: yup.string().required("Password is required!").matches("^(?=.*?[a-zA-Z])(?=.*?[0-9]).{6,}$", "Must contain at least 6 characters, including at least one letter and one number"),
+    confirmPassword: yup.string()
+    .oneOf([yup.ref("password"), ""], "Passwords must match"),
   });
 
   const handleSubmit = async (values) => {
@@ -82,7 +84,7 @@ function ResetPassword() {
                   <Field name="password">
                       {({ field, form }) => (
                         <FormControl isInvalid={form.errors.password && form.touched.password} isDisabled={isSubmitting}>
-                          <FormLabel>Password</FormLabel>
+                          <FormLabel>New Password</FormLabel>
                           <InputGroup size="md">
                             <Input {...field} placeholder="Password" bgColor="white" pr="4.5rem" type={showPassword ? "text" : "password"} />
                             <InputRightElement w="4.5rem">
@@ -92,6 +94,22 @@ function ResetPassword() {
                             </InputRightElement>
                           </InputGroup>
                           <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  <Field name="confirmPassword">
+                      {({ field, form }) => (
+                        <FormControl isInvalid={form.errors.confirmPassword && form.touched.confirmPassword} isDisabled={isSubmitting}>
+                          <FormLabel>Confirm Password</FormLabel>
+                          <InputGroup size="md">
+                            <Input {...field} placeholder="Confirm Password" bgColor="white" pr="4.5rem" type={showPassword ? "text" : "password"} />
+                            <InputRightElement w="4.5rem">
+                              <Button bg="white" boxShadow={"md"} size="sm" onClick={onTogglePassword}>
+                                {showPassword ? <AiFillEyeInvisible size={"20px"} /> : <AiFillEye size={"20px"} />}
+                              </Button>
+                            </InputRightElement>
+                          </InputGroup>
+                          <FormErrorMessage>{form.errors.confirmPassword}</FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>
