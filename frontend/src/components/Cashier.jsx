@@ -238,7 +238,7 @@ function Cashier() {
   return (
     <>
       <AdminSidebar setActivePage={setActivePage} activeItem={activeItem} />
-      <Flex direction={"column"} ml={{ base: 0, md: 64 }} h="100vh" bgColor="#f7f7f7">
+      <Flex direction={"column"} ml={{ base: 0, md: 64 }} maxW="100%" h="100vh" bgColor="#f7f7f7" overflowY={"auto"}>
         <Box mt="38px" ml="40px">
           <Text mb={4} fontWeight="bold" fontSize="2xl">
             Cashiers List
@@ -273,7 +273,7 @@ function Cashier() {
           </Flex>
         </Box>
         <Box bgColor="white" mt="28px" mx="40px" borderRadius={15} boxShadow={"lg"}>
-          <Table variant="simple">
+          <Table variant="simple"  maxW="100%" overflow="auto" >
             <Thead>
               <Tr>
                 <Th>ID</Th>
@@ -331,7 +331,7 @@ function Cashier() {
             </Tbody>
           </Table>
         </Box>
-        <Box display="flex" alignItems="center" justifyContent="right" gap={2} mt="20px" textAlign="right" mr={20}>
+        <Box display="flex" alignItems="center" justifyContent="right" gap={2} mt="20px" mb="20px" textAlign="right" mr={20}>
           <Text fontWeight={"bold"}> Page </Text>
           <Box>
             <Button key={1} size="sm" onClick={() => handlePageChange(1)} variant={currentPage === 1 ? "solid" : "outline"} mr="5px">
