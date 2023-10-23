@@ -43,7 +43,8 @@ const Sidebar = ({ activeItem }) => {
       {/* Sidebar Header */}
       <Flex direction="column" h="14vh" alignItems="center" mx="8" mt={4} mb={10} justifyContent="space-between">
         <Flex alignItems="center" justifyContent="center">
-          <Image src="https://i.ibb.co/LzsMhD0/mekdilogo2.png" w={"90%"} />
+          {/* <Image src="https://i.ibb.co/LzsMhD0/mekdilogo2.png" w={"90%"} /> */}
+          <Image src="https://i.ibb.co/sQZDWss/mekdi-menucashier.png" w={"60%"} />
         </Flex>
       </Flex>
       {/* Sidebar Navigation */}
